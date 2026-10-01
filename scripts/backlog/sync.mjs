@@ -4,12 +4,13 @@ import { spawnSync } from 'node:child_process';
 const args = new Set(process.argv.slice(2));
 const apply = args.has('--apply');
 const root = new URL('../../', import.meta.url);
+const ghExecutable = '/usr/bin/gh';
 const manifest = JSON.parse(readFileSync(new URL('docs/backlog/manifest.json', root), 'utf8'));
 const functionalSpec = readFileSync(new URL('docs/spec.md', root), 'utf8');
 const markerPattern = /<!-- maia-us-id: ([A-Z0-9-]+) -->/;
 
 function run(commandArgs, { input, allowFailure = false } = {}) {
-  const result = spawnSync('gh', commandArgs, {
+  const result = spawnSync(ghExecutable, commandArgs, {
     cwd: root,
     encoding: 'utf8',
     env: process.env,
@@ -56,14 +57,21 @@ function parseSections(source) {
   let current = null;
 
   for (const line of lines) {
-    const storyHeading = line.match(/^(\d+\.\d+)\s*:\s*(.+)$/);
-    const epicHeading = line.match(/^\d+\s*:\s*/);
+    const separatorIndex = line.indexOf(':');
+    const heading = separatorIndex >= 0 ? line.slice(0, separatorIndex).trim() : '';
+    const storyHeading = /^\d+\.\d+$/.test(heading);
+    const epicHeading = /^\d+$/.test(heading);
 
     if (storyHeading) {
-      const count = (occurrences.get(storyHeading[1]) || 0) + 1;
-      occurrences.set(storyHeading[1], count);
-      current = { id: storyHeading[1], occurrence: count, title: storyHeading[2], lines: [] };
-      sections.set(`${storyHeading[1]}#${count}`, current);
+      const count = (occurrences.get(heading) || 0) + 1;
+      occurrences.set(heading, count);
+      current = {
+        id: heading,
+        occurrence: count,
+        title: line.slice(separatorIndex + 1).trim(),
+        lines: []
+      };
+      sections.set(`${heading}#${count}`, current);
       continue;
     }
 
