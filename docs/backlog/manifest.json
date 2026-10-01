@@ -1,0 +1,491 @@
+{
+  "version": 1,
+  "repository": "maia-organization/maia-mobile-app",
+  "project": {
+    "owner": "maia-organization",
+    "title": "Maïa - Produit",
+    "startDate": "2026-10-05",
+    "sprintDurationDays": 14,
+    "sprintCapacity": 20
+  },
+  "epics": [
+    {
+      "id": "EPIC-PROFILE",
+      "title": "EPIC - Gestion du profil utilisateur",
+      "key": "profile",
+      "source": "docs/spec.md section 1"
+    },
+    {
+      "id": "EPIC-CYCLE",
+      "title": "EPIC - Gestion du cycle et personnalisation",
+      "key": "cycle",
+      "source": "docs/spec.md section 2"
+    },
+    {
+      "id": "EPIC-COMMUNITY",
+      "title": "EPIC - Communauté et modération",
+      "key": "community",
+      "source": "docs/spec.md section 3"
+    },
+    {
+      "id": "EPIC-TRAINING",
+      "title": "EPIC - Entraînements et suivi des performances",
+      "key": "training",
+      "source": "docs/spec.md section 4"
+    },
+    {
+      "id": "EPIC-CONTENT",
+      "title": "EPIC - Contenu et éducation",
+      "key": "content",
+      "source": "docs/spec.md section 5"
+    },
+    {
+      "id": "EPIC-NOTIFICATIONS",
+      "title": "EPIC - Engagement et notifications",
+      "key": "notifications",
+      "source": "docs/spec.md section 6"
+    }
+  ],
+  "stories": [
+    {
+      "id": "US-AUTH-001",
+      "source": "1.1",
+      "epic": "EPIC-PROFILE",
+      "title": "US - Créer un compte",
+      "priority": "P0",
+      "estimate": 5,
+      "status": "Done",
+      "areas": ["frontend", "backend"],
+      "technicalRef": "1.1",
+      "completedOn": "2026-09-10"
+    },
+    {
+      "id": "US-AUTH-002",
+      "source": "1.2",
+      "epic": "EPIC-PROFILE",
+      "title": "US - Se connecter",
+      "priority": "P0",
+      "estimate": 3,
+      "status": "Done",
+      "areas": ["frontend", "backend"],
+      "technicalRef": "1.2",
+      "completedOn": "2026-09-10"
+    },
+    {
+      "id": "US-AUTH-003",
+      "source": "1.3",
+      "epic": "EPIC-PROFILE",
+      "title": "US - Se déconnecter",
+      "priority": "P0",
+      "estimate": 2,
+      "status": "Done",
+      "areas": ["frontend"],
+      "completedOn": "2026-09-10"
+    },
+    {
+      "id": "US-PROFILE-001",
+      "source": "1.4",
+      "epic": "EPIC-PROFILE",
+      "title": "US - Modifier son profil",
+      "priority": "P0",
+      "estimate": 5,
+      "status": "Todo",
+      "areas": ["frontend", "backend"],
+      "technicalRef": "1.3"
+    },
+    {
+      "id": "US-PROFILE-002",
+      "source": "1.5",
+      "epic": "EPIC-PROFILE",
+      "title": "US - Consulter son profil",
+      "priority": "P0",
+      "estimate": 3,
+      "status": "Todo",
+      "areas": ["frontend", "backend"],
+      "technicalRef": "1.4"
+    },
+    {
+      "id": "US-AUTH-004",
+      "source": "1.6",
+      "epic": "EPIC-PROFILE",
+      "title": "US - Réinitialiser son mot de passe",
+      "priority": "P1",
+      "estimate": 5,
+      "status": "Backlog",
+      "areas": ["frontend", "backend"]
+    },
+    {
+      "id": "US-PREFERENCES-001",
+      "source": "1.7",
+      "epic": "EPIC-PROFILE",
+      "title": "US - Gérer ses préférences de notifications",
+      "priority": "P1",
+      "estimate": 3,
+      "status": "Todo",
+      "areas": ["frontend", "backend"]
+    },
+    {
+      "id": "US-ONBOARDING-001",
+      "source": "1.8",
+      "epic": "EPIC-PROFILE",
+      "title": "US - Découvrir Maïa lors de la première utilisation",
+      "priority": "P0",
+      "estimate": 5,
+      "status": "Todo",
+      "areas": ["frontend"]
+    },
+    {
+      "id": "US-ACCOUNT-001",
+      "source": "1.9",
+      "epic": "EPIC-PROFILE",
+      "title": "US - Supprimer son compte et ses données",
+      "priority": "P1",
+      "estimate": 5,
+      "status": "Backlog",
+      "areas": ["frontend", "backend", "security"]
+    },
+    {
+      "id": "US-PRIVACY-001",
+      "source": "1.10",
+      "mergedSources": ["2.7#1"],
+      "epic": "EPIC-PROFILE",
+      "title": "US - Contrôler la confidentialité de ses données",
+      "priority": "P1",
+      "estimate": 5,
+      "status": "Backlog",
+      "areas": ["frontend", "backend", "security"]
+    },
+
+    {
+      "id": "US-CYCLE-001",
+      "source": "2.1",
+      "epic": "EPIC-CYCLE",
+      "title": "US - Renseigner et mettre à jour son cycle",
+      "priority": "P0",
+      "estimate": 5,
+      "status": "Todo",
+      "areas": ["frontend", "backend"],
+      "technicalRef": "2.1"
+    },
+    {
+      "id": "US-CYCLE-002",
+      "source": "2.2",
+      "epic": "EPIC-CYCLE",
+      "title": "US - Recevoir une recommandation personnalisée",
+      "priority": "P0",
+      "estimate": 8,
+      "status": "Todo",
+      "areas": ["frontend", "backend"],
+      "technicalRef": "2.2"
+    },
+    {
+      "id": "US-FEEDBACK-001",
+      "source": "2.3",
+      "epic": "EPIC-CYCLE",
+      "title": "US - Indiquer son ressenti après une séance",
+      "priority": "P0",
+      "estimate": 5,
+      "status": "Todo",
+      "areas": ["frontend", "backend"]
+    },
+    {
+      "id": "US-CYCLE-003",
+      "source": "2.4",
+      "epic": "EPIC-CYCLE",
+      "title": "US - Visualiser les phases de son cycle",
+      "priority": "P0",
+      "estimate": 5,
+      "status": "Todo",
+      "areas": ["frontend", "backend"],
+      "technicalRef": "2.3"
+    },
+    {
+      "id": "US-WORKOUT-ADAPT-001",
+      "source": "2.5",
+      "epic": "EPIC-CYCLE",
+      "title": "US - Adapter manuellement une séance recommandée",
+      "priority": "P1",
+      "estimate": 5,
+      "status": "Backlog",
+      "areas": ["frontend", "backend"]
+    },
+    {
+      "id": "US-SYMPTOMS-001",
+      "source": "2.6",
+      "epic": "EPIC-CYCLE",
+      "title": "US - Renseigner ses symptômes",
+      "priority": "P1",
+      "estimate": 5,
+      "status": "Backlog",
+      "areas": ["frontend", "backend"]
+    },
+
+    {
+      "id": "US-COMMUNITY-001",
+      "source": "3.1",
+      "epic": "EPIC-COMMUNITY",
+      "title": "US - Accéder à l'espace Communauté",
+      "priority": "P2",
+      "estimate": 5,
+      "status": "Backlog",
+      "areas": ["frontend", "backend"]
+    },
+    {
+      "id": "US-MESSAGING-001",
+      "source": "3.2",
+      "epic": "EPIC-COMMUNITY",
+      "title": "US - Échanger par messagerie",
+      "priority": "P3",
+      "estimate": 8,
+      "status": "Backlog",
+      "areas": ["frontend", "backend"]
+    },
+    {
+      "id": "US-COMMUNITY-002",
+      "source": "3.3",
+      "epic": "EPIC-COMMUNITY",
+      "title": "US - Publier une course",
+      "priority": "P2",
+      "estimate": 8,
+      "status": "Backlog",
+      "areas": ["frontend", "backend"]
+    },
+    {
+      "id": "US-COMMUNITY-003",
+      "source": "3.4",
+      "epic": "EPIC-COMMUNITY",
+      "title": "US - Consulter le fil d'actualité",
+      "priority": "P2",
+      "estimate": 8,
+      "status": "Backlog",
+      "areas": ["frontend", "backend"]
+    },
+    {
+      "id": "US-GROUP-001",
+      "source": "3.5",
+      "epic": "EPIC-COMMUNITY",
+      "title": "US - Créer ou rejoindre un groupe de runneuses",
+      "priority": "P3",
+      "estimate": 8,
+      "status": "Backlog",
+      "areas": ["frontend", "backend"]
+    },
+    {
+      "id": "US-FOLLOW-001",
+      "source": "3.6",
+      "epic": "EPIC-COMMUNITY",
+      "title": "US - Suivre une autre utilisatrice",
+      "priority": "P3",
+      "estimate": 5,
+      "status": "Backlog",
+      "areas": ["frontend", "backend"]
+    },
+    {
+      "id": "US-MODERATION-001",
+      "source": "2.7",
+      "sourceOccurrence": 2,
+      "epic": "EPIC-COMMUNITY",
+      "title": "US - Signaler un contenu ou bloquer une utilisatrice",
+      "priority": "P2",
+      "estimate": 8,
+      "status": "Backlog",
+      "areas": ["frontend", "backend", "security"]
+    },
+
+    {
+      "id": "US-WORKOUT-001",
+      "source": "4.1",
+      "epic": "EPIC-TRAINING",
+      "title": "US - Voir l'entraînement du jour",
+      "priority": "P0",
+      "estimate": 5,
+      "status": "Todo",
+      "areas": ["frontend", "backend"],
+      "technicalRef": "4.1"
+    },
+    {
+      "id": "US-SESSION-001",
+      "source": "4.2",
+      "epic": "EPIC-TRAINING",
+      "title": "US - Lancer, mettre en pause et arrêter une séance",
+      "priority": "P0",
+      "estimate": 8,
+      "status": "Todo",
+      "areas": ["frontend", "backend"],
+      "technicalRef": "4.2"
+    },
+    {
+      "id": "US-SESSION-002",
+      "source": "4.3",
+      "epic": "EPIC-TRAINING",
+      "title": "US - Marquer un entraînement comme terminé",
+      "priority": "P0",
+      "estimate": 3,
+      "status": "Todo",
+      "areas": ["frontend", "backend"],
+      "technicalRef": "4.3"
+    },
+    {
+      "id": "US-STATS-001",
+      "source": "4.4",
+      "epic": "EPIC-TRAINING",
+      "title": "US - Consulter ses statistiques",
+      "priority": "P0",
+      "estimate": 5,
+      "status": "Todo",
+      "areas": ["frontend", "backend"],
+      "technicalRef": "4.4"
+    },
+    {
+      "id": "US-HISTORY-001",
+      "source": "4.5",
+      "epic": "EPIC-TRAINING",
+      "title": "US - Consulter l'historique des entraînements",
+      "priority": "P0",
+      "estimate": 5,
+      "status": "Todo",
+      "areas": ["frontend", "backend"],
+      "technicalRef": "4.5"
+    },
+    {
+      "id": "US-PLANNING-001",
+      "source": "4.6",
+      "epic": "EPIC-TRAINING",
+      "title": "US - Planifier ses séances",
+      "priority": "P1",
+      "estimate": 8,
+      "status": "Backlog",
+      "areas": ["frontend", "backend"]
+    },
+    {
+      "id": "US-SUMMARY-001",
+      "source": "4.7",
+      "epic": "EPIC-TRAINING",
+      "title": "US - Recevoir un résumé après une séance",
+      "priority": "P0",
+      "estimate": 5,
+      "status": "Backlog",
+      "areas": ["frontend", "backend"]
+    },
+    {
+      "id": "US-GOAL-001",
+      "source": "4.8",
+      "epic": "EPIC-TRAINING",
+      "title": "US - Définir un objectif hebdomadaire",
+      "priority": "P1",
+      "estimate": 5,
+      "status": "Backlog",
+      "areas": ["frontend", "backend"]
+    },
+    {
+      "id": "US-MOTIVATION-001",
+      "source": "4.9",
+      "epic": "EPIC-TRAINING",
+      "title": "US - Recevoir des encouragements personnalisés",
+      "priority": "P1",
+      "estimate": 3,
+      "status": "Backlog",
+      "areas": ["frontend", "backend"]
+    },
+
+    {
+      "id": "US-CONTENT-001",
+      "source": "5.1",
+      "epic": "EPIC-CONTENT",
+      "title": "US - Comprendre l'impact du cycle sur le sport",
+      "priority": "P1",
+      "estimate": 8,
+      "status": "Backlog",
+      "areas": ["frontend"]
+    },
+
+    {
+      "id": "US-NOTIFICATION-001",
+      "source": "6.1",
+      "epic": "EPIC-NOTIFICATIONS",
+      "title": "US - Recevoir un rappel d'entraînement",
+      "priority": "P1",
+      "estimate": 5,
+      "status": "Backlog",
+      "areas": ["frontend", "backend"],
+      "technicalRef": "5.1"
+    },
+    {
+      "id": "US-NOTIFICATION-002",
+      "source": "6.2",
+      "epic": "EPIC-NOTIFICATIONS",
+      "title": "US - Recevoir des notifications sociales",
+      "priority": "P3",
+      "estimate": 5,
+      "status": "Backlog",
+      "areas": ["frontend", "backend"]
+    },
+    {
+      "id": "US-NOTIFICATION-003",
+      "source": "6.3",
+      "epic": "EPIC-NOTIFICATIONS",
+      "title": "US - Recevoir des conseils liés au cycle",
+      "priority": "P1",
+      "estimate": 5,
+      "status": "Backlog",
+      "areas": ["frontend", "backend"]
+    }
+  ],
+  "technical": [
+    {
+      "id": "TECH-PLATFORM-001",
+      "title": "TECH - Initialiser les socles mobile, API et PostgreSQL",
+      "area": "platform",
+      "status": "Done",
+      "completedOn": "2026-05-21",
+      "summary": "Initialiser Expo, Fastify, Drizzle et PostgreSQL dans un workspace commun."
+    },
+    {
+      "id": "TECH-DESIGN-001",
+      "title": "TECH - Mettre en place le design system Maïa",
+      "area": "frontend",
+      "status": "Done",
+      "completedOn": "2026-06-11",
+      "summary": "Centraliser la charte, les couleurs, les typographies, les espacements et les composants de marque."
+    },
+    {
+      "id": "TECH-INFRA-001",
+      "title": "TECH - Conteneuriser la preview avec Docker et Nginx",
+      "area": "infra",
+      "status": "Done",
+      "completedOn": "2026-09-10",
+      "summary": "Relier le frontend, l'API et PostgreSQL derrière une gateway locale reproductible."
+    },
+    {
+      "id": "TECH-QUALITY-001",
+      "title": "TECH - Automatiser lint, tests et builds",
+      "area": "ci",
+      "status": "Done",
+      "completedOn": "2026-09-10",
+      "summary": "Exécuter automatiquement les contrôles de qualité, les tests et les builds Docker."
+    },
+    {
+      "id": "TECH-QUALITY-002",
+      "title": "TECH - Bloquer les PR avec le Quality Gate SonarCloud",
+      "area": "ci",
+      "status": "Done",
+      "completedOn": "2026-09-11",
+      "summary": "Empêcher le merge lorsqu'une analyse SonarCloud échoue ou remonte une issue."
+    },
+    {
+      "id": "TECH-SECURITY-001",
+      "title": "TECH - Retirer les configurations locales sensibles",
+      "area": "security",
+      "status": "Done",
+      "completedOn": "2026-09-11",
+      "summary": "Supprimer du dépôt les configurations locales susceptibles de contenir des secrets."
+    },
+    {
+      "id": "TECH-PRODUCT-001",
+      "title": "TECH - Automatiser le backlog GitHub Projects",
+      "area": "platform",
+      "status": "Review",
+      "summary": "Synchroniser de manière idempotente les EPIC, User Stories, statuts, sprints et vues du Project GitHub."
+    }
+  ]
+}

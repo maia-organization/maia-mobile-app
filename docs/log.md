@@ -281,3 +281,25 @@ et encore au backlog. Aucune Issue et aucun GitHub Project n'ont été créés p
 cette étape.
 
 **Chantier concerné :** organisation produit et automatisation du backlog.
+
+## 1er octobre 2026 - Pilotage produit dans GitHub
+
+### Automatisation du backlog et du Project
+
+J'ai transformé les spécifications fonctionnelles et le journal historique en un
+manifeste versionné comprenant 6 EPIC, 36 User Stories et 7 chantiers techniques.
+J'ai créé une synchronisation idempotente qui contrôle les doublons, gère les
+labels et alimente le Project GitHub avec les statuts, priorités, estimations,
+sprints et dates.
+
+J'ai initialisé le Project `Maïa - Produit` avec ses vues Kanban et Roadmap. Les
+48 éléments issus de l'historique sont importés et une Issue technique suit cette
+automatisation pendant sa revue. J'ai aussi formalisé dans `AGENTS.md` le cycle à
+suivre avant chaque modification : retrouver le ticket, contrôler ses critères,
+actualiser son statut et journaliser le travail dans la même pull request.
+
+**Chantier concerné :** `TECH-PRODUCT-001`, organisation produit et suivi du
+développement.
+
+**Vérifications :** lint, formatage, dry-run sans doublon, 48 Issues et 48 cartes
+GitHub contrôlées avant l'ajout du ticket de cette automatisation.

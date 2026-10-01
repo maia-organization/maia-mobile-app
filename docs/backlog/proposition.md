@@ -15,8 +15,7 @@ Sources analysées :
 Statuts proposés :
 
 - `Done` : fonctionnalité utilisable ou chantier technique terminé ;
-- `In Progress` : une partie existe, mais les critères complets ne sont pas encore
-  satisfaits ;
+- `Todo` : une partie existe déjà et le travail restant est prêt à être planifié ;
 - `Backlog` : aucune implémentation significative identifiée.
 
 ## EPIC proposés
@@ -38,29 +37,29 @@ signalement et à la modération, est rattaché à l'EPIC Communauté.
 
 ### EPIC Profil
 
-| Identifiant          | Titre de l'Issue                                    | Priorité | Estimation | Statut      |
-| -------------------- | --------------------------------------------------- | -------- | ---------: | ----------- |
-| `US-AUTH-001`        | US - Créer un compte                                | P0       |          5 | Done        |
-| `US-AUTH-002`        | US - Se connecter                                   | P0       |          3 | Done        |
-| `US-AUTH-003`        | US - Se déconnecter                                 | P0       |          2 | Done        |
-| `US-PROFILE-001`     | US - Modifier son profil                            | P0       |          5 | In Progress |
-| `US-PROFILE-002`     | US - Consulter son profil                           | P0       |          3 | In Progress |
-| `US-AUTH-004`        | US - Réinitialiser son mot de passe                 | P1       |          5 | Backlog     |
-| `US-PREFERENCES-001` | US - Gérer ses préférences de notifications         | P1       |          3 | In Progress |
-| `US-ONBOARDING-001`  | US - Découvrir Maïa lors de la première utilisation | P0       |          5 | In Progress |
-| `US-ACCOUNT-001`     | US - Supprimer son compte et ses données            | P1       |          5 | Backlog     |
-| `US-PRIVACY-001`     | US - Contrôler la confidentialité de ses données    | P1       |          5 | Backlog     |
+| Identifiant          | Titre de l'Issue                                    | Priorité | Estimation | Statut  |
+| -------------------- | --------------------------------------------------- | -------- | ---------: | ------- |
+| `US-AUTH-001`        | US - Créer un compte                                | P0       |          5 | Done    |
+| `US-AUTH-002`        | US - Se connecter                                   | P0       |          3 | Done    |
+| `US-AUTH-003`        | US - Se déconnecter                                 | P0       |          2 | Done    |
+| `US-PROFILE-001`     | US - Modifier son profil                            | P0       |          5 | Todo    |
+| `US-PROFILE-002`     | US - Consulter son profil                           | P0       |          3 | Todo    |
+| `US-AUTH-004`        | US - Réinitialiser son mot de passe                 | P1       |          5 | Backlog |
+| `US-PREFERENCES-001` | US - Gérer ses préférences de notifications         | P1       |          3 | Todo    |
+| `US-ONBOARDING-001`  | US - Découvrir Maïa lors de la première utilisation | P0       |          5 | Todo    |
+| `US-ACCOUNT-001`     | US - Supprimer son compte et ses données            | P1       |          5 | Backlog |
+| `US-PRIVACY-001`     | US - Contrôler la confidentialité de ses données    | P1       |          5 | Backlog |
 
 ### EPIC Cycle
 
-| Identifiant            | Titre de l'Issue                                 | Priorité | Estimation | Statut      |
-| ---------------------- | ------------------------------------------------ | -------- | ---------: | ----------- |
-| `US-CYCLE-001`         | US - Renseigner et mettre à jour son cycle       | P0       |          5 | In Progress |
-| `US-CYCLE-002`         | US - Recevoir une recommandation personnalisée   | P0       |          8 | In Progress |
-| `US-FEEDBACK-001`      | US - Indiquer son ressenti après une séance      | P0       |          5 | In Progress |
-| `US-CYCLE-003`         | US - Visualiser les phases de son cycle          | P0       |          5 | In Progress |
-| `US-WORKOUT-ADAPT-001` | US - Adapter manuellement une séance recommandée | P1       |          5 | Backlog     |
-| `US-SYMPTOMS-001`      | US - Renseigner ses symptômes                    | P1       |          5 | Backlog     |
+| Identifiant            | Titre de l'Issue                                 | Priorité | Estimation | Statut  |
+| ---------------------- | ------------------------------------------------ | -------- | ---------: | ------- |
+| `US-CYCLE-001`         | US - Renseigner et mettre à jour son cycle       | P0       |          5 | Todo    |
+| `US-CYCLE-002`         | US - Recevoir une recommandation personnalisée   | P0       |          8 | Todo    |
+| `US-FEEDBACK-001`      | US - Indiquer son ressenti après une séance      | P0       |          5 | Todo    |
+| `US-CYCLE-003`         | US - Visualiser les phases de son cycle          | P0       |          5 | Todo    |
+| `US-WORKOUT-ADAPT-001` | US - Adapter manuellement une séance recommandée | P1       |          5 | Backlog |
+| `US-SYMPTOMS-001`      | US - Renseigner ses symptômes                    | P1       |          5 | Backlog |
 
 ### EPIC Communauté
 
@@ -76,17 +75,17 @@ signalement et à la modération, est rattaché à l'EPIC Communauté.
 
 ### EPIC Entraînement
 
-| Identifiant         | Titre de l'Issue                                   | Priorité | Estimation | Statut      |
-| ------------------- | -------------------------------------------------- | -------- | ---------: | ----------- |
-| `US-WORKOUT-001`    | US - Voir l'entraînement du jour                   | P0       |          5 | In Progress |
-| `US-SESSION-001`    | US - Lancer, mettre en pause et arrêter une séance | P0       |          8 | In Progress |
-| `US-SESSION-002`    | US - Marquer un entraînement comme terminé         | P0       |          3 | In Progress |
-| `US-STATS-001`      | US - Consulter ses statistiques                    | P0       |          5 | In Progress |
-| `US-HISTORY-001`    | US - Consulter l'historique des entraînements      | P0       |          5 | In Progress |
-| `US-PLANNING-001`   | US - Planifier ses séances                         | P1       |          8 | Backlog     |
-| `US-SUMMARY-001`    | US - Recevoir un résumé après une séance           | P0       |          5 | Backlog     |
-| `US-GOAL-001`       | US - Définir un objectif hebdomadaire              | P1       |          5 | Backlog     |
-| `US-MOTIVATION-001` | US - Recevoir des encouragements personnalisés     | P1       |          3 | Backlog     |
+| Identifiant         | Titre de l'Issue                                   | Priorité | Estimation | Statut  |
+| ------------------- | -------------------------------------------------- | -------- | ---------: | ------- |
+| `US-WORKOUT-001`    | US - Voir l'entraînement du jour                   | P0       |          5 | Todo    |
+| `US-SESSION-001`    | US - Lancer, mettre en pause et arrêter une séance | P0       |          8 | Todo    |
+| `US-SESSION-002`    | US - Marquer un entraînement comme terminé         | P0       |          3 | Todo    |
+| `US-STATS-001`      | US - Consulter ses statistiques                    | P0       |          5 | Todo    |
+| `US-HISTORY-001`    | US - Consulter l'historique des entraînements      | P0       |          5 | Todo    |
+| `US-PLANNING-001`   | US - Planifier ses séances                         | P1       |          8 | Backlog |
+| `US-SUMMARY-001`    | US - Recevoir un résumé après une séance           | P0       |          5 | Backlog |
+| `US-GOAL-001`       | US - Définir un objectif hebdomadaire              | P1       |          5 | Backlog |
+| `US-MOTIVATION-001` | US - Recevoir des encouragements personnalisés     | P1       |          3 | Backlog |
 
 ### EPIC Contenu
 

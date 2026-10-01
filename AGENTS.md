@@ -66,6 +66,22 @@ Responsable de Docker, Nginx, GitHub Actions, SonarCloud et des secrets.
 - Une US comprend au minimum la persona, le besoin, le bénéfice et les critères
   d'acceptation. Les tâches techniques ne sont ajoutées que si elles sont utiles.
 
+## Cycle d'une modification
+
+Pour chaque demande qui modifie le produit ou son infrastructure :
+
+1. chercher l'US ou l'Issue technique correspondante avant de toucher au code ;
+2. comparer la demande aux critères de l'Issue et signaler les écarts utiles ;
+3. passer son statut à `In Progress` dans le manifeste et synchroniser le Project ;
+4. inclure l'identifiant stable dans la branche, la PR et les commits concernés ;
+5. mettre à jour `docs/log.md` et les critères réellement satisfaits ;
+6. passer l'Issue à `Review` lors de la PR, puis à `Done` uniquement après
+   validation et merge.
+
+Si aucune Issue ne correspond, préparer d'abord une nouvelle US, vérifier les
+doublons et la présenter avant sa création. Un commit purement documentaire peut
+utiliser une Issue technique regroupée lorsque cela reste cohérent.
+
 ## Journal de développement
 
 Toute modification du code, de l'infrastructure, de la CI/CD, des dépendances ou
