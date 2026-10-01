@@ -50,6 +50,41 @@ async function run() {
     );
 
     const authorization = { authorization: `Bearer ${token}` };
+    const profileResponse = await app.inject({
+      headers: authorization,
+      method: 'GET',
+      url: '/users/me'
+    });
+    assert.equal(profileResponse.statusCode, 200, profileResponse.body);
+    assert.equal(profileResponse.json().data.user.id, user.id);
+
+    const profileUpdateResponse = await app.inject({
+      headers: authorization,
+      method: 'PUT',
+      payload: {
+        birthdate: '1994-05-12',
+        cycle_length: 30,
+        cycle_start_date: '2026-09-01',
+        goal: 'endurance',
+        height: 168,
+        level: 'intermediaire',
+        weight: 62
+      },
+      url: '/users/me'
+    });
+    assert.equal(profileUpdateResponse.statusCode, 200, profileUpdateResponse.body);
+    assert.equal(profileUpdateResponse.json().data.user.goal, 'endurance');
+    assert.equal(profileUpdateResponse.json().data.user.cycleLength, 30);
+
+    const updatedProfileResponse = await app.inject({
+      headers: authorization,
+      method: 'GET',
+      url: '/users/me'
+    });
+    assert.equal(updatedProfileResponse.statusCode, 200, updatedProfileResponse.body);
+    assert.equal(updatedProfileResponse.json().data.user.weight, 62);
+    assert.equal(updatedProfileResponse.json().data.user.level, 'intermediaire');
+
     const cycleViewResponse = await app.inject({
       headers: authorization,
       method: 'GET',

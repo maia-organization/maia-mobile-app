@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { BrandButton } from '../components/BrandButton';
 import { TextField } from '../components/TextField';
@@ -45,21 +46,42 @@ export function ProfileSetupScreen({ navigation }) {
     setError('');
     setSuccess('');
   };
+  const selectOption = (setter, value) => {
+    setter(value);
+    setError('');
+    setSuccess('');
+  };
 
-  useEffect(() => {
-    getProfile()
-      .then(({ user }) => {
-        setBirthdate(user.birthdate || '');
-        setWeight(String(user.weight || ''));
-        setHeight(String(user.height || ''));
-        setLevel(user.level || 'debutante');
-        setGoal(user.goal || 'regularite');
-        setCycleStartDate(user.cycleStartDate || '');
-        setCycleLength(String(user.cycleLength || 28));
-      })
-      .catch((nextError) => setError(nextError.message))
-      .finally(() => setIsLoading(false));
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+      setError('');
+      setSuccess('');
+      setIsLoading(true);
+
+      getProfile()
+        .then(({ user }) => {
+          if (!isActive) return;
+          setBirthdate(user.birthdate || '');
+          setWeight(String(user.weight || ''));
+          setHeight(String(user.height || ''));
+          setLevel(user.level || 'debutante');
+          setGoal(user.goal || 'regularite');
+          setCycleStartDate(user.cycleStartDate || '');
+          setCycleLength(String(user.cycleLength || 28));
+        })
+        .catch((nextError) => {
+          if (isActive) setError(nextError.message);
+        })
+        .finally(() => {
+          if (isActive) setIsLoading(false);
+        });
+
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
 
   const handleSave = async () => {
     setError('');
@@ -83,8 +105,8 @@ export function ProfileSetupScreen({ navigation }) {
         level,
         weight: Number(weight)
       });
-      setSuccess('Profil sauvegardé.');
-      navigation.navigate('Home');
+      setSuccess('Profil sauvegardé. Tes prochaines recommandations utiliseront ces informations.');
+      setShowValidation(false);
     } catch (nextError) {
       setError(nextError.message);
     } finally {
@@ -161,7 +183,7 @@ export function ProfileSetupScreen({ navigation }) {
               {levels.map((option) => (
                 <BrandButton
                   key={option.value}
-                  onPress={() => setLevel(option.value)}
+                  onPress={() => selectOption(setLevel, option.value)}
                   variant={level === option.value ? 'secondary' : 'ghost'}
                 >
                   {option.label}
@@ -176,7 +198,7 @@ export function ProfileSetupScreen({ navigation }) {
               {goals.map((option) => (
                 <BrandButton
                   key={option.value}
-                  onPress={() => setGoal(option.value)}
+                  onPress={() => selectOption(setGoal, option.value)}
                   variant={goal === option.value ? 'secondary' : 'ghost'}
                 >
                   {option.label}
@@ -217,16 +239,24 @@ export function ProfileSetupScreen({ navigation }) {
             value={cycleLength}
           />
 
-          {error ? <Text style={styles.error}>{error}</Text> : null}
-          {success ? <Text style={styles.success}>{success}</Text> : null}
+          {error ? (
+            <Text accessibilityLiveRegion="polite" style={styles.error}>
+              {error}
+            </Text>
+          ) : null}
+          {success ? (
+            <Text accessibilityLiveRegion="polite" style={styles.success}>
+              {success}
+            </Text>
+          ) : null}
         </View>
 
         <View style={styles.actions}>
           <BrandButton disabled={isSaving} onPress={handleSave}>
             {isSaving ? 'Sauvegarde...' : 'Sauvegarder mon profil'}
           </BrandButton>
-          <BrandButton onPress={() => navigation.goBack()} variant="ghost">
-            Plus tard
+          <BrandButton onPress={() => navigation.navigate('Home')} variant="ghost">
+            Retour à l'accueil
           </BrandButton>
         </View>
       </ScrollView>

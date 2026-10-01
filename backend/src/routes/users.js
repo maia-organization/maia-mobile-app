@@ -2,13 +2,8 @@ const { eq } = require('drizzle-orm');
 
 const { db } = require('../db');
 const { cycles, users } = require('../db/schema');
+const { buildProfilePayload, isValidProfile } = require('../utils/profile');
 const { errorResponse, successResponse } = require('../utils/response');
-const {
-  ALLOWED_GOALS,
-  ALLOWED_LEVELS,
-  isNumberInRange,
-  isValidIsoDate
-} = require('../utils/validation');
 
 const selectUserProfile = {
   birthdate: users.birthdate,
@@ -22,31 +17,6 @@ const selectUserProfile = {
   name: users.name,
   weight: users.weight
 };
-
-function buildProfilePayload(body = {}) {
-  return {
-    birthdate: body.birthdate,
-    cycleLength: Number(body.cycle_length),
-    cycleStartDate: body.cycle_start_date,
-    goal: typeof body.goal === 'string' ? body.goal.trim() : '',
-    height: Number(body.height),
-    level: typeof body.level === 'string' ? body.level.trim() : '',
-    weight: Number(body.weight)
-  };
-}
-
-function isValidProfile(payload) {
-  return (
-    isValidIsoDate(payload.birthdate) &&
-    isNumberInRange(payload.weight, 30, 300) &&
-    isNumberInRange(payload.height, 120, 230) &&
-    ALLOWED_LEVELS.has(payload.level) &&
-    ALLOWED_GOALS.has(payload.goal) &&
-    isValidIsoDate(payload.cycleStartDate) &&
-    Number.isInteger(payload.cycleLength) &&
-    isNumberInRange(payload.cycleLength, 21, 40)
-  );
-}
 
 module.exports = async function userRoutes(app) {
   app.get('/me', { preHandler: app.authenticate }, async (request, reply) => {
@@ -72,32 +42,38 @@ module.exports = async function userRoutes(app) {
         .send(errorResponse('VALIDATION_ERROR', 'Vérifie les champs profil et cycle.'));
     }
 
-    const [updatedUser] = await db
-      .update(users)
-      .set({
-        birthdate: payload.birthdate,
-        cycleLength: payload.cycleLength,
-        cycleStartDate: payload.cycleStartDate,
-        goal: payload.goal,
-        height: payload.height,
-        level: payload.level,
-        weight: payload.weight
-      })
-      .where(eq(users.id, request.user.sub))
-      .returning(selectUserProfile);
+    const updatedUser = await db.transaction(async (transaction) => {
+      const [user] = await transaction
+        .update(users)
+        .set({
+          birthdate: payload.birthdate,
+          cycleLength: payload.cycleLength,
+          cycleStartDate: payload.cycleStartDate,
+          goal: payload.goal,
+          height: payload.height,
+          level: payload.level,
+          weight: payload.weight
+        })
+        .where(eq(users.id, request.user.sub))
+        .returning(selectUserProfile);
+
+      if (!user) return null;
+
+      await transaction
+        .update(cycles)
+        .set({
+          cycleLength: payload.cycleLength,
+          cycleStartDate: payload.cycleStartDate,
+          lastUpdated: new Date()
+        })
+        .where(eq(cycles.userId, request.user.sub));
+
+      return user;
+    });
 
     if (!updatedUser) {
       return reply.status(404).send(errorResponse('USER_NOT_FOUND', 'Utilisateur introuvable.'));
     }
-
-    await db
-      .update(cycles)
-      .set({
-        cycleLength: payload.cycleLength,
-        cycleStartDate: payload.cycleStartDate,
-        lastUpdated: new Date()
-      })
-      .where(eq(cycles.userId, request.user.sub));
 
     return successResponse({ user: updatedUser });
   });

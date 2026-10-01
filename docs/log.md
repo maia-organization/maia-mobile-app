@@ -311,6 +311,25 @@ ne collecte actuellement que pour le backend.
 **Commits :** `d8227d8`, `5048134`, `85d78ec` et `8531088`, fusionnés par la
 pull request `#61` (`acff9c9`).
 
+### Finalisation de la modification du profil
+
+J'ai terminé le parcours mobile de modification du profil. Les informations sont
+rechargées à chaque ouverture, les changements de champs et d'options effacent
+les anciens messages, et la confirmation de sauvegarde reste visible avant le
+retour à l'accueil.
+
+Côté API, j'ai regroupé la mise à jour du profil et du cycle dans une transaction
+PostgreSQL afin d'éviter un enregistrement partiel. J'ai isolé la validation du
+profil et ajouté des tests sur les valeurs autorisées, la protection JWT de la
+route et le rejet des données invalides.
+
+**Fonctionnalité concernée :** `US-PROFILE-001`, modification du profil.
+
+**Vérifications :** lint, 30 tests Jest, smoke test avec PostgreSQL, reconstruction
+Docker et parcours Playwright sur un viewport mobile de 390 x 844 pixels.
+
+**Commits :** `dc5e41a` et `268b892`.
+
 ### Mesure de la couverture backend dans SonarCloud
 
 J'ai complété le job SonarCloud pour qu'il exécute les tests Jest avec couverture
