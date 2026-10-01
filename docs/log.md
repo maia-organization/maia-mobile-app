@@ -329,3 +329,12 @@ route et le rejet des données invalides.
 Docker et parcours Playwright sur un viewport mobile de 390 x 844 pixels.
 
 **Commits :** `dc5e41a` et `268b892`.
+
+### Mesure de la couverture backend dans SonarCloud
+
+J'ai complété le job SonarCloud pour qu'il exécute les tests Jest avec couverture
+et transmette le rapport `lcov` au scanner. Le frontend reste temporairement hors
+de cette mesure tant que le projet ne dispose pas d'un runner de tests React
+Native ; il continue néanmoins d'être analysé par les autres règles Sonar.
+
+**Chantier concerné :** qualité CI nécessaire à la revue de `US-PROFILE-001`.
