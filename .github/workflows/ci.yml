@@ -30,7 +30,7 @@ jobs:
         run: npm ci
 
       - name: Install backend dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
         working-directory: backend
 
       - name: Install frontend dependencies
