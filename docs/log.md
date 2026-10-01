@@ -304,4 +304,6 @@ développement.
 **Vérifications :** lint, formatage, dry-run sans doublon, 48 Issues et 48 cartes
 GitHub contrôlées avant l'ajout du ticket de cette automatisation. J'ai ensuite
 corrigé les deux alertes de sécurité et de performance signalées par SonarCloud
-sur le script de synchronisation.
+sur le script de synchronisation. Ce script d'orchestration reste analysé par
+SonarCloud, mais il est exclu de la mesure de couverture applicative que le projet
+ne collecte actuellement que pour le backend.
