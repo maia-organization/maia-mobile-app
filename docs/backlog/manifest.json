@@ -484,7 +484,8 @@
       "id": "TECH-PRODUCT-001",
       "title": "TECH - Automatiser le backlog GitHub Projects",
       "area": "platform",
-      "status": "Review",
+      "status": "Done",
+      "completedOn": "2026-10-01",
       "summary": "Synchroniser de manière idempotente les EPIC, User Stories, statuts, sprints et vues du Project GitHub."
     }
   ]

@@ -307,3 +307,6 @@ corrigé les deux alertes de sécurité et de performance signalées par SonarCl
 sur le script de synchronisation. Ce script d'orchestration reste analysé par
 SonarCloud, mais il est exclu de la mesure de couverture applicative que le projet
 ne collecte actuellement que pour le backend.
+
+**Commits :** `d8227d8`, `5048134`, `85d78ec` et `8531088`, fusionnés par la
+pull request `#61` (`acff9c9`).
