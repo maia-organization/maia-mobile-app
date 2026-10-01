@@ -385,6 +385,9 @@ function ensureIssue(item, type, body, maps) {
 
   const shouldClose = item.status === 'Done';
   if (shouldClose && issue.state !== 'CLOSED') {
+    if (type === 'technical') {
+      run(['issue', 'edit', String(issue.number), '--repo', manifest.repository, '--body', body]);
+    }
     run([
       'issue',
       'close',
