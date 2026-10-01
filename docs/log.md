@@ -267,3 +267,43 @@ dans `AGENTS.md` : chaque future modification de code, d'infrastructure ou de CI
 doit compléter ce fichier dans la même pull request.
 
 **Chantier concerné :** documentation et suivi du projet.
+
+### Préparation du backlog automatisé
+
+J'ai défini quatre rôles de travail dans `AGENTS.md` : Product et Backlog,
+Frontend Mobile, Backend et Infrastructure. Chaque rôle connaît les documents de
+référence qu'il doit lire et les limites de son intervention.
+
+J'ai également analysé les spécifications, le journal et le code existant pour
+préparer un dry-run du futur backlog GitHub. La proposition regroupe les doublons,
+normalise les identifiants et distingue les fonctionnalités terminées, partielles
+et encore au backlog. Aucune Issue et aucun GitHub Project n'ont été créés pendant
+cette étape.
+
+**Chantier concerné :** organisation produit et automatisation du backlog.
+
+## 1er octobre 2026 - Pilotage produit dans GitHub
+
+### Automatisation du backlog et du Project
+
+J'ai transformé les spécifications fonctionnelles et le journal historique en un
+manifeste versionné comprenant 6 EPIC, 36 User Stories et 7 chantiers techniques.
+J'ai créé une synchronisation idempotente qui contrôle les doublons, gère les
+labels et alimente le Project GitHub avec les statuts, priorités, estimations,
+sprints et dates.
+
+J'ai initialisé le Project `Maïa - Produit` avec ses vues Kanban et Roadmap. Les
+48 éléments issus de l'historique sont importés et une Issue technique suit cette
+automatisation pendant sa revue. J'ai aussi formalisé dans `AGENTS.md` le cycle à
+suivre avant chaque modification : retrouver le ticket, contrôler ses critères,
+actualiser son statut et journaliser le travail dans la même pull request.
+
+**Chantier concerné :** `TECH-PRODUCT-001`, organisation produit et suivi du
+développement.
+
+**Vérifications :** lint, formatage, dry-run sans doublon, 48 Issues et 48 cartes
+GitHub contrôlées avant l'ajout du ticket de cette automatisation. J'ai ensuite
+corrigé les deux alertes de sécurité et de performance signalées par SonarCloud
+sur le script de synchronisation. Ce script d'orchestration reste analysé par
+SonarCloud, mais il est exclu de la mesure de couverture applicative que le projet
+ne collecte actuellement que pour le backend.

@@ -11,6 +11,8 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
+    "backlog:plan": "node scripts/backlog/sync.mjs",
+    "backlog:sync": "node scripts/backlog/sync.mjs --apply",
     "prepare": "husky",
     "setup": "npm run setup:backend && npm run setup:frontend",
     "setup:backend": "npm --prefix backend install",

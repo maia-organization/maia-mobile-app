@@ -36,6 +36,16 @@ module.exports = [
     }
   },
   {
+    files: ['scripts/**/*.mjs'],
+    languageOptions: {
+      ecmaVersion: 2023,
+      globals: {
+        ...globals.node
+      },
+      sourceType: 'module'
+    }
+  },
+  {
     files: ['backend/**/*.test.js'],
     languageOptions: {
       globals: {
