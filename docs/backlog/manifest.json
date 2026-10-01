@@ -89,7 +89,7 @@
       "title": "US - Modifier son profil",
       "priority": "P0",
       "estimate": 5,
-      "status": "Review",
+      "status": "Done",
       "areas": ["frontend", "backend"],
       "technicalRef": "1.3"
     },
