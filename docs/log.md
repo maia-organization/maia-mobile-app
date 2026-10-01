@@ -310,3 +310,12 @@ ne collecte actuellement que pour le backend.
 
 **Commits :** `d8227d8`, `5048134`, `85d78ec` et `8531088`, fusionnés par la
 pull request `#61` (`acff9c9`).
+
+### Mesure de la couverture backend dans SonarCloud
+
+J'ai complété le job SonarCloud pour qu'il exécute les tests Jest avec couverture
+et transmette le rapport `lcov` au scanner. Le frontend reste temporairement hors
+de cette mesure tant que le projet ne dispose pas d'un runner de tests React
+Native ; il continue néanmoins d'être analysé par les autres règles Sonar.
+
+**Chantier concerné :** qualité CI nécessaire à la revue de `US-PROFILE-001`.
