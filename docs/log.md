@@ -405,3 +405,20 @@ consultation, la validation et la sauvegarde du cycle.
 
 **Commits :** `5698f9a`, `129653a`, `b0b2f73`, `8be2a68`, fusionnés dans
 `develop` par la pull request `#68` (`80db991`).
+
+## 2 octobre 2026 - Recommandation personnalisée
+
+### Séance quotidienne adaptée
+
+J'ai relié l'accueil à la recommandation quotidienne afin d'afficher une séance
+de course personnalisée avec son titre, sa durée, son intensité et la phase de
+cycle prise en compte. L'écran prévoit aussi les états de chargement et d'erreur
+pour que la recommandation reste compréhensible lorsque l'API est indisponible.
+
+J'ai ajouté les tests de la route protégée de recommandation pour vérifier le
+retour de la séance sauvegardée et l'unicité de la création quotidienne.
+
+**Fonctionnalité concernée :** `US-CYCLE-002`, recommandation d'entraînement
+personnalisée.
+
+**Vérifications :** tests Jest backend, lint et formatage.

@@ -36,6 +36,10 @@ export function getCycleView() {
   return requestUser('/cycle/view');
 }
 
+export function getTodayWorkout() {
+  return requestUser('/workouts/today');
+}
+
 export function updateCycle(payload) {
   return requestUser('/cycle', {
     body: JSON.stringify(payload),
