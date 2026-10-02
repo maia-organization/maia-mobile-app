@@ -197,7 +197,8 @@
       "title": "US - Visualiser les phases de son cycle",
       "priority": "P0",
       "estimate": 5,
-      "status": "Review",
+      "status": "Done",
+      "completedOn": "2026-10-02",
       "areas": ["frontend", "backend"],
       "technicalRef": "2.3"
     },

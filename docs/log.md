@@ -454,3 +454,6 @@ projections menstruelle et ovulatoire utilisées par l'interface.
 
 **Vérifications :** tests Jest ciblés des services et routes Cycle, lint et
 formatage.
+
+**Commits :** `465c84b`, `c95e76a`, fusionnés dans `develop` par la pull request
+`#71` (`935eb26`).
