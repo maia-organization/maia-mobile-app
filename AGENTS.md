@@ -13,6 +13,8 @@ Appliquer uniquement les sections pertinentes pour la tâche en cours.
 - Commencer par les tests et vérifications ciblés avant d'élargir la validation.
 - Ne pas créer ou déléguer à plusieurs agents lorsqu'un seul contexte de travail suffit.
 - Signaler avant modification tout changement important de contrat API, schéma de données ou architecture qui n'est pas explicitement demandé.
+- Toute promesse déclenchée doit être attendue, terminée par un gestionnaire de
+  rejet ou explicitement ignorée avec l'opérateur `void`.
 
 ## Product et Backlog
 

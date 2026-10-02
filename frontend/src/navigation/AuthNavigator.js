@@ -32,17 +32,24 @@ export function AuthNavigator() {
   useEffect(() => {
     let isMounted = true;
 
-    getAuthToken()
-      .then((storedToken) => {
+    const restoreSession = async () => {
+      try {
+        const storedToken = await getAuthToken();
         if (isMounted) {
           setToken(storedToken);
         }
-      })
-      .finally(() => {
+      } catch {
+        if (isMounted) {
+          setToken(null);
+        }
+      } finally {
         if (isMounted) {
           setIsReady(true);
         }
-      });
+      }
+    };
+
+    void restoreSession();
 
     return () => {
       isMounted = false;
