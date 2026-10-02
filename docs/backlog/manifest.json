@@ -302,7 +302,7 @@
       "title": "US - Voir l'entraînement du jour",
       "priority": "P0",
       "estimate": 5,
-      "status": "Todo",
+      "status": "In Progress",
       "areas": ["frontend", "backend"],
       "technicalRef": "4.1"
     },

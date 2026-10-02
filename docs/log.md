@@ -457,3 +457,14 @@ formatage.
 
 **Commits :** `465c84b`, `c95e76a`, fusionnés dans `develop` par la pull request
 `#71` (`935eb26`).
+
+## 2 octobre 2026 - Entraînement du jour
+
+### Consolidation de l'US-WORKOUT-001
+
+J'ai validé que la séance quotidienne est déjà disponible depuis le tableau de
+bord : elle affiche le type, la durée et l'intensité, et s'adapte à la phase du
+cycle. Cette couverture a été livrée avec `US-CYCLE-002`; je l'ai rattachée à
+`US-WORKOUT-001` pour conserver un suivi backlog fidèle sans dupliquer le code.
+
+**Vérifications :** 44 tests Jest backend, lint et formatage.
