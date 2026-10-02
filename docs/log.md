@@ -486,3 +486,6 @@ segments parcourus pendant une pause ne sont pas comptabilisés.
 
 **Vérifications :** tests Jest ciblés du calcul des métriques, lint et
 formatage.
+
+**Commits :** `c8a91ee`, fusionné dans `develop` par la pull request `#73`
+(`f794db7`).
