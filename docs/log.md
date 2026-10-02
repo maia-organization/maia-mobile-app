@@ -402,3 +402,6 @@ consultation, la validation et la sauvegarde du cycle.
 **Fonctionnalité concernée :** `US-CYCLE-001`, gestion du cycle menstruel.
 
 **Vérifications :** tests Jest backend, lint, formatage et export Expo Web.
+
+**Commits :** `5698f9a`, `129653a`, `b0b2f73`, `8be2a68`, fusionnés dans
+`develop` par la pull request `#68` (`80db991`).
