@@ -1,32 +1,70 @@
-import { Image, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useCallback, useState } from 'react';
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { BrandButton } from '../components/BrandButton';
+import { getTodayWorkout } from '../services/userApi';
 import { colors, fonts, radius, spacing, type } from '../theme';
 
 const maiaIcon = require('../../assets/maia-app-icon.png');
 
-const nextSteps = [
-  {
-    label: 'Profil',
-    text: 'Renseigner niveau, objectif et rythme.'
-  },
-  {
-    label: 'Cycle',
-    text: 'Ajouter la date des dernières règles.'
-  },
-  {
-    label: 'Run',
-    text: 'Voir la première séance adaptée.'
-  }
-];
+const intensityLabels = {
+  high: 'Élevée',
+  low: 'Douce',
+  moderate: 'Modérée',
+  progressive: 'Progressive'
+};
 
 export function HomeScreen({ navigation, onLogout }) {
+  const [error, setError] = useState('');
+  const [isLoadingWorkout, setIsLoadingWorkout] = useState(true);
+  const [workout, setWorkout] = useState(null);
+
+  const loadWorkout = useCallback(() => {
+    let isActive = true;
+    setError('');
+    setIsLoadingWorkout(true);
+
+    getTodayWorkout()
+      .then((nextWorkout) => {
+        if (isActive) setWorkout(nextWorkout);
+      })
+      .catch((nextError) => {
+        if (isActive) setError(nextError.message);
+      })
+      .finally(() => {
+        if (isActive) setIsLoadingWorkout(false);
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
+
+  useFocusEffect(loadWorkout);
+
   const handleLogout = async () => {
     await onLogout();
     navigation.reset({
       index: 0,
       routes: [{ name: 'Welcome' }]
     });
+  };
+
+  const handleStartWorkout = () => {
+    Alert.alert(
+      'Ta séance est prête',
+      'Prends le temps de t’échauffer, puis lance-toi à ton rythme.'
+    );
   };
 
   return (
@@ -39,25 +77,48 @@ export function HomeScreen({ navigation, onLogout }) {
 
         <View style={styles.content}>
           <View style={styles.hero}>
-            <Text style={styles.title}>Bienvenue dans l'aventure.</Text>
+            <Text style={styles.title}>Ta séance du jour.</Text>
             <Text style={styles.subtitle}>
-              Ton compte est prêt. On va maintenant personnaliser Maïa autour de ton corps.
+              Une recommandation adaptée à ton niveau, ton objectif et ta phase de cycle.
             </Text>
           </View>
 
-          <View style={styles.todayCard}>
-            <Text style={styles.cardEyebrow}>MVP EN COURS</Text>
-            <Text style={styles.cardTitle}>Prochaine étape : ton profil sportif et ton cycle.</Text>
-          </View>
+          {isLoadingWorkout ? (
+            <View style={styles.todayCard}>
+              <ActivityIndicator color={colors.ink} />
+              <Text style={styles.loadingText}>Préparation de ta séance…</Text>
+            </View>
+          ) : null}
 
-          <View style={styles.stepList}>
-            {nextSteps.map((step) => (
-              <View key={step.label} style={styles.stepButton}>
-                <Text style={styles.stepLabel}>{step.label}</Text>
-                <Text style={styles.stepText}>{step.text}</Text>
+          {error ? (
+            <View style={styles.errorCard}>
+              <Text accessibilityLiveRegion="polite" style={styles.errorText}>
+                {error}
+              </Text>
+              <BrandButton onPress={loadWorkout} variant="secondary">
+                Réessayer
+              </BrandButton>
+            </View>
+          ) : null}
+
+          {workout ? (
+            <View style={styles.todayCard}>
+              <Text style={styles.cardEyebrow}>AUJOURD’HUI · {workout.phase}</Text>
+              <Text style={styles.cardTitle}>{workout.title}</Text>
+              <View style={styles.workoutDetails}>
+                <Text style={styles.detailText}>{workout.duration} minutes</Text>
+                <Text style={styles.detailText}>
+                  Intensité {intensityLabels[workout.intensity] || workout.intensity}
+                </Text>
               </View>
-            ))}
-          </View>
+              {workout.adaptation ? (
+                <Text style={styles.adaptation}>{workout.adaptation}</Text>
+              ) : null}
+              <BrandButton onPress={handleStartWorkout} variant="primary">
+                Lancer ma séance
+              </BrandButton>
+            </View>
+          ) : null}
         </View>
 
         <View style={styles.actions}>
@@ -128,6 +189,25 @@ const styles = StyleSheet.create({
     gap: spacing.md,
     padding: spacing.lg
   },
+  errorCard: {
+    borderColor: colors.rose,
+    borderRadius: radius.sm,
+    borderWidth: 1,
+    gap: spacing.md,
+    padding: spacing.lg
+  },
+  errorText: {
+    color: colors.white,
+    fontFamily: fonts.body,
+    fontSize: 15,
+    lineHeight: 21
+  },
+  loadingText: {
+    color: colors.ink,
+    fontFamily: fonts.strong,
+    fontSize: 16,
+    textAlign: 'center'
+  },
   cardEyebrow: {
     ...type.eyebrow,
     color: colors.ink
@@ -139,28 +219,9 @@ const styles = StyleSheet.create({
     letterSpacing: 0,
     lineHeight: 27
   },
-  stepList: {
-    gap: spacing.md
-  },
-  stepButton: {
-    borderColor: colors.borderLight,
-    borderRadius: radius.sm,
-    borderWidth: 1,
-    gap: spacing.xs,
-    minHeight: 78,
-    padding: spacing.lg
-  },
-  stepLabel: {
-    ...type.eyebrow,
-    color: colors.rose
-  },
-  stepText: {
-    color: colors.white,
-    fontFamily: fonts.body,
-    fontSize: 15,
-    letterSpacing: 0,
-    lineHeight: 21
-  },
+  workoutDetails: { gap: spacing.xs },
+  detailText: { color: colors.ink, fontFamily: fonts.strong, fontSize: 16, lineHeight: 22 },
+  adaptation: { color: colors.ink, fontFamily: fonts.body, fontSize: 15, lineHeight: 21 },
   actions: {
     gap: spacing.md
   }

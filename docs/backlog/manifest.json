@@ -174,7 +174,7 @@
       "title": "US - Recevoir une recommandation personnalisée",
       "priority": "P0",
       "estimate": 8,
-      "status": "Todo",
+      "status": "In Progress",
       "areas": ["frontend", "backend"],
       "technicalRef": "2.2"
     },
