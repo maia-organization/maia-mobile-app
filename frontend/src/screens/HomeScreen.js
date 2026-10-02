@@ -12,7 +12,7 @@ import {
 import { useFocusEffect } from '@react-navigation/native';
 
 import { BrandButton } from '../components/BrandButton';
-import { getTodayWorkout } from '../services/userApi';
+import { getTodayWorkout, startSession } from '../services/userApi';
 import { colors, fonts, radius, spacing, type } from '../theme';
 
 const maiaIcon = require('../../assets/maia-app-icon.png');
@@ -60,11 +60,13 @@ export function HomeScreen({ navigation, onLogout }) {
     });
   };
 
-  const handleStartWorkout = () => {
-    Alert.alert(
-      'Ta séance est prête',
-      'Prends le temps de t’échauffer, puis lance-toi à ton rythme.'
-    );
+  const handleStartWorkout = async () => {
+    try {
+      const { session_id: sessionId } = await startSession();
+      navigation.navigate('Session', { sessionId });
+    } catch (nextError) {
+      Alert.alert('Impossible de démarrer la séance', nextError.message);
+    }
   };
 
   return (
@@ -114,7 +116,7 @@ export function HomeScreen({ navigation, onLogout }) {
               {workout.adaptation ? (
                 <Text style={styles.adaptation}>{workout.adaptation}</Text>
               ) : null}
-              <BrandButton onPress={handleStartWorkout} variant="primary">
+              <BrandButton onPress={() => void handleStartWorkout()} variant="primary">
                 Lancer ma séance
               </BrandButton>
             </View>

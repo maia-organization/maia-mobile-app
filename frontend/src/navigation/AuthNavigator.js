@@ -5,11 +5,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { HomeScreen } from '../screens/HomeScreen';
 import { CycleScreen } from '../screens/CycleScreen';
+import { FeedbackScreen } from '../screens/FeedbackScreen';
 import { LoginScreen } from '../screens/LoginScreen';
 import { OnboardingScreen } from '../screens/OnboardingScreen';
 import { ProfileSetupScreen } from '../screens/ProfileSetupScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { RegisterScreen } from '../screens/RegisterScreen';
+import { SessionScreen } from '../screens/SessionScreen';
 import { WelcomeScreen } from '../screens/WelcomeScreen';
 import { colors } from '../theme';
 import { clearAuthToken, getAuthToken, saveAuthToken } from '../services/authStorage';
@@ -111,6 +113,8 @@ export function AuthNavigator() {
         <Stack.Screen name="Home">
           {(props) => <HomeScreen {...props} onLogout={handleLogout} />}
         </Stack.Screen>
+        <Stack.Screen component={SessionScreen} name="Session" />
+        <Stack.Screen component={FeedbackScreen} name="Feedback" />
         <Stack.Screen component={ProfileSetupScreen} name="ProfileSetup" />
         <Stack.Screen component={ProfileScreen} name="Profile" />
         <Stack.Screen component={CycleScreen} name="Cycle" />

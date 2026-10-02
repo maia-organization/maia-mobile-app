@@ -186,7 +186,7 @@
       "title": "US - Indiquer son ressenti après une séance",
       "priority": "P0",
       "estimate": 5,
-      "status": "Todo",
+      "status": "Review",
       "areas": ["frontend", "backend"]
     },
     {
