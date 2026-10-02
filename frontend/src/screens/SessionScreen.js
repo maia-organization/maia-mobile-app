@@ -3,8 +3,10 @@ import { Alert, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import * as Location from 'expo-location';
 
 import { BrandButton } from '../components/BrandButton';
+import { SessionMetric } from '../components/SessionMetric';
 import { stopSession } from '../services/userApi';
 import { colors, fonts, radius, spacing, type } from '../theme';
+import { formatDistance, formatDuration } from '../utils/sessionFormat';
 
 const EARTH_RADIUS_KM = 6371;
 
@@ -20,17 +22,14 @@ function distanceBetween(first, second) {
   return 2 * EARTH_RADIUS_KM * Math.asin(Math.sqrt(haversine));
 }
 
-function formatDuration(totalSeconds) {
-  const minutes = Math.floor(totalSeconds / 60)
-    .toString()
-    .padStart(2, '0');
-  const seconds = (totalSeconds % 60).toString().padStart(2, '0');
-
-  return `${minutes}:${seconds}`;
-}
-
-function formatDistance(distance) {
-  return `${distance.toFixed(2)} km`;
+// expo-location 19 cannot remove its listeners on web, so the location callback also
+// ignores updates once tracking is paused or stopped.
+function removeLocationSubscription(subscription) {
+  try {
+    subscription?.remove();
+  } catch {
+    // Web only: the listener stays registered and its updates are ignored.
+  }
 }
 
 export function SessionScreen({ navigation, route }) {
@@ -47,7 +46,7 @@ export function SessionScreen({ navigation, route }) {
   const [locationStatus, setLocationStatus] = useState('Connexion au GPS…');
 
   const stopLocationTracking = useCallback(() => {
-    locationSubscription.current?.remove();
+    removeLocationSubscription(locationSubscription.current);
     locationSubscription.current = null;
   }, []);
 
@@ -69,6 +68,8 @@ export function SessionScreen({ navigation, route }) {
           timeInterval: 3000
         },
         (location) => {
+          if (isPausedRef.current) return;
+
           const coordinate = {
             lat: location.coords.latitude,
             lng: location.coords.longitude,
@@ -88,7 +89,7 @@ export function SessionScreen({ navigation, route }) {
       );
 
       if (!isMounted.current || isPausedRef.current) {
-        subscription.remove();
+        removeLocationSubscription(subscription);
         return;
       }
 
@@ -142,8 +143,8 @@ export function SessionScreen({ navigation, route }) {
     stopLocationTracking();
 
     try {
-      await stopSession(route.params.sessionId, coordinates.current);
-      navigation.replace('Feedback', { sessionId: route.params.sessionId });
+      const { session } = await stopSession(route.params.sessionId, coordinates.current);
+      navigation.replace('SessionSummary', { session, sessionId: route.params.sessionId });
     } catch (error) {
       Alert.alert('Impossible d’enregistrer la séance', error.message);
       isPausedRef.current = isPaused;
@@ -162,14 +163,8 @@ export function SessionScreen({ navigation, route }) {
           <Text style={styles.subtitle}>
             Écoute ton corps. Tes données sont enregistrées quand tu termines.
           </Text>
-          <View accessibilityLabel={`Durée ${formatDuration(duration)}`} style={styles.metric}>
-            <Text style={styles.metricLabel}>DURÉE</Text>
-            <Text style={styles.metricValue}>{formatDuration(duration)}</Text>
-          </View>
-          <View accessibilityLabel={`Distance ${formatDistance(distance)}`} style={styles.metric}>
-            <Text style={styles.metricLabel}>DISTANCE</Text>
-            <Text style={styles.metricValue}>{formatDistance(distance)}</Text>
-          </View>
+          <SessionMetric label="Durée" value={formatDuration(duration)} />
+          <SessionMetric label="Distance" value={formatDistance(distance)} />
           <Text accessibilityLiveRegion="polite" style={styles.locationStatus}>
             {locationStatus}
           </Text>
@@ -199,9 +194,6 @@ const styles = StyleSheet.create({
   },
   actions: { gap: spacing.md },
   locationStatus: { color: colors.ink, fontFamily: fonts.body, fontSize: 14, lineHeight: 20 },
-  metric: { borderTopColor: 'rgba(15, 15, 15, 0.18)', borderTopWidth: 1, paddingTop: spacing.md },
-  metricLabel: { ...type.eyebrow, color: colors.ink },
-  metricValue: { color: colors.ink, fontFamily: fonts.heading, fontSize: 32, lineHeight: 38 },
   title: { color: colors.ink, fontFamily: fonts.heading, fontSize: 30, lineHeight: 36 },
   subtitle: { color: colors.ink, fontFamily: fonts.body, fontSize: 17, lineHeight: 25 }
 });

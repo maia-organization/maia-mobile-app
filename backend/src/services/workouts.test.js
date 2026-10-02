@@ -1,4 +1,13 @@
-const { getWorkoutRecommendation } = require('./workouts');
+const { getDayRange, getWorkoutRecommendation } = require('./workouts');
+
+describe('workout day range', () => {
+  test('bounds a recommendation date to its UTC day, across a year boundary', () => {
+    expect(getDayRange('2026-12-31')).toEqual({
+      end: new Date('2027-01-01T00:00:00.000Z'),
+      start: new Date('2026-12-31T00:00:00.000Z')
+    });
+  });
+});
 
 describe('workout recommendation', () => {
   test('reduces effort during the menstrual phase', () => {

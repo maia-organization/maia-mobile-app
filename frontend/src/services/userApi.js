@@ -3,11 +3,13 @@ import { getAuthToken } from './authStorage';
 
 async function requestUser(path, options = {}) {
   const token = await getAuthToken();
+  // Bodiless requests must not declare JSON: Fastify rejects empty JSON bodies with a 400.
+  const contentType = options.body === undefined ? {} : { 'Content-Type': 'application/json' };
   const response = await fetch(`${API_URL}${path}`, {
     ...options,
     headers: {
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
+      ...contentType,
       ...options.headers
     }
   });

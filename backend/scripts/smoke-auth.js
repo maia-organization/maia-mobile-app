@@ -1,10 +1,17 @@
 const assert = require('node:assert/strict');
+const { randomUUID } = require('node:crypto');
 
 const { eq } = require('drizzle-orm');
 
 const { buildApp } = require('../src/app');
 const { db, pool } = require('../src/db');
-const { cycles, notificationSettings, users, workoutRecommendations } = require('../src/db/schema');
+const {
+  cycles,
+  notificationSettings,
+  sessions,
+  users,
+  workoutRecommendations
+} = require('../src/db/schema');
 
 async function run() {
   const app = buildApp();
@@ -110,6 +117,27 @@ async function run() {
     assert.equal(workoutResponse.statusCode, 200, workoutResponse.body);
     assert.equal(workoutResponse.json().data.type, 'run');
     assert.ok(workoutResponse.json().data.duration >= 15);
+    assert.equal(workoutResponse.json().data.completed, false);
+
+    const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    await db.insert(sessions).values({
+      distance: 3,
+      duration: 1200,
+      endTime: new Date(yesterday.getTime() + 1200 * 1000),
+      startTime: yesterday,
+      status: 'completed',
+      userId: user.id
+    });
+    const workoutAfterPastSessionResponse = await app.inject({
+      headers: authorization,
+      method: 'GET',
+      url: '/workouts/today'
+    });
+    assert.equal(
+      workoutAfterPastSessionResponse.json().data.completed,
+      false,
+      'A session completed on another day marked the daily workout as completed.'
+    );
 
     const sessionStartResponse = await app.inject({
       headers: authorization,
@@ -143,6 +171,22 @@ async function run() {
     assert.equal(sessionStopResponse.json().data.session.status, 'completed');
     assert.ok(sessionStopResponse.json().data.session.distance > 0.9);
 
+    const stoppedSessionCompleteResponse = await app.inject({
+      headers: authorization,
+      method: 'PUT',
+      url: `/sessions/${sessionId}/complete`
+    });
+    assert.equal(
+      stoppedSessionCompleteResponse.statusCode,
+      200,
+      stoppedSessionCompleteResponse.body
+    );
+    assert.deepEqual(
+      stoppedSessionCompleteResponse.json().data.session,
+      sessionStopResponse.json().data.session,
+      'Validating a stopped session changed its final statistics.'
+    );
+
     const feedbackResponse = await app.inject({
       headers: authorization,
       method: 'PUT',
@@ -157,7 +201,10 @@ async function run() {
       method: 'GET',
       url: '/workouts/today'
     });
-    assert.deepEqual(repeatedWorkoutResponse.json().data, workoutResponse.json().data);
+    assert.deepEqual(repeatedWorkoutResponse.json().data, {
+      ...workoutResponse.json().data,
+      completed: true
+    });
 
     const recommendations = await db
       .select({ id: workoutRecommendations.id })
@@ -165,13 +212,49 @@ async function run() {
       .where(eq(workoutRecommendations.userId, user.id));
     assert.equal(recommendations.length, 1);
 
+    const untrackedSessionStartResponse = await app.inject({
+      headers: authorization,
+      method: 'POST',
+      url: '/sessions/start'
+    });
+    assert.equal(untrackedSessionStartResponse.statusCode, 201, untrackedSessionStartResponse.body);
+    const untrackedSessionId = untrackedSessionStartResponse.json().data.session_id;
+
+    const untrackedSessionCompleteResponse = await app.inject({
+      headers: authorization,
+      method: 'PUT',
+      url: `/sessions/${untrackedSessionId}/complete`
+    });
+    assert.equal(
+      untrackedSessionCompleteResponse.statusCode,
+      200,
+      untrackedSessionCompleteResponse.body
+    );
+    assert.equal(untrackedSessionCompleteResponse.json().data.session.status, 'completed');
+    assert.equal(untrackedSessionCompleteResponse.json().data.session.distance, 0);
+    assert.ok(untrackedSessionCompleteResponse.json().data.session.end_time);
+
+    const unknownSessionCompleteResponse = await app.inject({
+      headers: authorization,
+      method: 'PUT',
+      url: `/sessions/${randomUUID()}/complete`
+    });
+    assert.equal(
+      unknownSessionCompleteResponse.statusCode,
+      404,
+      unknownSessionCompleteResponse.body
+    );
+
     const historyResponse = await app.inject({
       headers: authorization,
       method: 'GET',
       url: '/sessions?limit=10&offset=0'
     });
     assert.equal(historyResponse.statusCode, 200, historyResponse.body);
-    assert.equal(historyResponse.json().data.sessions.length, 1);
+    const history = historyResponse.json().data.sessions;
+    assert.equal(history.length, 3);
+    assert.equal(history[0].id, untrackedSessionId);
+    assert.ok(history.every((session) => session.status === 'completed'));
 
     const statsResponse = await app.inject({
       headers: authorization,
@@ -179,8 +262,8 @@ async function run() {
       url: '/stats/me'
     });
     assert.equal(statsResponse.statusCode, 200, statsResponse.body);
-    assert.equal(statsResponse.json().data.total_sessions, 1);
-    assert.ok(statsResponse.json().data.total_distance > 0.9);
+    assert.equal(statsResponse.json().data.total_sessions, 3);
+    assert.ok(statsResponse.json().data.total_distance > 3.9);
 
     process.stdout.write('Backend database smoke test passed.\n');
   } finally {
