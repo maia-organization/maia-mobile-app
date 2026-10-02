@@ -3,9 +3,10 @@ import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, View } f
 import { useFocusEffect } from '@react-navigation/native';
 
 import { BrandButton } from '../components/BrandButton';
+import { CycleSettingsForm } from '../components/CycleSettingsForm';
 import { TextField } from '../components/TextField';
 import { getProfile, updateProfile } from '../services/userApi';
-import { colors, fonts, radius, spacing, type } from '../theme';
+import { colors, fonts, spacing, type } from '../theme';
 import { isNumberInRange, isValidIsoDate } from '../utils/validation';
 
 const levels = [
@@ -207,57 +208,21 @@ export function ProfileSetupScreen({ navigation }) {
             </View>
           </View>
 
-          <TextField
-            error={
-              showValidation && !isValidIsoDate(cycleStartDate)
-                ? "Entre une date valide qui n'est pas dans le futur."
-                : ''
-            }
-            helperText="Format : AAAA-MM-JJ"
-            keyboardType="numbers-and-punctuation"
-            label="Début des dernières règles"
-            maxLength={10}
-            onChangeText={updateField(setCycleStartDate)}
-            placeholder="AAAA-MM-JJ"
-            value={cycleStartDate}
+          <CycleSettingsForm
+            cycleLength={cycleLength}
+            cycleStartDate={cycleStartDate}
+            error={error}
+            isSaving={isSaving}
+            onCycleLengthChange={updateField(setCycleLength)}
+            onCycleStartDateChange={updateField(setCycleStartDate)}
+            onSave={handleSave}
+            onSecondaryAction={() => navigation.navigate('Home')}
+            primaryLabel="Sauvegarder mon profil"
+            savingLabel="Sauvegarde..."
+            secondaryLabel="Retour à l'accueil"
+            showValidation={showValidation}
+            success={success}
           />
-          <TextField
-            error={
-              showValidation &&
-              (!Number.isInteger(cycleLengthValue) || !isNumberInRange(cycleLengthValue, 21, 40))
-                ? 'Saisis une durée comprise entre 21 et 40 jours.'
-                : ''
-            }
-            helperText="Entre 21 et 40 jours"
-            keyboardType="number-pad"
-            label="Durée moyenne du cycle"
-            maxLength={2}
-            onChangeText={updateField(setCycleLength)}
-            onSubmitEditing={handleSave}
-            placeholder="28"
-            returnKeyType="done"
-            value={cycleLength}
-          />
-
-          {error ? (
-            <Text accessibilityLiveRegion="polite" style={styles.error}>
-              {error}
-            </Text>
-          ) : null}
-          {success ? (
-            <Text accessibilityLiveRegion="polite" style={styles.success}>
-              {success}
-            </Text>
-          ) : null}
-        </View>
-
-        <View style={styles.actions}>
-          <BrandButton disabled={isSaving} onPress={handleSave}>
-            {isSaving ? 'Sauvegarde...' : 'Sauvegarder mon profil'}
-          </BrandButton>
-          <BrandButton onPress={() => navigation.navigate('Home')} variant="ghost">
-            Retour à l'accueil
-          </BrandButton>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -317,29 +282,5 @@ const styles = StyleSheet.create({
     fontFamily: fonts.strong,
     fontSize: 13,
     letterSpacing: 0
-  },
-  actions: {
-    gap: spacing.md
-  },
-  error: {
-    color: colors.roseLight,
-    fontFamily: fonts.strong,
-    fontSize: 13,
-    letterSpacing: 0,
-    lineHeight: 18,
-    textAlign: 'center'
-  },
-  success: {
-    backgroundColor: colors.honeySoft,
-    borderColor: colors.borderLight,
-    borderRadius: radius.sm,
-    borderWidth: 1,
-    color: colors.honey,
-    fontFamily: fonts.strong,
-    fontSize: 13,
-    letterSpacing: 0,
-    lineHeight: 18,
-    padding: spacing.md,
-    textAlign: 'center'
   }
 });

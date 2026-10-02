@@ -4,6 +4,7 @@ import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { HomeScreen } from '../screens/HomeScreen';
+import { CycleScreen } from '../screens/CycleScreen';
 import { LoginScreen } from '../screens/LoginScreen';
 import { OnboardingScreen } from '../screens/OnboardingScreen';
 import { ProfileSetupScreen } from '../screens/ProfileSetupScreen';
@@ -112,6 +113,7 @@ export function AuthNavigator() {
         </Stack.Screen>
         <Stack.Screen component={ProfileSetupScreen} name="ProfileSetup" />
         <Stack.Screen component={ProfileScreen} name="Profile" />
+        <Stack.Screen component={CycleScreen} name="Cycle" />
       </Stack.Navigator>
     </NavigationContainer>
   );

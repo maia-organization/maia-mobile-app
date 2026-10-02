@@ -183,6 +183,11 @@ export function ProfileScreen({ navigation }) {
             value={displayValue(profile.cycleStartDate)}
           />
           <ProfileItem label="Durée moyenne" value={displayValue(profile.cycleLength, ' jours')} />
+          <View style={styles.cycleAction}>
+            <BrandButton onPress={() => navigation.navigate('Cycle')} variant="secondary">
+              Voir et ajuster mon cycle
+            </BrandButton>
+          </View>
         </ProfileSection>
 
         <ProfileSection title="Mes notifications">
@@ -258,6 +263,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     overflow: 'hidden'
   },
+  cycleAction: { padding: spacing.md },
   item: {
     borderBottomColor: colors.borderLight,
     borderBottomWidth: 1,

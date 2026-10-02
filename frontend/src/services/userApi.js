@@ -32,6 +32,17 @@ export function updateProfile(payload) {
   });
 }
 
+export function getCycleView() {
+  return requestUser('/cycle/view');
+}
+
+export function updateCycle(payload) {
+  return requestUser('/cycle', {
+    body: JSON.stringify(payload),
+    method: 'PUT'
+  });
+}
+
 export function getNotificationSettings() {
   return requestUser('/notifications/settings');
 }
