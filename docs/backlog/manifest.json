@@ -495,7 +495,8 @@
       "id": "TECH-BUGFIX-001",
       "title": "TECH - Fiabiliser les parcours web de séance",
       "area": "frontend",
-      "status": "Review",
+      "status": "Done",
+      "completedOn": "2026-10-02",
       "summary": "Diriger les requêtes web vers l'API configurée, présenter une erreur exploitable si une réponse n'est pas JSON et empêcher le démarrage concurrent d'une même séance."
     }
   ]
