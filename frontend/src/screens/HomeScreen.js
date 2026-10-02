@@ -61,6 +61,9 @@ export function HomeScreen({ navigation, onLogout }) {
         </View>
 
         <View style={styles.actions}>
+          <BrandButton onPress={() => navigation.navigate('Profile')} variant="secondary">
+            Consulter mon profil
+          </BrandButton>
           <BrandButton onPress={() => navigation.navigate('ProfileSetup')}>
             Compléter mon profil
           </BrandButton>

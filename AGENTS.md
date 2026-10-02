@@ -148,9 +148,11 @@ Pour ces changements :
 2. comparer la demande aux critères de l'Issue et signaler les écarts significatifs ;
 3. passer son statut à `In Progress` dans le manifeste et synchroniser le Project lorsque le workflow le nécessite ;
 4. utiliser l'identifiant stable dans la branche, la PR et les commits concernés ;
-5. mettre à jour les critères réellement satisfaits ;
-6. passer l'Issue à `Review` lors de la PR ;
-7. passer l'Issue à `Done` uniquement après validation et merge.
+5. pousser la branche dédiée vers `origin` et ouvrir une PR avant de considérer
+   l'implémentation remise ;
+6. mettre à jour les critères réellement satisfaits ;
+7. passer l'Issue à `Review` lors de la PR ;
+8. passer l'Issue à `Done` uniquement après validation et merge.
 
 Si aucune Issue ne correspond à une fonctionnalité ou un bug planifié, préparer une nouvelle US, vérifier les doublons et présenter le dry-run avant création.
 

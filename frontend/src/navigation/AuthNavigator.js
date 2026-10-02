@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomeScreen } from '../screens/HomeScreen';
 import { LoginScreen } from '../screens/LoginScreen';
 import { ProfileSetupScreen } from '../screens/ProfileSetupScreen';
+import { ProfileScreen } from '../screens/ProfileScreen';
 import { RegisterScreen } from '../screens/RegisterScreen';
 import { WelcomeScreen } from '../screens/WelcomeScreen';
 import { colors } from '../theme';
@@ -87,6 +88,7 @@ export function AuthNavigator() {
           {(props) => <HomeScreen {...props} onLogout={handleLogout} />}
         </Stack.Screen>
         <Stack.Screen component={ProfileSetupScreen} name="ProfileSetup" />
+        <Stack.Screen component={ProfileScreen} name="Profile" />
       </Stack.Navigator>
     </NavigationContainer>
   );

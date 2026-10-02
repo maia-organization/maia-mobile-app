@@ -338,3 +338,18 @@ de cette mesure tant que le projet ne dispose pas d'un runner de tests React
 Native ; il continue néanmoins d'être analysé par les autres règles Sonar.
 
 **Chantier concerné :** qualité CI nécessaire à la revue de `US-PROFILE-001`.
+
+## 1er octobre 2026 - Consultation du profil
+
+### Écran profil en lecture seule
+
+J'ai ajouté l'écran de consultation du profil. Il recharge les données de
+l'utilisatrice à chaque ouverture via `GET /users/me` et les présente de façon
+structurée : informations personnelles, profil sportif et cycle. Un état de
+chargement, un message d'erreur et un accès à la modification du profil sont
+prévus pour assurer un parcours lisible sur mobile.
+
+**Fonctionnalité concernée :** `US-PROFILE-002`, consultation du profil.
+
+**Vérifications :** lint et contrôle du statut `In Progress` de l'Issue #22 dans
+le Project GitHub.

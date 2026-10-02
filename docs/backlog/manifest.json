@@ -100,7 +100,7 @@
       "title": "US - Consulter son profil",
       "priority": "P0",
       "estimate": 3,
-      "status": "Todo",
+      "status": "In Progress",
       "areas": ["frontend", "backend"],
       "technicalRef": "1.4"
     },
