@@ -3,6 +3,7 @@ import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, View } f
 import { useFocusEffect } from '@react-navigation/native';
 
 import { BrandButton } from '../components/BrandButton';
+import { CycleFields } from '../components/CycleFields';
 import { TextField } from '../components/TextField';
 import { getProfile, updateProfile } from '../services/userApi';
 import { colors, fonts, radius, spacing, type } from '../theme';
@@ -207,36 +208,13 @@ export function ProfileSetupScreen({ navigation }) {
             </View>
           </View>
 
-          <TextField
-            error={
-              showValidation && !isValidIsoDate(cycleStartDate)
-                ? "Entre une date valide qui n'est pas dans le futur."
-                : ''
-            }
-            helperText="Format : AAAA-MM-JJ"
-            keyboardType="numbers-and-punctuation"
-            label="Début des dernières règles"
-            maxLength={10}
-            onChangeText={updateField(setCycleStartDate)}
-            placeholder="AAAA-MM-JJ"
-            value={cycleStartDate}
-          />
-          <TextField
-            error={
-              showValidation &&
-              (!Number.isInteger(cycleLengthValue) || !isNumberInRange(cycleLengthValue, 21, 40))
-                ? 'Saisis une durée comprise entre 21 et 40 jours.'
-                : ''
-            }
-            helperText="Entre 21 et 40 jours"
-            keyboardType="number-pad"
-            label="Durée moyenne du cycle"
-            maxLength={2}
-            onChangeText={updateField(setCycleLength)}
+          <CycleFields
+            cycleLength={cycleLength}
+            cycleStartDate={cycleStartDate}
+            onCycleLengthChange={updateField(setCycleLength)}
+            onCycleStartDateChange={updateField(setCycleStartDate)}
             onSubmitEditing={handleSave}
-            placeholder="28"
-            returnKeyType="done"
-            value={cycleLength}
+            showValidation={showValidation}
           />
 
           {error ? (
