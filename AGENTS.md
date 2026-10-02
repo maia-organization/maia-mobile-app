@@ -125,6 +125,18 @@ GH_TOKEN="$(<"$HOME/.config/maia/github-token")" npm run backlog:plan
 GH_TOKEN="$(<"$HOME/.config/maia/github-token")" npm run backlog:sync
 ```
 
+Avant une synchronisation, valider ce jeton sans l'afficher :
+
+```bash
+GH_TOKEN="$(<"$HOME/.config/maia/github-token")" gh api /user --jq .login >/dev/null
+```
+
+Si cette vérification échoue, le jeton du fichier est expiré ou invalide : ne pas
+le transmettre à la synchronisation. Utiliser uniquement un compte `gh` local
+déjà authentifié et autorisé sur l'organisation, après contrôle avec `gh auth
+status`, ou renouveler le jeton organisationnel hors du dépôt. Ne jamais laisser
+`gh` basculer silencieusement entre ces deux contextes pendant une même opération.
+
 - Toujours exécuter et contrôler le dry-run avant `backlog:sync`.
 - Attendre la fin du processus de synchronisation : il traite tous les éléments
   du Project et peut dépasser la durée d'un premier poll du terminal.

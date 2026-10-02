@@ -284,17 +284,9 @@ function localPlan() {
 
 function listIssues() {
   return runJson([
-    'issue',
-    'list',
-    '--repo',
-    manifest.repository,
-    '--state',
-    'all',
-    '--limit',
-    '1000',
-    '--json',
-    'number,title,body,state,url,labels'
-  ]);
+    'api',
+    `repos/${manifest.repository}/issues?state=all&per_page=100&sort=created&direction=asc`
+  ]).filter((item) => !item.pull_request);
 }
 
 function issueMaps(issues) {
