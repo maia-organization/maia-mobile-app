@@ -468,3 +468,6 @@ cycle. Cette couverture a été livrée avec `US-CYCLE-002`; je l'ai rattachée 
 `US-WORKOUT-001` pour conserver un suivi backlog fidèle sans dupliquer le code.
 
 **Vérifications :** 44 tests Jest backend, lint et formatage.
+
+**Commits :** `b181a16`, `7c316a7`, fusionnés dans `develop` par la pull request
+`#72` (`6feb5b0`).
