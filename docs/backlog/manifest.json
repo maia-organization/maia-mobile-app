@@ -324,7 +324,7 @@
       "title": "US - Marquer un entraînement comme terminé",
       "priority": "P0",
       "estimate": 3,
-      "status": "Review",
+      "status": "Done",
       "areas": ["frontend", "backend"],
       "technicalRef": "4.3"
     },
