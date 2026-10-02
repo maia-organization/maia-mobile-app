@@ -5,12 +5,14 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { HomeScreen } from '../screens/HomeScreen';
 import { LoginScreen } from '../screens/LoginScreen';
+import { OnboardingScreen } from '../screens/OnboardingScreen';
 import { ProfileSetupScreen } from '../screens/ProfileSetupScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { RegisterScreen } from '../screens/RegisterScreen';
 import { WelcomeScreen } from '../screens/WelcomeScreen';
 import { colors } from '../theme';
 import { clearAuthToken, getAuthToken, saveAuthToken } from '../services/authStorage';
+import { completeOnboarding, hasCompletedOnboarding } from '../services/onboardingStorage';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +29,7 @@ const navigationTheme = {
 
 export function AuthNavigator() {
   const [token, setToken] = useState(null);
+  const [hasSeenOnboarding, setHasSeenOnboarding] = useState(false);
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
@@ -34,13 +37,18 @@ export function AuthNavigator() {
 
     const restoreSession = async () => {
       try {
-        const storedToken = await getAuthToken();
+        const [storedToken, onboardingCompleted] = await Promise.all([
+          getAuthToken(),
+          hasCompletedOnboarding()
+        ]);
         if (isMounted) {
           setToken(storedToken);
+          setHasSeenOnboarding(onboardingCompleted);
         }
       } catch {
         if (isMounted) {
           setToken(null);
+          setHasSeenOnboarding(false);
         }
       } finally {
         if (isMounted) {
@@ -66,6 +74,11 @@ export function AuthNavigator() {
     setToken(null);
   };
 
+  const handleOnboardingCompleted = async () => {
+    await completeOnboarding();
+    setHasSeenOnboarding(true);
+  };
+
   if (!isReady) {
     return (
       <View style={styles.loading}>
@@ -77,13 +90,16 @@ export function AuthNavigator() {
   return (
     <NavigationContainer theme={navigationTheme}>
       <Stack.Navigator
-        initialRouteName={token ? 'Home' : 'Welcome'}
+        initialRouteName={token ? 'Home' : hasSeenOnboarding ? 'Welcome' : 'Onboarding'}
         screenOptions={{
           animation: 'fade_from_bottom',
           contentStyle: { backgroundColor: colors.ink },
           headerShown: false
         }}
       >
+        <Stack.Screen name="Onboarding">
+          {(props) => <OnboardingScreen {...props} onComplete={handleOnboardingCompleted} />}
+        </Stack.Screen>
         <Stack.Screen component={WelcomeScreen} name="Welcome" />
         <Stack.Screen name="Login">
           {(props) => <LoginScreen {...props} onAuthenticated={handleAuthenticated} />}

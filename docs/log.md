@@ -371,3 +371,17 @@ La mise à jour du réglage global et des catégories est transactionnelle ; le 
 
 **Vérifications :** lint, formatage et 38 tests Jest backend, dont les scénarios
 JWT, validation, lecture et sauvegarde atomique des préférences.
+
+## 2 octobre 2026 - Onboarding
+
+### Découverte de Maïa à la première ouverture
+
+J'ai ajouté un parcours d'onboarding mobile en quatre étapes pour présenter le
+profil, les entraînements, le cycle et la communauté. Chaque étape peut être
+passée et la fin du parcours est conservée localement afin qu'il ne soit plus
+affiché lors des ouvertures suivantes.
+
+**Fonctionnalité concernée :** `US-ONBOARDING-001`, première découverte de
+Maïa.
+
+**Vérifications :** lint, formatage et export Expo Web.
