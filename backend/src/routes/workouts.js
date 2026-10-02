@@ -1,10 +1,28 @@
-const { and, desc, eq } = require('drizzle-orm');
+const { and, desc, eq, gte, lt } = require('drizzle-orm');
 
 const { db } = require('../db');
 const { sessionFeedback, sessions, users, workoutRecommendations } = require('../db/schema');
 const { getCycleView } = require('../services/cycle');
-const { getWorkoutRecommendation } = require('../services/workouts');
+const { getDayRange, getWorkoutRecommendation } = require('../services/workouts');
 const { errorResponse, successResponse } = require('../utils/response');
+
+async function hasCompletedSession(userId, date) {
+  const { end, start } = getDayRange(date);
+  const [session] = await db
+    .select({ id: sessions.id })
+    .from(sessions)
+    .where(
+      and(
+        eq(sessions.userId, userId),
+        eq(sessions.status, 'completed'),
+        gte(sessions.startTime, start),
+        lt(sessions.startTime, end)
+      )
+    )
+    .limit(1);
+
+  return Boolean(session);
+}
 
 module.exports = async function workoutRoutes(app) {
   app.get('/today', { preHandler: app.authenticate }, async (request, reply) => {
@@ -71,6 +89,9 @@ module.exports = async function workoutRoutes(app) {
       )
       .limit(1);
 
-    return successResponse(storedRecommendation);
+    return successResponse({
+      ...storedRecommendation,
+      completed: await hasCompletedSession(request.user.sub, recommendation.date)
+    });
   });
 };

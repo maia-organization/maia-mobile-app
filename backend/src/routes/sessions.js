@@ -49,7 +49,8 @@ async function completeSession(session, coordinates) {
     .where(and(eq(sessions.id, session.id), eq(sessions.status, 'active')))
     .returning(sessionFields);
 
-  return completed;
+  // A concurrent request may have completed the session first: return its stored statistics.
+  return completed ?? sessionFieldsFromRecord(await findSession(session.id, session.userId));
 }
 
 module.exports = async function sessionRoutes(app) {

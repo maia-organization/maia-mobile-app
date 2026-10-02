@@ -489,3 +489,32 @@ formatage.
 
 **Commits :** `c8a91ee`, fusionné dans `develop` par la pull request `#73`
 (`f794db7`).
+
+## 2 octobre 2026 - Validation d'une séance terminée
+
+### Récapitulatif, validation et plan du jour
+
+J'ai ajouté un écran récapitulatif après l'arrêt d'une séance : il affiche la
+durée, la distance et l'allure moyenne calculées par l'API, puis permet de valider
+la séance via `PUT /sessions/{id}/complete` avant le ressenti facultatif. La carte
+de l'entraînement du jour signale désormais une séance terminée par un badge et
+une confirmation, tout en laissant la possibilité de relancer une nouvelle séance.
+
+Côté API, `GET /workouts/today` expose un champ additif `completed`, calculé à
+partir des séances terminées démarrées le jour UTC de la recommandation. La
+validation reste idempotente et renvoie désormais les statistiques enregistrées
+lorsqu'une requête concurrente a déjà terminé la séance.
+
+En testant le parcours dans la preview web, j'ai corrigé deux anomalies qui
+bloquaient les séances : le client déclarait un corps JSON sur des requêtes sans
+corps, que Fastify rejetait en erreur 400 au démarrage comme à la validation, et
+l'arrêt du suivi GPS échouait sur le web car expo-location 19 ne sait pas y retirer
+ses écouteurs.
+
+**Fonctionnalité concernée :** `US-SESSION-002`, marquer un entraînement comme
+terminé.
+
+**Vérifications :** 53 tests Jest backend, smoke test PostgreSQL enrichi (jour de
+la séance, idempotence, séance active terminée, historique et statistiques), lint,
+formatage, expo-doctor, export Expo Web et parcours Playwright sur un viewport
+mobile de 390 x 844 pixels.

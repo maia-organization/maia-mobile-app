@@ -25,6 +25,15 @@ const phaseDurationAdjustment = {
   ovulatory: 10
 };
 
+const DAY_IN_MS = 24 * 60 * 60 * 1000;
+
+// Recommendation dates are UTC days (see getWorkoutRecommendation).
+function getDayRange(date) {
+  const start = new Date(`${date}T00:00:00.000Z`);
+
+  return { end: new Date(start.getTime() + DAY_IN_MS), start };
+}
+
 function getWorkoutRecommendation({ cycleView, feedback, goal, level }) {
   const phase = cycleView.current_phase;
   const goalAdjustment = goal === 'endurance' ? 5 : 0;
@@ -45,4 +54,4 @@ function getWorkoutRecommendation({ cycleView, feedback, goal, level }) {
   };
 }
 
-module.exports = { getWorkoutRecommendation };
+module.exports = { getDayRange, getWorkoutRecommendation };

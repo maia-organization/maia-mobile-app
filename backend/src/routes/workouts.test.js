@@ -9,7 +9,7 @@ const { buildApp } = require('../app');
 
 const userId = '892ed587-cd78-46d4-8810-8f85e84c6310';
 
-function profileLookup(result) {
+function limitedLookup(result) {
   return {
     from: () => ({
       where: () => ({ limit: jest.fn().mockResolvedValue(result) })
@@ -42,7 +42,7 @@ describe('workout routes', () => {
   });
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   test("requires a JWT to view today's workout", async () => {
@@ -51,10 +51,10 @@ describe('workout routes', () => {
     expect(response.statusCode).toBe(401);
   });
 
-  test('creates at most one daily recommendation and returns the saved workout', async () => {
+  function mockTodayWorkout(completedSessions) {
     mockDb.select
       .mockReturnValueOnce(
-        profileLookup([
+        limitedLookup([
           {
             cycleLength: 28,
             cycleStartDate: '2026-10-01',
@@ -65,7 +65,7 @@ describe('workout routes', () => {
       )
       .mockReturnValueOnce(feedbackLookup([]))
       .mockReturnValueOnce(
-        profileLookup([
+        limitedLookup([
           {
             adaptation: null,
             date: '2026-10-02',
@@ -76,24 +76,35 @@ describe('workout routes', () => {
             type: 'run'
           }
         ])
-      );
+      )
+      .mockReturnValueOnce(limitedLookup(completedSessions));
     const insert = {
       onConflictDoNothing: jest.fn().mockResolvedValue()
     };
     mockDb.insert.mockReturnValue({ values: jest.fn().mockReturnValue(insert) });
-    const token = app.jwt.sign({ sub: userId });
 
-    const response = await app.inject({
-      headers: { authorization: `Bearer ${token}` },
+    return insert;
+  }
+
+  function requestTodayWorkout() {
+    return app.inject({
+      headers: { authorization: `Bearer ${app.jwt.sign({ sub: userId })}` },
       method: 'GET',
       url: '/workouts/today'
     });
+  }
+
+  test('creates at most one daily recommendation and returns the saved workout', async () => {
+    const insert = mockTodayWorkout([]);
+
+    const response = await requestTodayWorkout();
 
     expect(response.statusCode).toBe(200);
     expect(insert.onConflictDoNothing).toHaveBeenCalledTimes(1);
     expect(response.json()).toEqual({
       data: {
         adaptation: null,
+        completed: false,
         date: '2026-10-02',
         duration: 35,
         intensity: 'progressive',
@@ -103,5 +114,14 @@ describe('workout routes', () => {
       },
       success: true
     });
+  });
+
+  test('identifies the daily workout as completed once a session of the day is completed', async () => {
+    mockTodayWorkout([{ id: '5b0f6f43-8b4e-4c39-9a3e-2f7d4c1a9e11' }]);
+
+    const response = await requestTodayWorkout();
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json().data.completed).toBe(true);
   });
 });

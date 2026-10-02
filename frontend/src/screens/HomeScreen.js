@@ -106,6 +106,18 @@ export function HomeScreen({ navigation, onLogout }) {
           {workout ? (
             <View style={styles.todayCard}>
               <Text style={styles.cardEyebrow}>AUJOURD’HUI · {workout.phase}</Text>
+              {workout.completed ? (
+                <View
+                  accessibilityLabel="Séance du jour terminée et ajoutée à ton historique"
+                  accessible
+                  style={styles.completedBanner}
+                >
+                  <Text style={styles.completedBadge}>✓ TERMINÉE</Text>
+                  <Text style={styles.completedText}>
+                    Bravo, ta séance du jour est ajoutée à ton historique.
+                  </Text>
+                </View>
+              ) : null}
               <Text style={styles.cardTitle}>{workout.title}</Text>
               <View style={styles.workoutDetails}>
                 <Text style={styles.detailText}>{workout.duration} minutes</Text>
@@ -117,7 +129,7 @@ export function HomeScreen({ navigation, onLogout }) {
                 <Text style={styles.adaptation}>{workout.adaptation}</Text>
               ) : null}
               <BrandButton onPress={() => void handleStartWorkout()} variant="primary">
-                Lancer ma séance
+                {workout.completed ? 'Lancer une nouvelle séance' : 'Lancer ma séance'}
               </BrandButton>
             </View>
           ) : null}
@@ -213,6 +225,25 @@ const styles = StyleSheet.create({
   cardEyebrow: {
     ...type.eyebrow,
     color: colors.ink
+  },
+  completedBanner: {
+    alignItems: 'flex-start',
+    gap: spacing.xs
+  },
+  completedBadge: {
+    ...type.eyebrow,
+    backgroundColor: colors.ink,
+    borderRadius: radius.round,
+    color: colors.success,
+    overflow: 'hidden',
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs
+  },
+  completedText: {
+    color: colors.ink,
+    fontFamily: fonts.strong,
+    fontSize: 15,
+    lineHeight: 21
   },
   cardTitle: {
     color: colors.ink,
