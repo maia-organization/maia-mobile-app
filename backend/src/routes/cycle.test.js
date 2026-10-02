@@ -54,7 +54,16 @@ describe('cycle routes', () => {
       data: {
         current_phase: expect.any(String),
         cycle_length: 28,
-        cycle_start_date: expect.any(String)
+        cycle_start_date: expect.any(String),
+        phase_projections: expect.arrayContaining([
+          expect.objectContaining({
+            end_date: expect.any(String),
+            label: 'Phase menstruelle',
+            phase: 'menstrual',
+            start_date: expect.any(String)
+          }),
+          expect.objectContaining({ label: 'Phase ovulatoire', phase: 'ovulatory' })
+        ])
       },
       success: true
     });
