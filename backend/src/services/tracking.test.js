@@ -28,4 +28,13 @@ describe('running session tracking', () => {
     expect(calculateDistance([])).toBe(0);
     expect(calculateDistance(coordinates.slice(0, 1))).toBe(0);
   });
+
+  test('does not count distance travelled while tracking is paused', () => {
+    const pausedCoordinates = [
+      coordinates[0],
+      { ...coordinates[1], paused: true, timestamp: '2026-09-11T10:07:00.000Z' }
+    ];
+
+    expect(calculateDistance(pausedCoordinates)).toBe(0);
+  });
 });

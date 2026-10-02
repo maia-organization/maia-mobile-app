@@ -313,7 +313,7 @@
       "title": "US - Lancer, mettre en pause et arrêter une séance",
       "priority": "P0",
       "estimate": 8,
-      "status": "Todo",
+      "status": "Review",
       "areas": ["frontend", "backend"],
       "technicalRef": "4.2"
     },
