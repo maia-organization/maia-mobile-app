@@ -163,7 +163,7 @@
       "title": "US - Renseigner et mettre à jour son cycle",
       "priority": "P0",
       "estimate": 5,
-      "status": "In Progress",
+      "status": "Review",
       "areas": ["frontend", "backend"],
       "technicalRef": "2.1"
     },
