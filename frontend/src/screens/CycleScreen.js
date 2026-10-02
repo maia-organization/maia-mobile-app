@@ -4,6 +4,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { BrandButton } from '../components/BrandButton';
 import { CycleSettingsForm } from '../components/CycleSettingsForm';
+import { CycleTimeline } from '../components/CycleTimeline';
 import { getCycleView, updateCycle } from '../services/userApi';
 import { colors, fonts, radius, spacing, type } from '../theme';
 import { isNumberInRange, isValidIsoDate } from '../utils/validation';
@@ -130,15 +131,21 @@ export function CycleScreen({ navigation }) {
         </View>
 
         {cycle ? (
-          <View style={styles.phaseCard}>
-            <Text style={styles.phaseLabel}>AUJOURD’HUI · JOUR {cycle.cycle_day}</Text>
-            <Text style={[styles.phaseTitle, { color: phaseColors[cycle.current_phase] }]}>
-              {cycle.current_phase_label}
-            </Text>
-            <Text style={styles.phaseText}>
-              Prochain cycle prévu le {cycle.next_cycle_start_date}.
-            </Text>
-          </View>
+          <>
+            <View accessibilityLiveRegion="polite" style={styles.phaseCard}>
+              <Text style={styles.phaseLabel}>AUJOURD’HUI · JOUR {cycle.cycle_day}</Text>
+              <Text style={[styles.phaseTitle, { color: phaseColors[cycle.current_phase] }]}>
+                {cycle.current_phase_label}
+              </Text>
+              <Text style={styles.phaseText}>
+                Prochain cycle prévu le {cycle.next_cycle_start_date}.
+              </Text>
+            </View>
+            <CycleTimeline
+              currentPhase={cycle.current_phase}
+              projections={cycle.phase_projections}
+            />
+          </>
         ) : null}
 
         <CycleSettingsForm

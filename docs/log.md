@@ -437,3 +437,20 @@ indique un besoin de récupération.
 **Fonctionnalité concernée :** `US-FEEDBACK-001`, ressenti post-séance.
 
 **Vérifications :** tests Jest backend, lint et formatage.
+
+## 2 octobre 2026 - Visualisation des phases du cycle
+
+### Frise prévisionnelle du cycle
+
+J'ai enrichi l'écran Cycle avec une frise proportionnelle des phases, la mise en
+avant de la phase actuelle et les dates prévisionnelles associées. Les repères
+des règles et de l'ovulation sont désormais lisibles immédiatement, afin d'aider
+l'utilisatrice à anticiper son cycle sans modifier le contrat API existant.
+
+J'ai également renforcé le test de la vue de cycle pour vérifier la présence des
+projections menstruelle et ovulatoire utilisées par l'interface.
+
+**Fonctionnalité concernée :** `US-CYCLE-003`, visualisation des phases du cycle.
+
+**Vérifications :** tests Jest ciblés des services et routes Cycle, lint et
+formatage.
