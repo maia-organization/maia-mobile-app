@@ -3,10 +3,10 @@ import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, View } f
 import { useFocusEffect } from '@react-navigation/native';
 
 import { BrandButton } from '../components/BrandButton';
-import { CycleFields } from '../components/CycleFields';
+import { CycleSettingsForm } from '../components/CycleSettingsForm';
 import { TextField } from '../components/TextField';
 import { getProfile, updateProfile } from '../services/userApi';
-import { colors, fonts, radius, spacing, type } from '../theme';
+import { colors, fonts, spacing, type } from '../theme';
 import { isNumberInRange, isValidIsoDate } from '../utils/validation';
 
 const levels = [
@@ -208,34 +208,21 @@ export function ProfileSetupScreen({ navigation }) {
             </View>
           </View>
 
-          <CycleFields
+          <CycleSettingsForm
             cycleLength={cycleLength}
             cycleStartDate={cycleStartDate}
+            error={error}
+            isSaving={isSaving}
             onCycleLengthChange={updateField(setCycleLength)}
             onCycleStartDateChange={updateField(setCycleStartDate)}
-            onSubmitEditing={handleSave}
+            onSave={handleSave}
+            onSecondaryAction={() => navigation.navigate('Home')}
+            primaryLabel="Sauvegarder mon profil"
+            savingLabel="Sauvegarde..."
+            secondaryLabel="Retour à l'accueil"
             showValidation={showValidation}
+            success={success}
           />
-
-          {error ? (
-            <Text accessibilityLiveRegion="polite" style={styles.error}>
-              {error}
-            </Text>
-          ) : null}
-          {success ? (
-            <Text accessibilityLiveRegion="polite" style={styles.success}>
-              {success}
-            </Text>
-          ) : null}
-        </View>
-
-        <View style={styles.actions}>
-          <BrandButton disabled={isSaving} onPress={handleSave}>
-            {isSaving ? 'Sauvegarde...' : 'Sauvegarder mon profil'}
-          </BrandButton>
-          <BrandButton onPress={() => navigation.navigate('Home')} variant="ghost">
-            Retour à l'accueil
-          </BrandButton>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -295,29 +282,5 @@ const styles = StyleSheet.create({
     fontFamily: fonts.strong,
     fontSize: 13,
     letterSpacing: 0
-  },
-  actions: {
-    gap: spacing.md
-  },
-  error: {
-    color: colors.roseLight,
-    fontFamily: fonts.strong,
-    fontSize: 13,
-    letterSpacing: 0,
-    lineHeight: 18,
-    textAlign: 'center'
-  },
-  success: {
-    backgroundColor: colors.honeySoft,
-    borderColor: colors.borderLight,
-    borderRadius: radius.sm,
-    borderWidth: 1,
-    color: colors.honey,
-    fontFamily: fonts.strong,
-    fontSize: 13,
-    letterSpacing: 0,
-    lineHeight: 18,
-    padding: spacing.md,
-    textAlign: 'center'
   }
 });

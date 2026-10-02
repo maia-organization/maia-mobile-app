@@ -3,7 +3,7 @@ import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, View } f
 import { useFocusEffect } from '@react-navigation/native';
 
 import { BrandButton } from '../components/BrandButton';
-import { CycleFields } from '../components/CycleFields';
+import { CycleSettingsForm } from '../components/CycleSettingsForm';
 import { getCycleView, updateCycle } from '../services/userApi';
 import { colors, fonts, radius, spacing, type } from '../theme';
 import { isNumberInRange, isValidIsoDate } from '../utils/validation';
@@ -141,54 +141,30 @@ export function CycleScreen({ navigation }) {
           </View>
         ) : null}
 
-        <View style={styles.form}>
-          <Text style={styles.formTitle}>Ajuster mes informations</Text>
-          <CycleFields
-            cycleLength={cycleLength}
-            cycleStartDate={cycleStartDate}
-            onCycleLengthChange={updateField(setCycleLength)}
-            onCycleStartDateChange={updateField(setCycleStartDate)}
-            onSubmitEditing={handleSave}
-            showValidation={showValidation}
-          />
-          {error ? (
-            <Text accessibilityLiveRegion="polite" style={styles.error}>
-              {error}
-            </Text>
-          ) : null}
-          {success ? (
-            <Text accessibilityLiveRegion="polite" style={styles.success}>
-              {success}
-            </Text>
-          ) : null}
-        </View>
-
-        <View style={styles.actions}>
-          <BrandButton disabled={isSaving} onPress={handleSave}>
-            {isSaving ? 'Mise à jour…' : 'Mettre à jour mon cycle'}
-          </BrandButton>
-          <BrandButton onPress={() => navigation.navigate('Profile')} variant="ghost">
-            Retour au profil
-          </BrandButton>
-        </View>
+        <CycleSettingsForm
+          cycleLength={cycleLength}
+          cycleStartDate={cycleStartDate}
+          error={error}
+          isSaving={isSaving}
+          onCycleLengthChange={updateField(setCycleLength)}
+          onCycleStartDateChange={updateField(setCycleStartDate)}
+          onSave={handleSave}
+          onSecondaryAction={() => navigation.navigate('Profile')}
+          primaryLabel="Mettre à jour mon cycle"
+          savingLabel="Mise à jour…"
+          secondaryLabel="Retour au profil"
+          showValidation={showValidation}
+          success={success}
+          title="Ajuster mes informations"
+        />
       </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  actions: { gap: spacing.md },
-  error: {
-    color: colors.roseLight,
-    fontFamily: fonts.strong,
-    fontSize: 13,
-    lineHeight: 18,
-    textAlign: 'center'
-  },
   errorScreen: { flex: 1, gap: spacing.lg, justifyContent: 'center', padding: spacing.xl },
   eyebrow: { ...type.eyebrow, color: colors.rose },
-  form: { gap: spacing.lg },
-  formTitle: { color: colors.honey, fontFamily: fonts.strong, fontSize: 16 },
   header: { gap: spacing.md },
   loading: { alignItems: 'center', flex: 1, justifyContent: 'center' },
   phaseCard: {
@@ -205,17 +181,5 @@ const styles = StyleSheet.create({
   safeArea: { backgroundColor: colors.ink, flex: 1 },
   screen: { gap: spacing.xxl, padding: spacing.xl },
   subtitle: { color: colors.cream, fontFamily: fonts.body, fontSize: 16, lineHeight: 23 },
-  success: {
-    backgroundColor: colors.honeySoft,
-    borderColor: colors.borderLight,
-    borderRadius: radius.sm,
-    borderWidth: 1,
-    color: colors.honey,
-    fontFamily: fonts.strong,
-    fontSize: 13,
-    lineHeight: 18,
-    padding: spacing.md,
-    textAlign: 'center'
-  },
   title: { ...type.title, color: colors.white }
 });
