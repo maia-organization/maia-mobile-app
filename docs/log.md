@@ -518,3 +518,20 @@ terminé.
 la séance, idempotence, séance active terminée, historique et statistiques), lint,
 formatage, expo-doctor, export Expo Web et parcours Playwright sur un viewport
 mobile de 390 x 844 pixels.
+
+## 2 octobre 2026 - Fiabilisation des parcours web de séance
+
+### API configurée et actions protégées
+
+J'ai corrigé le client web afin qu'il conserve l'URL configurée de l'API au lieu
+d'envoyer les actions de séance au serveur de preview Expo. Les réponses non JSON
+sont maintenant traduites en message compréhensible, sans exposer l'erreur de
+parsing technique. Le bouton de lancement indique aussi son état de démarrage et
+ignore les appuis concurrents, pour empêcher la création involontaire de plusieurs
+séances.
+
+**Chantier concerné :** `TECH-BUGFIX-001`, fiabilisation des parcours web de
+séance.
+
+**Vérifications :** tests Jest ciblés des sessions et recommandations, lint,
+formatage et export Expo Web.

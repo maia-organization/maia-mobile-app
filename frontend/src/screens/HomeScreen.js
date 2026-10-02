@@ -27,6 +27,7 @@ const intensityLabels = {
 export function HomeScreen({ navigation, onLogout }) {
   const [error, setError] = useState('');
   const [isLoadingWorkout, setIsLoadingWorkout] = useState(true);
+  const [isStarting, setIsStarting] = useState(false);
   const [workout, setWorkout] = useState(null);
 
   const loadWorkout = useCallback(() => {
@@ -61,11 +62,16 @@ export function HomeScreen({ navigation, onLogout }) {
   };
 
   const handleStartWorkout = async () => {
+    if (isStarting) return;
+
+    setIsStarting(true);
     try {
       const { session_id: sessionId } = await startSession();
       navigation.navigate('Session', { sessionId });
     } catch (nextError) {
       Alert.alert('Impossible de démarrer la séance', nextError.message);
+    } finally {
+      setIsStarting(false);
     }
   };
 
@@ -128,8 +134,16 @@ export function HomeScreen({ navigation, onLogout }) {
               {workout.adaptation ? (
                 <Text style={styles.adaptation}>{workout.adaptation}</Text>
               ) : null}
-              <BrandButton onPress={() => void handleStartWorkout()} variant="primary">
-                {workout.completed ? 'Lancer une nouvelle séance' : 'Lancer ma séance'}
+              <BrandButton
+                disabled={isStarting}
+                onPress={() => void handleStartWorkout()}
+                variant="primary"
+              >
+                {isStarting
+                  ? 'Démarrage…'
+                  : workout.completed
+                    ? 'Lancer une nouvelle séance'
+                    : 'Lancer ma séance'}
               </BrandButton>
             </View>
           ) : null}

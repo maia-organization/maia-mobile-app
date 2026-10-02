@@ -15,7 +15,13 @@ async function requestAuth(path, payload) {
     throw new Error("Impossible de joindre l'API Maïa. Vérifie que la preview est bien lancée.");
   }
 
-  const result = await response.json();
+  let result;
+
+  try {
+    result = await response.json();
+  } catch {
+    throw new Error("L'API Maïa a renvoyé une réponse inattendue. Réessaie dans un instant.");
+  }
 
   if (!response.ok || !result.success) {
     throw new Error(result.error?.message || 'Une erreur est survenue.');
