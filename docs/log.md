@@ -471,3 +471,18 @@ cycle. Cette couverture a été livrée avec `US-CYCLE-002`; je l'ai rattachée 
 
 **Commits :** `b181a16`, `7c316a7`, fusionnés dans `develop` par la pull request
 `#72` (`6feb5b0`).
+
+## 2 octobre 2026 - Suivi d'une séance de running
+
+### Chrono, GPS et pause
+
+J'ai transformé l'écran de séance en suivi de course : le chrono et la distance
+s'affichent en direct, le GPS est relevé toutes les quelques secondes et la
+séance peut être mise en pause puis reprise. À l'arrêt, les coordonnées sont
+envoyées à l'API pour enregistrer la durée, la distance et l'allure finale. Les
+segments parcourus pendant une pause ne sont pas comptabilisés.
+
+**Fonctionnalité concernée :** `US-SESSION-001`, séance de running.
+
+**Vérifications :** tests Jest ciblés du calcul des métriques, lint et
+formatage.

@@ -33,6 +33,7 @@ function isValidCoordinates(coordinates) {
       Number.isFinite(coordinate?.lng) &&
       coordinate.lng >= -180 &&
       coordinate.lng <= 180 &&
+      (coordinate.paused === undefined || typeof coordinate.paused === 'boolean') &&
       Number.isFinite(timestamp) &&
       timestamp >= previousTimestamp
     );
@@ -40,12 +41,11 @@ function isValidCoordinates(coordinates) {
 }
 
 function calculateDistance(coordinates) {
-  const distance = coordinates
-    .slice(1)
-    .reduce(
-      (total, coordinate, index) => total + distanceBetween(coordinates[index], coordinate),
-      0
-    );
+  const distance = coordinates.slice(1).reduce((total, coordinate, index) => {
+    const previousCoordinate = coordinates[index];
+
+    return coordinate.paused ? total : total + distanceBetween(previousCoordinate, coordinate);
+  }, 0);
 
   return Math.round(distance * 1000) / 1000;
 }

@@ -44,6 +44,13 @@ export function startSession() {
   return requestUser('/sessions/start', { method: 'POST' });
 }
 
+export function stopSession(sessionId, coordinates) {
+  return requestUser('/sessions/stop', {
+    body: JSON.stringify({ coordinates, session_id: sessionId }),
+    method: 'POST'
+  });
+}
+
 export function completeSession(sessionId) {
   return requestUser(`/sessions/${sessionId}/complete`, { method: 'PUT' });
 }
