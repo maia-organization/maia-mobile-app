@@ -31,3 +31,14 @@ export function updateProfile(payload) {
     method: 'PUT'
   });
 }
+
+export function getNotificationSettings() {
+  return requestUser('/notifications/settings');
+}
+
+export function updateNotificationSettings(payload) {
+  return requestUser('/notifications/settings', {
+    body: JSON.stringify(payload),
+    method: 'PUT'
+  });
+}

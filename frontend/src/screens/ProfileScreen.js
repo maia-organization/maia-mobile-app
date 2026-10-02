@@ -1,9 +1,21 @@
 import { useCallback, useState } from 'react';
-import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  View
+} from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 
 import { BrandButton } from '../components/BrandButton';
-import { getProfile } from '../services/userApi';
+import {
+  getNotificationSettings,
+  getProfile,
+  updateNotificationSettings
+} from '../services/userApi';
 import { colors, fonts, radius, spacing, type } from '../theme';
 
 const labels = {
@@ -39,19 +51,40 @@ function ProfileItem({ label, value }) {
   );
 }
 
+function NotificationToggle({ disabled, label, onValueChange, value }) {
+  return (
+    <View style={[styles.notificationItem, disabled && styles.notificationItemDisabled]}>
+      <Text style={styles.itemLabel}>{label}</Text>
+      <Switch
+        accessibilityLabel={label}
+        disabled={disabled}
+        onValueChange={onValueChange}
+        thumbColor={value ? colors.rose : colors.muted}
+        trackColor={{ false: colors.borderLight, true: colors.roseDeep }}
+        value={value}
+      />
+    </View>
+  );
+}
+
 export function ProfileScreen({ navigation }) {
   const [profile, setProfile] = useState(null);
+  const [notificationSettings, setNotificationSettings] = useState(null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [isSavingNotifications, setIsSavingNotifications] = useState(false);
+  const [notificationFeedback, setNotificationFeedback] = useState('');
 
   const loadProfile = useCallback(() => {
     let isActive = true;
     setError('');
     setIsLoading(true);
 
-    getProfile()
-      .then(({ user }) => {
-        if (isActive) setProfile(user);
+    Promise.all([getProfile(), getNotificationSettings()])
+      .then(([{ user }, { settings }]) => {
+        if (!isActive) return;
+        setProfile(user);
+        setNotificationSettings(settings);
       })
       .catch((nextError) => {
         if (isActive) setError(nextError.message);
@@ -64,6 +97,28 @@ export function ProfileScreen({ navigation }) {
       isActive = false;
     };
   }, []);
+
+  const updateNotifications = (changes) => {
+    setNotificationSettings((current) => ({ ...current, ...changes }));
+    setNotificationFeedback('');
+  };
+
+  const saveNotifications = async () => {
+    if (!notificationSettings) return;
+
+    setIsSavingNotifications(true);
+    setNotificationFeedback('');
+
+    try {
+      const { settings } = await updateNotificationSettings(notificationSettings);
+      setNotificationSettings(settings);
+      setNotificationFeedback('Préférences enregistrées.');
+    } catch (nextError) {
+      setNotificationFeedback(nextError.message);
+    } finally {
+      setIsSavingNotifications(false);
+    }
+  };
 
   useFocusEffect(loadProfile);
 
@@ -130,6 +185,48 @@ export function ProfileScreen({ navigation }) {
           <ProfileItem label="Durée moyenne" value={displayValue(profile.cycleLength, ' jours')} />
         </ProfileSection>
 
+        <ProfileSection title="Mes notifications">
+          <NotificationToggle
+            label="Recevoir des notifications"
+            onValueChange={(enabled) => updateNotifications({ enabled })}
+            value={notificationSettings?.enabled || false}
+          />
+          <NotificationToggle
+            disabled={!notificationSettings?.enabled}
+            label="Entraînements"
+            onValueChange={(workout_notifications) =>
+              updateNotifications({ workout_notifications })
+            }
+            value={notificationSettings?.workout_notifications || false}
+          />
+          <NotificationToggle
+            disabled={!notificationSettings?.enabled}
+            label="Conseils liés à mon cycle"
+            onValueChange={(cycle_notifications) => updateNotifications({ cycle_notifications })}
+            value={notificationSettings?.cycle_notifications || false}
+          />
+          <NotificationToggle
+            disabled={!notificationSettings?.enabled}
+            label="Communauté"
+            onValueChange={(social_notifications) => updateNotifications({ social_notifications })}
+            value={notificationSettings?.social_notifications || false}
+          />
+          <View style={styles.notificationAction}>
+            <BrandButton
+              disabled={isSavingNotifications}
+              onPress={saveNotifications}
+              variant="secondary"
+            >
+              {isSavingNotifications ? 'Enregistrement…' : 'Enregistrer mes préférences'}
+            </BrandButton>
+            {!!notificationFeedback && (
+              <Text accessibilityLiveRegion="polite" style={styles.notificationFeedback}>
+                {notificationFeedback}
+              </Text>
+            )}
+          </View>
+        </ProfileSection>
+
         <View style={styles.actions}>
           <BrandButton onPress={() => navigation.navigate('ProfileSetup')}>
             Modifier mon profil
@@ -174,6 +271,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     letterSpacing: 0,
     lineHeight: 22
+  },
+  notificationItem: {
+    alignItems: 'center',
+    borderBottomColor: colors.borderLight,
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: spacing.lg
+  },
+  notificationItemDisabled: { opacity: 0.5 },
+  notificationAction: { gap: spacing.sm, padding: spacing.lg },
+  notificationFeedback: {
+    color: colors.success,
+    fontFamily: fonts.strong,
+    fontSize: 13,
+    lineHeight: 19,
+    textAlign: 'center'
   },
   actions: { gap: spacing.md },
   error: {

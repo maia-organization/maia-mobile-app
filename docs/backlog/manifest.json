@@ -121,7 +121,7 @@
       "title": "US - Gérer ses préférences de notifications",
       "priority": "P1",
       "estimate": 3,
-      "status": "Todo",
+      "status": "In Progress",
       "areas": ["frontend", "backend"]
     },
     {
