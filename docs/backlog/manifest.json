@@ -100,7 +100,7 @@
       "title": "US - Consulter son profil",
       "priority": "P0",
       "estimate": 3,
-      "status": "Review",
+      "status": "Done",
       "areas": ["frontend", "backend"],
       "technicalRef": "1.4"
     },
