@@ -422,3 +422,18 @@ retour de la séance sauvegardée et l'unicité de la création quotidienne.
 personnalisée.
 
 **Vérifications :** tests Jest backend, lint et formatage.
+
+## 2 octobre 2026 - Ressenti après une séance
+
+### Saisie facultative du ressenti
+
+J'ai relié le lancement d'une séance au parcours de fin de séance, puis ajouté un
+écran de ressenti rapide. L'utilisatrice peut noter son énergie, sa fatigue, sa
+douleur et sa motivation sur une échelle de 1 à 5, ou passer cette étape sans
+culpabilisation. Les données sont envoyées aux routes protégées existantes et
+servent déjà à alléger la recommandation suivante lorsque le dernier ressenti
+indique un besoin de récupération.
+
+**Fonctionnalité concernée :** `US-FEEDBACK-001`, ressenti post-séance.
+
+**Vérifications :** tests Jest backend, lint et formatage.

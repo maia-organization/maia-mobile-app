@@ -40,6 +40,21 @@ export function getTodayWorkout() {
   return requestUser('/workouts/today');
 }
 
+export function startSession() {
+  return requestUser('/sessions/start', { method: 'POST' });
+}
+
+export function completeSession(sessionId) {
+  return requestUser(`/sessions/${sessionId}/complete`, { method: 'PUT' });
+}
+
+export function saveSessionFeedback(sessionId, feedback) {
+  return requestUser(`/sessions/${sessionId}/feedback`, {
+    body: JSON.stringify(feedback),
+    method: 'PUT'
+  });
+}
+
 export function updateCycle(payload) {
   return requestUser('/cycle', {
     body: JSON.stringify(payload),
