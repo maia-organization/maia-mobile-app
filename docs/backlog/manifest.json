@@ -121,7 +121,7 @@
       "title": "US - Gérer ses préférences de notifications",
       "priority": "P1",
       "estimate": 3,
-      "status": "Done",
+      "status": "Review",
       "areas": ["frontend", "backend"]
     },
     {
@@ -131,7 +131,7 @@
       "title": "US - Découvrir Maïa lors de la première utilisation",
       "priority": "P0",
       "estimate": 5,
-      "status": "Review",
+      "status": "Done",
       "areas": ["frontend"]
     },
     {
