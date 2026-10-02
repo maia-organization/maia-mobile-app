@@ -353,3 +353,21 @@ prévus pour assurer un parcours lisible sur mobile.
 
 **Vérifications :** lint et contrôle du statut `In Progress` de l'Issue #22 dans
 le Project GitHub.
+
+## 2 octobre 2026 - Préférences de notifications
+
+### Gestion des rappels depuis le profil
+
+J'ai ajouté les préférences de notifications dans le profil : l'utilisatrice peut
+activer ou désactiver les rappels, puis choisir ceux liés aux entraînements, aux
+conseils de cycle et à la communauté. Les choix sont enregistrés explicitement et
+un retour de succès ou d'erreur est affiché dans l'écran.
+
+Côté API, j'ai ajouté les routes JWT de lecture et de mise à jour des préférences.
+La mise à jour du réglage global et des catégories est transactionnelle ; le schéma
+`notification_settings` existant a été réutilisé, sans migration.
+
+**Fonctionnalité concernée :** `US-PREFERENCES-001`, préférences de notifications.
+
+**Vérifications :** lint, formatage et 38 tests Jest backend, dont les scénarios
+JWT, validation, lecture et sauvegarde atomique des préférences.
