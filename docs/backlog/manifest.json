@@ -490,6 +490,13 @@
       "status": "Done",
       "completedOn": "2026-10-01",
       "summary": "Synchroniser de manière idempotente les EPIC, User Stories, statuts, sprints et vues du Project GitHub."
+    },
+    {
+      "id": "TECH-BUGFIX-001",
+      "title": "TECH - Fiabiliser les parcours web de séance",
+      "area": "frontend",
+      "status": "In Progress",
+      "summary": "Diriger les requêtes web vers l'API configurée, présenter une erreur exploitable si une réponse n'est pas JSON et empêcher le démarrage concurrent d'une même séance."
     }
   ]
 }

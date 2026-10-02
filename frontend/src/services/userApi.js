@@ -5,16 +5,28 @@ async function requestUser(path, options = {}) {
   const token = await getAuthToken();
   // Bodiless requests must not declare JSON: Fastify rejects empty JSON bodies with a 400.
   const contentType = options.body === undefined ? {} : { 'Content-Type': 'application/json' };
-  const response = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      ...contentType,
-      ...options.headers
-    }
-  });
+  let response;
 
-  const result = await response.json();
+  try {
+    response = await fetch(`${API_URL}${path}`, {
+      ...options,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        ...contentType,
+        ...options.headers
+      }
+    });
+  } catch {
+    throw new Error("Impossible de joindre l'API Maïa. Vérifie que la preview est bien lancée.");
+  }
+
+  let result;
+
+  try {
+    result = await response.json();
+  } catch {
+    throw new Error("L'API Maïa a renvoyé une réponse inattendue. Réessaie dans un instant.");
+  }
 
   if (!response.ok || !result.success) {
     throw new Error(result.error?.message || 'Une erreur est survenue.');

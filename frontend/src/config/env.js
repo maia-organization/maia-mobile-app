@@ -11,7 +11,7 @@ function getNativeBundleHost() {
 
 function resolveApiUrl() {
   if (Platform.OS === 'web') {
-    return typeof window === 'undefined' ? configuredApiUrl : window.location.origin;
+    return configuredApiUrl;
   }
 
   const bundleHost = getNativeBundleHost();
