@@ -385,3 +385,20 @@ affiché lors des ouvertures suivantes.
 Maïa.
 
 **Vérifications :** lint, formatage et export Expo Web.
+
+## 2 octobre 2026 - Gestion du cycle
+
+### Consultation et mise à jour du cycle
+
+J'ai ajouté l'écran Cycle, accessible depuis l'accueil et le profil. Il affiche le
+jour et la phase actuelle, permet de corriger la date de début des dernières
+règles et la durée moyenne du cycle, puis confirme la prise en compte de ces
+informations par les prochaines recommandations.
+
+J'ai réutilisé les routes protégées existantes afin de conserver la mise à jour
+atomique des données de cycle et du profil. J'ai complété les tests API sur la
+consultation, la validation et la sauvegarde du cycle.
+
+**Fonctionnalité concernée :** `US-CYCLE-001`, gestion du cycle menstruel.
+
+**Vérifications :** tests Jest backend, lint, formatage et export Expo Web.
