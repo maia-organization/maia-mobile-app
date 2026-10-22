@@ -54,6 +54,10 @@ export function getTodayWorkout() {
   return requestUser('/workouts/today');
 }
 
+export function getStats() {
+  return requestUser('/stats/me');
+}
+
 export function startSession() {
   return requestUser('/sessions/start', { method: 'POST' });
 }
