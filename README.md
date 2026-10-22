@@ -98,3 +98,14 @@ npm --prefix backend run db:generate
 npm --prefix backend audit --omit=dev
 npm --prefix frontend audit --omit=dev
 ```
+
+## Tests frontend
+
+Les tests frontend couvrent la logique unitaire et les interactions UI critiques (boutons,
+navigation et retours d'erreur de l'API). Toute fonctionnalité modifiée doit adapter les deux
+niveaux de tests concernés.
+
+```bash
+npm --prefix frontend test
+npm --prefix frontend run test:ui
+```
