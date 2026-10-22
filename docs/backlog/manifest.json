@@ -357,7 +357,7 @@
       "title": "US - Planifier ses séances",
       "priority": "P1",
       "estimate": 8,
-      "status": "Backlog",
+      "status": "In Progress",
       "areas": ["frontend", "backend"]
     },
     {
