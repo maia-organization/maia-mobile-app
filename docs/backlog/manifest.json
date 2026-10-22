@@ -492,6 +492,13 @@
       "summary": "Empêcher le merge lorsqu'une analyse SonarCloud échoue ou remonte une issue."
     },
     {
+      "id": "TECH-QUALITY-003",
+      "title": "TECH - Tester les parcours UI et les erreurs applicatives",
+      "area": "ci",
+      "status": "Review",
+      "summary": "Mettre en place des tests unitaires frontend et des tests UI automatisés des parcours critiques afin de vérifier les actions des boutons, les erreurs réseau ou serveur et l'absence d'erreur applicative. Chaque évolution fonctionnelle devra ajouter ou adapter les tests unitaires et UI pertinents, exécutés dans la CI."
+    },
+    {
       "id": "TECH-SECURITY-001",
       "title": "TECH - Retirer les configurations locales sensibles",
       "area": "security",

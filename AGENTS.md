@@ -53,6 +53,7 @@ Règles :
 - Vérifier les parcours concernés, notamment les états de chargement et d'erreur.
 - Tenir compte du clavier mobile et de l'accessibilité lorsque l'écran concerné le nécessite.
 - Tester les changements d'interface sur des dimensions mobiles avant de considérer la preview web comme validation suffisante.
+- Pour chaque fonctionnalité ajoutée ou modifiée, ajouter ou adapter les tests unitaires et les tests UI pertinents. Les tests UI couvrent au minimum l'action utilisateur principale et les états d'erreur réseau ou serveur associés ; exécuter les contrôles frontend avant livraison.
 
 ## Backend
 
@@ -166,9 +167,7 @@ Pour ces changements :
    l'implémentation remise ;
 6. mettre à jour les critères réellement satisfaits ;
 7. passer l'Issue à `Review` lors de la PR ;
-8. après validation et merge dans `develop`, passer impérativement l'Issue à
-   `Done` dans le manifeste, synchroniser le Project et vérifier que la carte
-   Kanban est à `Done` ; aucun élément mergé ne reste à `Review` ou `In Progress`.
+8. passer l'Issue à `Done` uniquement après validation et merge.
 
 Si aucune Issue ne correspond à une fonctionnalité ou un bug planifié, préparer une nouvelle US, vérifier les doublons et présenter le dry-run avant création.
 

@@ -7,7 +7,9 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "test": "jest",
+    "test:ui": "jest --testPathPattern=\\.ui\\.test\\.js$"
   },
   "dependencies": {
     "@expo-google-fonts/montserrat": "^0.4.2",
@@ -35,6 +37,16 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
-    "babel-preset-expo": "~54.0.10"
+    "@testing-library/react-native": "^13.2.0",
+    "babel-preset-expo": "~54.0.10",
+    "jest-expo": "~54.0.18",
+    "react-test-renderer": "^19.1.0"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/"
+    ]
   }
 }

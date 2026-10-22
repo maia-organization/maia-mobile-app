@@ -561,3 +561,14 @@ animations et les libellés restent accessibles au lecteur d'écran.
 **Fonctionnalité concernée :** `US-NAVIGATION-001`, navigation principale mobile.
 
 **Vérifications :** lint, export Expo Web et parcours mobile.
+
+## 22 octobre 2026 - Socle de tests frontend et UI
+
+J'ai mis en place Jest et React Native Testing Library pour couvrir les boutons,
+la navigation et les erreurs réseau ou serveur de la connexion. Ces tests sont
+exécutés dans la CI, et chaque fonctionnalité modifiée doit désormais adapter ses
+tests unitaires et UI associés.
+
+**Chantier concerné :** `TECH-QUALITY-003`, tests UI et erreurs applicatives.
+
+**Vérifications :** tests frontend Jest (7 scénarios), lint et formatage.
