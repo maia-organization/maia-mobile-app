@@ -446,8 +446,9 @@
       "title": "US - Naviguer facilement entre les sections de l’application",
       "priority": "P1",
       "estimate": 5,
-      "status": "Review",
-      "areas": ["frontend"]
+      "status": "Done",
+      "areas": ["frontend"],
+      "completedOn": "2026-10-22"
     }
   ],
   "technical": [
