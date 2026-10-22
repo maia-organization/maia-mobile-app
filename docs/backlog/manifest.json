@@ -335,7 +335,7 @@
       "title": "US - Consulter ses statistiques",
       "priority": "P0",
       "estimate": 5,
-      "status": "In Progress",
+      "status": "Review",
       "areas": ["frontend", "backend"],
       "technicalRef": "4.4"
     },
