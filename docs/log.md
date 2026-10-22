@@ -548,3 +548,26 @@ et leur phase est recalculée à partir du cycle pour la date planifiée.
 **Fonctionnalité concernée :** `US-PLANNING-001`, planifier ses séances.
 
 **Vérifications :** tests Jest backend, lint et génération de migration Drizzle.
+
+## 22 octobre 2026 - Navigation mobile principale
+
+### Barre basse, gestes et transitions adaptées
+
+J'ai ajouté une barre de navigation fixe pour les espaces Accueil, Cycle,
+Statistiques et Profil. La destination active est accessible par bouton ou
+balayage horizontal ; les animations respectent la préférence de réduction des
+animations et les libellés restent accessibles au lecteur d'écran.
+
+**Fonctionnalité concernée :** `US-NAVIGATION-001`, navigation principale mobile.
+
+**Vérifications :** lint, export Expo Web et parcours mobile.
+
+## 22 octobre 2026 - Export Web de la navigation
+
+J'ai rétabli l'écran Statistiques et son chargement API, déjà référencés par la
+barre de navigation. L'export Expo Web n'était pas bloqué par Metro : il
+échouait parce que cet import n'était pas présent dans la branche de navigation.
+
+**Fonctionnalités concernées :** `US-NAVIGATION-001` et `US-STATS-001`.
+
+**Vérifications :** tests UI de l'écran Statistiques et export Expo Web.
