@@ -115,7 +115,7 @@ export function RegisterScreen({ navigation, onAuthenticated }) {
       await onAuthenticated(authData);
       navigation.reset({
         index: 0,
-        routes: [{ name: 'Home' }]
+        routes: [{ name: 'MainTabs' }]
       });
     } catch (nextError) {
       setError(nextError.message);
@@ -290,16 +290,22 @@ export function RegisterScreen({ navigation, onAuthenticated }) {
 
       <View style={styles.actions}>
         {step > 0 ? (
-          <BrandButton disabled={isSubmitting} onPress={goBack} variant="ghost">
-            Retour
-          </BrandButton>
-        ) : null}
-        {step < steps.length - 1 ? (
-          <BrandButton onPress={goNext}>Continuer</BrandButton>
+          <View style={styles.actionsWithBack}>
+            <BrandButton compact disabled={isSubmitting} onPress={goBack} variant="ghost">
+              Retour
+            </BrandButton>
+            <View style={styles.primaryAction}>
+              {step < steps.length - 1 ? (
+                <BrandButton onPress={goNext}>Continuer</BrandButton>
+              ) : (
+                <BrandButton disabled={isSubmitting} onPress={handleSubmit}>
+                  {isSubmitting ? 'Création...' : 'Créer le compte'}
+                </BrandButton>
+              )}
+            </View>
+          </View>
         ) : (
-          <BrandButton disabled={isSubmitting} onPress={handleSubmit}>
-            {isSubmitting ? 'Création...' : 'Créer le compte'}
-          </BrandButton>
+          <BrandButton onPress={goNext}>Continuer</BrandButton>
         )}
       </View>
     </AuthScreenLayout>
@@ -343,6 +349,9 @@ const styles = StyleSheet.create({
   optionGrid: {
     gap: spacing.sm
   },
+  primaryAction: {
+    flex: 1
+  },
   groupLabel: {
     color: colors.cream,
     fontFamily: fonts.strong,
@@ -359,6 +368,11 @@ const styles = StyleSheet.create({
   actions: {
     gap: spacing.md,
     marginTop: spacing.sm
+  },
+  actionsWithBack: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.sm
   },
   error: {
     color: colors.roseLight,

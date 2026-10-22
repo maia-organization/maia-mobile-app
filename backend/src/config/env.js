@@ -4,7 +4,8 @@ const env = {
   PORT: Number(process.env.PORT || 3000),
   DATABASE_URL: process.env.DATABASE_URL || '',
   JWT_SECRET: process.env.JWT_SECRET || 'change-me',
-  CORS_ORIGIN: process.env.CORS_ORIGIN || '*'
+  // En production, définir explicitement l'URL publique du frontend, sans joker.
+  CORS_ORIGIN: process.env.CORS_ORIGIN || ''
 };
 
 module.exports = { env };

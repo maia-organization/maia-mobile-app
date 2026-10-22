@@ -498,6 +498,18 @@
       "status": "Done",
       "completedOn": "2026-10-02",
       "summary": "Diriger les requêtes web vers l'API configurée, présenter une erreur exploitable si une réponse n'est pas JSON et empêcher le démarrage concurrent d'une même séance."
+    },
+    {
+      "id": "TECH-BUGFIX-002",
+      "type": "bugfix",
+      "epic": "EPIC-PROFILE",
+      "title": "BUG - Corriger le parcours de création de compte",
+      "area": "platform",
+      "areas": ["frontend", "backend"],
+      "priority": "P0",
+      "estimate": 2,
+      "status": "In Progress",
+      "summary": "Distinguer clairement les actions Retour et Continuer dans l'inscription et autoriser les origines locales configurées pour finaliser une création de compte, avec une configuration CORS restrictive prévue en production."
     }
   ]
 }
