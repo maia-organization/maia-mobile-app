@@ -561,3 +561,13 @@ animations et les libellés restent accessibles au lecteur d'écran.
 **Fonctionnalité concernée :** `US-NAVIGATION-001`, navigation principale mobile.
 
 **Vérifications :** lint, export Expo Web et parcours mobile.
+
+## 22 octobre 2026 - Export Web de la navigation
+
+J'ai rétabli l'écran Statistiques et son chargement API, déjà référencés par la
+barre de navigation. L'export Expo Web n'était pas bloqué par Metro : il
+échouait parce que cet import n'était pas présent dans la branche de navigation.
+
+**Fonctionnalités concernées :** `US-NAVIGATION-001` et `US-STATS-001`.
+
+**Vérifications :** tests UI de l'écran Statistiques et export Expo Web.
