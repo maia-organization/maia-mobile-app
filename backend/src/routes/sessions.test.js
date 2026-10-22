@@ -172,3 +172,60 @@ describe('session completion route', () => {
     });
   });
 });
+
+describe('session history route', () => {
+  let app;
+  let authorization;
+
+  beforeAll(async () => {
+    app = buildApp({ logger: false });
+    await app.ready();
+    authorization = `Bearer ${app.jwt.sign({ sub: userId })}`;
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+
+  function historyLookup(result) {
+    return {
+      from: () => ({
+        where: () => ({
+          orderBy: () => ({ limit: () => ({ offset: jest.fn().mockResolvedValue(result) }) })
+        })
+      })
+    };
+  }
+
+  test('returns the authenticated user history ordered by its start date', async () => {
+    mockDb.select.mockReturnValueOnce(historyLookup([storedCompletedSessionResponse]));
+
+    const response = await app.inject({
+      headers: { authorization },
+      method: 'GET',
+      url: '/sessions?limit=50&offset=0'
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toEqual({
+      data: { limit: 50, offset: 0, sessions: [storedCompletedSessionResponse] },
+      success: true
+    });
+  });
+
+  test('rejects invalid pagination before querying the database', async () => {
+    const response = await app.inject({
+      headers: { authorization },
+      method: 'GET',
+      url: '/sessions?limit=51'
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json().error.code).toBe('VALIDATION_ERROR');
+    expect(mockDb.select).not.toHaveBeenCalled();
+  });
+});

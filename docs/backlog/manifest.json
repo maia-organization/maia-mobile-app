@@ -346,7 +346,7 @@
       "title": "US - Consulter l'historique des entraînements",
       "priority": "P0",
       "estimate": 5,
-      "status": "Todo",
+      "status": "In Progress",
       "areas": ["frontend", "backend"],
       "technicalRef": "4.5"
     },

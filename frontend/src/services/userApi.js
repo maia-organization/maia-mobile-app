@@ -58,6 +58,10 @@ export function getStats() {
   return requestUser('/stats/me');
 }
 
+export function getSessionHistory() {
+  return requestUser('/sessions?limit=50&offset=0');
+}
+
 export function startSession() {
   return requestUser('/sessions/start', { method: 'POST' });
 }
