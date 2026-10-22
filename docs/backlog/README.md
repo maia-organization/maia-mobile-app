@@ -56,7 +56,12 @@ La synchronisation :
    `feat/US-PROFILE-001-edit-profile`.
 5. Ajouter `Refs #NUMERO` au corps de la PR.
 6. Mettre à jour `docs/log.md` dans la même PR.
-7. Passer à `Review`, puis à `Done` après validation et merge.
+7. Passer à `Review` dès l'ouverture de la PR.
+8. Après le merge de la PR dans `develop`, passer impérativement l'élément à
+   `Done` dans `manifest.json`, lancer et contrôler le dry-run, puis
+   synchroniser le Project. Vérifier enfin que la carte Kanban est bien à
+   `Done` et que l'Issue est fermée. Aucun élément mergé dans `develop` ne doit
+   rester à `Review` ou `In Progress`.
 
 Les descriptions d'Issues déjà importées ne sont pas remplacées automatiquement,
 afin de préserver les décisions et échanges faits directement dans GitHub.

@@ -176,6 +176,38 @@ preferred_time
 int
 Heure (0–23), défaut : 18
 
+Table planned_workouts
+Champ
+Type
+Notes
+id
+UUID
+PK
+user_id
+UUID
+FK → user
+planned_date
+date
+Une séance par jour et par utilisatrice
+type
+string
+Douce, progressive ou dynamique
+duration
+int
+En minutes
+intensity
+string
+Adaptée à la phase du cycle
+phase
+string
+Phase calculée au moment de la planification
+
+Planning hebdomadaire
+Endpoints : GET /planning?week_start=YYYY-MM-DD, POST /planning, PUT /planning/:id, DELETE /planning/:id 🔒
+Le GET retourne du lundi au dimanche les séances enregistrées, avec la phase recalculée pour la date prévue.
+Le POST accepte planned_date et type ; le backend calcule durée, intensité et adaptation selon le profil et le cycle.
+Le PUT déplace une séance sur une date à venir. Une seule séance est autorisée par jour.
+
 Règles métier
 Une seule session active par utilisateur
 Recalcul automatique du cycle après modification de cycle_start_date ou cycle_length

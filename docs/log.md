@@ -535,3 +535,16 @@ séance.
 
 **Vérifications :** tests Jest ciblés des sessions et recommandations, lint,
 formatage et export Expo Web.
+
+## 22 octobre 2026 - Planning hebdomadaire des séances
+
+### Organiser les séances selon le cycle
+
+J'ai ajouté un planning hebdomadaire qui permet de choisir une séance douce,
+progressive ou dynamique, de la placer sur un jour, puis de la déplacer ou de
+la retirer. Les séances enregistrées restent personnelles à chaque utilisatrice
+et leur phase est recalculée à partir du cycle pour la date planifiée.
+
+**Fonctionnalité concernée :** `US-PLANNING-001`, planifier ses séances.
+
+**Vérifications :** tests Jest backend, lint et génération de migration Drizzle.

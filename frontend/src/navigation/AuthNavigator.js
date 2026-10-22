@@ -10,6 +10,7 @@ import { LoginScreen } from '../screens/LoginScreen';
 import { OnboardingScreen } from '../screens/OnboardingScreen';
 import { ProfileSetupScreen } from '../screens/ProfileSetupScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
+import { PlanningScreen } from '../screens/PlanningScreen';
 import { RegisterScreen } from '../screens/RegisterScreen';
 import { SessionScreen } from '../screens/SessionScreen';
 import { SessionSummaryScreen } from '../screens/SessionSummaryScreen';
@@ -120,6 +121,7 @@ export function AuthNavigator() {
         <Stack.Screen component={ProfileSetupScreen} name="ProfileSetup" />
         <Stack.Screen component={ProfileScreen} name="Profile" />
         <Stack.Screen component={CycleScreen} name="Cycle" />
+        <Stack.Screen component={PlanningScreen} name="Planning" />
       </Stack.Navigator>
     </NavigationContainer>
   );
