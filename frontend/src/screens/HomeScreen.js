@@ -55,7 +55,7 @@ export function HomeScreen({ navigation, onLogout }) {
 
   const handleLogout = async () => {
     await onLogout();
-    navigation.reset({
+    (navigation.getParent() || navigation).reset({
       index: 0,
       routes: [{ name: 'Welcome' }]
     });
@@ -150,8 +150,8 @@ export function HomeScreen({ navigation, onLogout }) {
         </View>
 
         <View style={styles.actions}>
-          <BrandButton onPress={() => navigation.navigate('Planning')} variant="secondary">
-            Planifier mes séances
+          <BrandButton onPress={() => navigation.navigate('Stats')} variant="secondary">
+            Voir mes statistiques
           </BrandButton>
           <BrandButton onPress={() => navigation.navigate('Profile')} variant="secondary">
             Consulter mon profil

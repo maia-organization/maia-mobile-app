@@ -44,6 +44,12 @@
       "title": "EPIC - Engagement et notifications",
       "key": "notifications",
       "source": "docs/spec.md section 6"
+    },
+    {
+      "id": "EPIC-NAVIGATION",
+      "title": "EPIC - Expérience de navigation mobile",
+      "key": "navigation",
+      "source": "docs/spec.md section 7"
     }
   ],
   "stories": [
@@ -432,6 +438,16 @@
       "estimate": 5,
       "status": "Backlog",
       "areas": ["frontend", "backend"]
+    },
+    {
+      "id": "US-NAVIGATION-001",
+      "source": "7.1",
+      "epic": "EPIC-NAVIGATION",
+      "title": "US - Naviguer facilement entre les sections de l’application",
+      "priority": "P1",
+      "estimate": 5,
+      "status": "In Progress",
+      "areas": ["frontend"]
     }
   ],
   "technical": [
