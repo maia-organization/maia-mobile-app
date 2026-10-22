@@ -70,6 +70,21 @@ describe('planning routes', () => {
     });
   });
 
+  test('rejects an invalid week and returns not found when the profile is absent', async () => {
+    const invalidWeek = await request(app, {
+      method: 'GET',
+      url: '/planning?week_start=not-a-date'
+    });
+    mockDb.select.mockReturnValueOnce(profileLookup([]));
+    const missingProfile = await request(app, {
+      method: 'GET',
+      url: '/planning?week_start=2099-01-07'
+    });
+
+    expect(invalidWeek.statusCode).toBe(400);
+    expect(missingProfile.statusCode).toBe(404);
+  });
+
   test('creates a cycle-adapted workout for a valid future date', async () => {
     const returning = jest.fn().mockResolvedValue([record]);
     mockDb.select.mockReturnValueOnce(profileLookup());
@@ -96,6 +111,32 @@ describe('planning routes', () => {
     expect(response.json()).toMatchObject({ error: { code: 'VALIDATION_ERROR' }, success: false });
   });
 
+  test('handles an absent profile and a duplicate date when creating a workout', async () => {
+    mockDb.select.mockReturnValueOnce(profileLookup([]));
+    const missingProfile = await request(app, {
+      method: 'POST',
+      payload: { planned_date: '2099-01-05', type: 'gentle' },
+      url: '/planning'
+    });
+
+    mockDb.select.mockReturnValueOnce(profileLookup());
+    mockDb.insert.mockReturnValue({
+      values: jest.fn().mockReturnValue({
+        returning: jest
+          .fn()
+          .mockRejectedValue(Object.assign(new Error('duplicate'), { code: '23505' }))
+      })
+    });
+    const duplicate = await request(app, {
+      method: 'POST',
+      payload: { planned_date: '2099-01-05', type: 'gentle' },
+      url: '/planning'
+    });
+
+    expect(missingProfile.statusCode).toBe(404);
+    expect(duplicate.statusCode).toBe(409);
+  });
+
   test('moves a planned workout to another future day', async () => {
     const returning = jest.fn().mockResolvedValue([{ ...record, plannedDate: '2099-01-06' }]);
     mockDb.update.mockReturnValue({
@@ -113,6 +154,27 @@ describe('planning routes', () => {
     expect(response.json().data.date).toBe('2099-01-06');
   });
 
+  test('rejects an invalid move and reports a missing planned workout', async () => {
+    const invalidMove = await request(app, {
+      method: 'PUT',
+      payload: { planned_date: '2099-01-06' },
+      url: '/planning/not-an-id'
+    });
+    mockDb.update.mockReturnValue({
+      set: jest.fn().mockReturnValue({
+        where: jest.fn().mockReturnValue({ returning: jest.fn().mockResolvedValue([]) })
+      })
+    });
+    const missingWorkout = await request(app, {
+      method: 'PUT',
+      payload: { planned_date: '2099-01-06' },
+      url: `/planning/${workoutId}`
+    });
+
+    expect(invalidMove.statusCode).toBe(400);
+    expect(missingWorkout.statusCode).toBe(404);
+  });
+
   test('removes only the authenticated user’s planned workout', async () => {
     const returning = jest.fn().mockResolvedValue([{ id: workoutId }]);
     mockDb.delete.mockReturnValue({ where: jest.fn().mockReturnValue({ returning }) });
@@ -121,5 +183,16 @@ describe('planning routes', () => {
 
     expect(response.statusCode).toBe(204);
     expect(returning).toHaveBeenCalledTimes(1);
+  });
+
+  test('rejects invalid identifiers and reports missing planned workouts when deleting', async () => {
+    const invalidId = await request(app, { method: 'DELETE', url: '/planning/not-an-id' });
+    mockDb.delete.mockReturnValue({
+      where: jest.fn().mockReturnValue({ returning: jest.fn().mockResolvedValue([]) })
+    });
+    const missingWorkout = await request(app, { method: 'DELETE', url: `/planning/${workoutId}` });
+
+    expect(invalidId.statusCode).toBe(400);
+    expect(missingWorkout.statusCode).toBe(404);
   });
 });
