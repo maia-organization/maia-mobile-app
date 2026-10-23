@@ -549,6 +549,33 @@ et leur phase est recalculée à partir du cycle pour la date planifiée.
 
 **Vérifications :** tests Jest backend, lint et génération de migration Drizzle.
 
+## 22 octobre 2026 - Correction de la création de compte
+
+### Actions d'inscription et accès API local
+
+J'ai rendu les actions de l'inscription plus hiérarchisées : à partir de l'étape
+profil, le retour est une action secondaire compacte, placée à côté de l'action
+principale Continuer ou Créer le compte. J'ai aussi configuré le CORS pour
+autoriser explicitement les previews locales durant le développement, tout en
+exigeant une origine publique précise en production.
+
+**Chantier concerné :** `TECH-BUGFIX-002`, correction du parcours de création de
+compte.
+
+**Vérifications :** test Jest ciblé du prévol CORS local, lint et formatage.
+
+## 23 octobre 2026 - Prévol CORS des actions API locales
+
+J'ai complété les méthodes autorisées par le prévol CORS local pour couvrir les
+actions `PUT` et `DELETE` déjà exposées par l'API. Les origines restent limitées
+aux previews locales en développement et à l'origine configurée en production.
+
+**Chantier concerné :** `TECH-BUGFIX-002`, correction du parcours de création de
+compte.
+
+**Vérifications :** tests Jest ciblés du plugin CORS, prévol HTTP à travers
+Nginx et lint.
+
 ## 22 octobre 2026 - Navigation mobile principale
 
 ### Barre basse, gestes et transitions adaptées

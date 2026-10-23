@@ -187,6 +187,7 @@ const labelDefinitions = [
   ['type:user-story', '1d76db', 'User Story produit'],
   ['type:epic', '5319e7', 'EPIC regroupant plusieurs User Stories'],
   ['type:technical', '6f42c1', 'Chantier technique'],
+  ['type:bugfix', 'd73a4a', 'Correction de comportement'],
   ...manifest.epics.map((epic) => [
     `epic:${epic.key}`,
     '0e8a16',
@@ -293,6 +294,7 @@ function issueMaps(issues) {
   const byId = new Map();
   const byTitle = new Map();
   for (const issue of issues) {
+    issue.url = issue.html_url || issue.url;
     const match = issue.body?.match(markerPattern);
     if (match) byId.set(match[1], issue);
     byTitle.set(normalize(issue.title), issue);
@@ -520,6 +522,24 @@ function ensureProjectFields(project) {
   createField('Epic', 'SINGLE_SELECT', [...manifest.epics.map((epic) => epic.id), 'TECH-PLATFORM']);
 
   fields = projectFields(project.number);
+  const epic = fields.find((field) => field.name === 'Epic');
+  const epicOptions = [...manifest.epics.map((entry) => entry.id), 'TECH-PLATFORM'];
+  if (epic.options.map((option) => option.name).join('|') !== epicOptions.join('|')) {
+    graphql(
+      'mutation($input: UpdateProjectV2FieldInput!) { updateProjectV2Field(input: $input) { projectV2Field { ... on ProjectV2SingleSelectField { id name } } } }',
+      {
+        input: {
+          fieldId: epic.id,
+          singleSelectOptions: epicOptions.map((name) => ({
+            name,
+            color: 'GRAY',
+            description: ''
+          }))
+        }
+      }
+    );
+  }
+
   if (!fields.some((field) => field.name === 'Sprint')) {
     const { iterations } = buildSchedule();
     graphql(
@@ -721,7 +741,7 @@ for (const story of manifest.stories) {
   records.push({ source: story, issue });
 }
 for (const item of manifest.technical) {
-  const issue = ensureIssue(item, 'technical', technicalBody(item), duplicateMaps);
+  const issue = ensureIssue(item, item.type || 'technical', technicalBody(item), duplicateMaps);
   records.push({ source: item, issue });
 }
 
