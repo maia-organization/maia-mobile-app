@@ -25,6 +25,23 @@ describe('SessionSummaryScreen UI', () => {
     expect(view.getByText(/belle distance/i)).toBeTruthy();
   });
 
+  it('valide la séance puis ouvre directement le ressenti', async () => {
+    completeSession.mockResolvedValueOnce({});
+    const view = render(
+      <SessionSummaryScreen
+        navigation={navigation}
+        route={{ params: { session, sessionId: 'session-1' } }}
+      />
+    );
+
+    await act(async () => {
+      fireEvent.press(view.getByRole('button', { name: 'Valider ma séance' }));
+    });
+
+    expect(completeSession).toHaveBeenCalledWith('session-1');
+    expect(navigation.replace).toHaveBeenCalledWith('Feedback', { sessionId: 'session-1' });
+  });
+
   it('signale une erreur serveur lors de la validation', async () => {
     completeSession.mockRejectedValueOnce(new Error('La validation est indisponible.'));
     jest.spyOn(Alert, 'alert').mockImplementation(jest.fn());
