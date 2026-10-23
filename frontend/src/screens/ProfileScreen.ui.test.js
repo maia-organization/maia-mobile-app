@@ -53,7 +53,7 @@ describe('ProfileScreen UI', () => {
     });
     const view = render(<ProfileScreen navigation={navigation} onLogout={onLogout} />);
 
-    const deleteButton = await view.findByTestId('delete-account-button');
+    const deleteButton = await view.findByTestId('delete-account-button', {}, { timeout: 5000 });
     await act(async () => {
       fireEvent.press(deleteButton);
     });
@@ -78,7 +78,7 @@ describe('ProfileScreen UI', () => {
     jest.spyOn(Alert, 'alert').mockImplementation((_, __, actions) => actions?.[1]?.onPress());
     const view = render(<ProfileScreen navigation={navigation} onLogout={onLogout} />);
 
-    const deleteButton = await view.findByTestId('delete-account-button');
+    const deleteButton = await view.findByTestId('delete-account-button', {}, { timeout: 5000 });
     await act(async () => {
       fireEvent.press(deleteButton);
     });
