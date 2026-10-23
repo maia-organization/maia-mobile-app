@@ -525,7 +525,8 @@
       "areas": ["frontend", "backend"],
       "priority": "P0",
       "estimate": 2,
-      "status": "Review",
+      "status": "Done",
+      "completedOn": "2026-10-23",
       "summary": "Distinguer clairement les actions Retour et Continuer dans l'inscription et autoriser les origines locales configurées pour finaliser une création de compte, avec une configuration CORS restrictive prévue en production."
     }
   ]
