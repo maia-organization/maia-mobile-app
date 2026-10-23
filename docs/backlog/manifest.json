@@ -341,7 +341,7 @@
       "title": "US - Consulter ses statistiques",
       "priority": "P0",
       "estimate": 5,
-      "status": "Review",
+      "status": "Done",
       "areas": ["frontend", "backend"],
       "technicalRef": "4.4"
     },
