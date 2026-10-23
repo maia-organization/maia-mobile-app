@@ -77,4 +77,17 @@ module.exports = async function userRoutes(app) {
 
     return successResponse({ user: updatedUser });
   });
+
+  app.delete('/me', { preHandler: app.authenticate }, async (request, reply) => {
+    const [deletedUser] = await db
+      .delete(users)
+      .where(eq(users.id, request.user.sub))
+      .returning({ id: users.id });
+
+    if (!deletedUser) {
+      return reply.status(404).send(errorResponse('USER_NOT_FOUND', 'Utilisateur introuvable.'));
+    }
+
+    return successResponse({ message: 'Compte supprimé.' });
+  });
 };

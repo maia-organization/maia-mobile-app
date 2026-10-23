@@ -147,7 +147,7 @@
       "title": "US - Supprimer son compte et ses données",
       "priority": "P1",
       "estimate": 5,
-      "status": "Backlog",
+      "status": "Review",
       "areas": ["frontend", "backend", "security"]
     },
     {

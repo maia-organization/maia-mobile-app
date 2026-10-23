@@ -644,3 +644,16 @@ tests unitaires et UI associés.
 **Chantier concerné :** `TECH-QUALITY-003`, tests UI et erreurs applicatives.
 
 **Vérifications :** tests frontend Jest, lint et formatage.
+
+## 23 octobre 2026 - Suppression du compte et des données
+
+J'ai ajouté depuis le profil une action de suppression irréversible, protégée par
+une confirmation explicite. L'API authentifiée supprime le compte : les données
+personnelles associées sont effacées par les relations PostgreSQL en cascade,
+puis l'utilisatrice est déconnectée après le message de confirmation.
+
+**Fonctionnalité concernée :** `US-ACCOUNT-001`, suppression du compte et des
+données personnelles.
+
+**Vérifications :** tests Jest ciblés de la route utilisateur et de l'écran
+Profil, lint et formatage.
