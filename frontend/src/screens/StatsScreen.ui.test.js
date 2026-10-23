@@ -1,6 +1,6 @@
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 
-import { getStats } from '../services/userApi';
+import { getSessionHistory, getStats } from '../services/userApi';
 import { StatsScreen } from './StatsScreen';
 
 jest.mock('@react-navigation/native', () => ({
@@ -8,12 +8,14 @@ jest.mock('@react-navigation/native', () => ({
 }));
 
 jest.mock('../services/userApi', () => ({
+  getSessionHistory: jest.fn(),
   getStats: jest.fn()
 }));
 
 describe('StatsScreen UI', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    getSessionHistory.mockResolvedValue({ sessions: [] });
   });
 
   it('affiche les statistiques chargées', async () => {

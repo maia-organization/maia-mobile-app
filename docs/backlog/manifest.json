@@ -352,7 +352,7 @@
       "title": "US - Consulter l'historique des entraînements",
       "priority": "P0",
       "estimate": 5,
-      "status": "Todo",
+      "status": "Review",
       "areas": ["frontend", "backend"],
       "technicalRef": "4.5"
     },

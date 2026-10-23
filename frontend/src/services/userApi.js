@@ -58,6 +58,10 @@ export function getStats() {
   return requestUser('/stats/me');
 }
 
+export function getSessionHistory() {
+  return requestUser('/sessions?limit=50&offset=0');
+}
+
 export function getPlanning(weekStart) {
   return requestUser(`/planning?week_start=${weekStart}`);
 }

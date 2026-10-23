@@ -553,6 +553,24 @@ JWT et le format des agrégats retournés pour les seules séances terminées.
 
 **Vérifications :** 55 tests Jest backend, lint et formatage.
 
+## 22 octobre 2026 - Historique des entraînements
+
+### Séances passées et tri par date
+
+J'ai complété l'écran Statistiques avec l'historique des séances de course. Il
+affiche la date, le type, la durée et l'état de chaque séance, identifie
+clairement les séances terminées et permet de les trier de la plus récente à la
+plus ancienne, ou inversement. L'écran recharge simultanément les statistiques
+et l'historique, avec les mêmes états de chargement et d'erreur.
+
+J'ai également couvert l'endpoint authentifié `GET /sessions` pour la
+pagination et le format de l'historique retourné.
+
+**Fonctionnalité concernée :** `US-HISTORY-001`, consultation de l'historique
+des entraînements.
+
+**Vérifications :** tests Jest ciblés de la route sessions, lint et formatage.
+
 ## 22 octobre 2026 - Planning hebdomadaire des séances
 
 ### Organiser les séances selon le cycle
