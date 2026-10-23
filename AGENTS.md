@@ -166,7 +166,9 @@ Pour ces changements :
    l'implémentation remise ;
 6. mettre à jour les critères réellement satisfaits ;
 7. passer l'Issue à `Review` lors de la PR ;
-8. passer l'Issue à `Done` uniquement après validation et merge.
+8. après validation et merge dans `develop`, passer impérativement l'Issue à
+   `Done` dans le manifeste, synchroniser le Project et vérifier que la carte
+   Kanban est à `Done` ; aucun élément mergé ne reste à `Review` ou `In Progress`.
 
 Si aucune Issue ne correspond à une fonctionnalité ou un bug planifié, préparer une nouvelle US, vérifier les doublons et présenter le dry-run avant création.
 

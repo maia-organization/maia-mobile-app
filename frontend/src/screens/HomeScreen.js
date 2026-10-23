@@ -55,7 +55,7 @@ export function HomeScreen({ navigation, onLogout }) {
 
   const handleLogout = async () => {
     await onLogout();
-    navigation.reset({
+    (navigation.getParent() || navigation).reset({
       index: 0,
       routes: [{ name: 'Welcome' }]
     });
