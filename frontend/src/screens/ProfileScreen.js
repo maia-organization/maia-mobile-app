@@ -14,8 +14,10 @@ import { useFocusEffect } from '@react-navigation/native';
 import { BrandButton } from '../components/BrandButton';
 import {
   getNotificationSettings,
+  getPrivacySettings,
   getProfile,
   updateNotificationSettings,
+  updatePrivacySettings,
   deleteAccount
 } from '../services/userApi';
 import { colors, fonts, radius, spacing, type } from '../theme';
@@ -72,6 +74,7 @@ function NotificationToggle({ disabled, label, onValueChange, value }) {
 export function ProfileScreen({ navigation, onLogout }) {
   const [profile, setProfile] = useState(null);
   const [notificationSettings, setNotificationSettings] = useState(null);
+  const [privacySettings, setPrivacySettings] = useState(null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSavingNotifications, setIsSavingNotifications] = useState(false);
@@ -83,11 +86,12 @@ export function ProfileScreen({ navigation, onLogout }) {
     setError('');
     setIsLoading(true);
 
-    Promise.all([getProfile(), getNotificationSettings()])
-      .then(([{ user }, { settings }]) => {
+    Promise.all([getProfile(), getNotificationSettings(), getPrivacySettings()])
+      .then(([{ user }, { settings }, { settings: privacy }]) => {
         if (!isActive) return;
         setProfile(user);
         setNotificationSettings(settings);
+        setPrivacySettings(privacy);
       })
       .catch((nextError) => {
         if (isActive) setError(nextError.message);
@@ -104,6 +108,18 @@ export function ProfileScreen({ navigation, onLogout }) {
   const updateNotifications = (changes) => {
     setNotificationSettings((current) => ({ ...current, ...changes }));
     setNotificationFeedback('');
+  };
+
+  const savePrivacy = async (changes) => {
+    if (!privacySettings) return;
+    const next = { ...privacySettings, ...changes };
+    setPrivacySettings(next);
+    try {
+      const { settings } = await updatePrivacySettings(next);
+      setPrivacySettings(settings);
+    } catch (nextError) {
+      setError(nextError.message);
+    }
   };
 
   const saveNotifications = async () => {
@@ -269,6 +285,12 @@ export function ProfileScreen({ navigation, onLogout }) {
               </Text>
             )}
           </View>
+        </ProfileSection>
+
+        <ProfileSection title="Confidentialité">
+          <NotificationToggle label="Profil public" onValueChange={(value) => savePrivacy({ profile_visibility: value ? 'public' : 'private' })} value={privacySettings?.profile_visibility === 'public'} />
+          <NotificationToggle label="Afficher mes statistiques" onValueChange={(show_stats) => savePrivacy({ show_stats })} value={privacySettings?.show_stats || false} />
+          <NotificationToggle label="Afficher mes informations de cycle" onValueChange={(show_cycle) => savePrivacy({ show_cycle })} value={privacySettings?.show_cycle || false} />
         </ProfileSection>
 
         <View style={styles.actions}>

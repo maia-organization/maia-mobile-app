@@ -657,3 +657,11 @@ données personnelles.
 
 **Vérifications :** tests Jest ciblés de la route utilisateur et de l'écran
 Profil, lint et formatage.
+
+## 23 octobre 2026 - Confidentialité des données
+
+J'ai ajouté les préférences de confidentialité du profil, des statistiques et du cycle, sauvegardées immédiatement via l'API. La visibilité par défaut des courses est également persistée pour les futures publications.
+
+**Fonctionnalité concernée :** `US-PRIVACY-001`.
+
+**Vérifications :** migration Drizzle générée, tests Jest ciblés backend et UI frontend.
