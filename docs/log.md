@@ -677,3 +677,14 @@ notification intrusive.
 
 **Vérifications :** tests Jest ciblés des règles métier, de la route API et des
 écrans mobile, y compris les erreurs réseau et serveur.
+
+## 23 octobre 2026 - Adaptation manuelle de la séance recommandée
+
+J'ai permis d'alléger ou d'augmenter l'intensité d'une séance du jour, ou de la
+remplacer par une marche. Le choix est enregistré immédiatement et les
+recommandations suivantes l'utilisent pour rester adaptées au rythme choisi.
+
+**Fonctionnalité concernée :** `US-WORKOUT-ADAPT-001`.
+
+**Vérifications :** migration Drizzle générée, tests Jest ciblés backend et UI
+frontend, lint.

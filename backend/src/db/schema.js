@@ -78,6 +78,7 @@ const workoutRecommendations = pgTable(
     intensity: varchar('intensity', { length: 32 }).notNull(),
     phase: varchar('phase', { length: 32 }).notNull(),
     adaptation: varchar('adaptation', { length: 255 }),
+    manuallyAdapted: boolean('manually_adapted').default(false).notNull(),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
   },
   (table) => [
