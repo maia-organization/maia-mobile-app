@@ -688,3 +688,14 @@ recommandations suivantes l'utilisent pour rester adaptées au rythme choisi.
 
 **Vérifications :** migration Drizzle générée, tests Jest ciblés backend et UI
 frontend, lint.
+
+## 23 octobre 2026 - Résumé de séance
+
+J'ai rendu le récapitulatif de fin de séance disponible avec la durée, la distance,
+l'allure moyenne et un message encourageant. Après validation, l'utilisatrice arrive
+directement sur le ressenti facultatif afin d'ajuster les recommandations futures.
+
+**Fonctionnalité concernée :** `US-SUMMARY-001`, résumé après une séance.
+
+**Vérifications :** dry-run de synchronisation du backlog et test UI ciblé du
+parcours de validation vers le ressenti.

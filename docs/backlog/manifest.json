@@ -373,7 +373,7 @@
       "title": "US - Recevoir un résumé après une séance",
       "priority": "P0",
       "estimate": 5,
-      "status": "Backlog",
+      "status": "Review",
       "areas": ["frontend", "backend"]
     },
     {
