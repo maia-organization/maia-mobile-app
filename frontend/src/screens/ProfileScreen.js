@@ -288,9 +288,23 @@ export function ProfileScreen({ navigation, onLogout }) {
         </ProfileSection>
 
         <ProfileSection title="Confidentialité">
-          <NotificationToggle label="Profil public" onValueChange={(value) => savePrivacy({ profile_visibility: value ? 'public' : 'private' })} value={privacySettings?.profile_visibility === 'public'} />
-          <NotificationToggle label="Afficher mes statistiques" onValueChange={(show_stats) => savePrivacy({ show_stats })} value={privacySettings?.show_stats || false} />
-          <NotificationToggle label="Afficher mes informations de cycle" onValueChange={(show_cycle) => savePrivacy({ show_cycle })} value={privacySettings?.show_cycle || false} />
+          <NotificationToggle
+            label="Profil public"
+            onValueChange={(value) =>
+              savePrivacy({ profile_visibility: value ? 'public' : 'private' })
+            }
+            value={privacySettings?.profile_visibility === 'public'}
+          />
+          <NotificationToggle
+            label="Afficher mes statistiques"
+            onValueChange={(show_stats) => savePrivacy({ show_stats })}
+            value={privacySettings?.show_stats || false}
+          />
+          <NotificationToggle
+            label="Afficher mes informations de cycle"
+            onValueChange={(show_cycle) => savePrivacy({ show_cycle })}
+            value={privacySettings?.show_cycle || false}
+          />
         </ProfileSection>
 
         <View style={styles.actions}>

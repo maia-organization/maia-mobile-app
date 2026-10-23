@@ -41,7 +41,9 @@ describe('ProfileScreen UI', () => {
     jest.clearAllMocks();
     getProfile.mockResolvedValue({ user: profile });
     getNotificationSettings.mockResolvedValue({ settings: { enabled: true } });
-    require('../services/userApi').getPrivacySettings.mockResolvedValue({ settings: { profile_visibility: 'public', show_cycle: false, show_stats: true } });
+    require('../services/userApi').getPrivacySettings.mockResolvedValue({
+      settings: { profile_visibility: 'public', show_cycle: false, show_stats: true }
+    });
   });
 
   it('demande confirmation, supprime le compte puis déconnecte l’utilisatrice', async () => {
