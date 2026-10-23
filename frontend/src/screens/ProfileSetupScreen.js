@@ -216,7 +216,7 @@ export function ProfileSetupScreen({ navigation }) {
             onCycleLengthChange={updateField(setCycleLength)}
             onCycleStartDateChange={updateField(setCycleStartDate)}
             onSave={handleSave}
-            onSecondaryAction={() => navigation.navigate('Home')}
+            onSecondaryAction={() => navigation.navigate('MainTabs', { screen: 'Home' })}
             primaryLabel="Sauvegarder mon profil"
             savingLabel="Sauvegarde..."
             secondaryLabel="Retour à l'accueil"

@@ -54,6 +54,10 @@ export function getTodayWorkout() {
   return requestUser('/workouts/today');
 }
 
+export function getStats() {
+  return requestUser('/stats/me');
+}
+
 export function getPlanning(weekStart) {
   return requestUser(`/planning?week_start=${weekStart}`);
 }
