@@ -563,3 +563,15 @@ exigeant une origine publique précise en production.
 compte.
 
 **Vérifications :** test Jest ciblé du prévol CORS local, lint et formatage.
+
+## 23 octobre 2026 - Prévol CORS des actions API locales
+
+J'ai complété les méthodes autorisées par le prévol CORS local pour couvrir les
+actions `PUT` et `DELETE` déjà exposées par l'API. Les origines restent limitées
+aux previews locales en développement et à l'origine configurée en production.
+
+**Chantier concerné :** `TECH-BUGFIX-002`, correction du parcours de création de
+compte.
+
+**Vérifications :** tests Jest ciblés du plugin CORS, prévol HTTP à travers
+Nginx et lint.

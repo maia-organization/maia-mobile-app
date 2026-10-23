@@ -18,6 +18,7 @@ function isAllowedOrigin(origin) {
 
 module.exports = fastifyPlugin(async function corsPlugin(app) {
   await app.register(cors, {
+    methods: ['GET', 'HEAD', 'POST', 'PUT', 'DELETE'],
     origin(origin, callback) {
       if (!origin || isAllowedOrigin(origin)) {
         callback(null, true);

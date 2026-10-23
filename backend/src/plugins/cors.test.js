@@ -31,6 +31,20 @@ describe('CORS plugin', () => {
     expect(response.headers['access-control-allow-origin']).toBe(origin);
   });
 
+  test.each(['PUT', 'DELETE'])('authorizes %s requests used by the API', async (method) => {
+    const response = await app.inject({
+      headers: {
+        'access-control-request-method': method,
+        origin: 'http://localhost:8082'
+      },
+      method: 'OPTIONS',
+      url: '/users/me'
+    });
+
+    expect(response.statusCode).toBe(204);
+    expect(response.headers['access-control-allow-methods']).toContain(method);
+  });
+
   test('keeps CORS headers on an error response', async () => {
     const origin = 'http://localhost:8082';
     const response = await app.inject({
