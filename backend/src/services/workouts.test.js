@@ -40,6 +40,44 @@ describe('workout recommendation', () => {
       })
     ).toMatchObject({ duration: 30, intensity: 'low' });
   });
+
+  test('uses the latest lower intensity choice for the next recommendation', () => {
+    expect(
+      getWorkoutRecommendation({
+        cycleView: { current_phase: 'follicular' },
+        goal: 'regularite',
+        lastManualAdaptation: { intensity: 'low', type: 'run' },
+        level: 'intermediaire'
+      })
+    ).toMatchObject({
+      adaptation: 'Adaptée à l’intensité choisie lors de ta dernière séance.',
+      duration: 25,
+      intensity: 'low',
+      type: 'run'
+    });
+  });
+
+  test('uses the latest higher intensity choice for the next recommendation', () => {
+    expect(
+      getWorkoutRecommendation({
+        cycleView: { current_phase: 'luteal' },
+        goal: 'regularite',
+        lastManualAdaptation: { intensity: 'high', type: 'run' },
+        level: 'intermediaire'
+      })
+    ).toMatchObject({ duration: 40, intensity: 'high', type: 'run' });
+  });
+
+  test('uses the latest walking choice for the next recommendation', () => {
+    expect(
+      getWorkoutRecommendation({
+        cycleView: { current_phase: 'follicular' },
+        goal: 'regularite',
+        lastManualAdaptation: { intensity: 'low', type: 'walk' },
+        level: 'intermediaire'
+      })
+    ).toMatchObject({ duration: 15, intensity: 'low', title: 'Marche adaptée', type: 'walk' });
+  });
 });
 
 describe('pre-session encouragement', () => {

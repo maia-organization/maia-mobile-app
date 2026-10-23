@@ -76,7 +76,10 @@ function getWorkoutRecommendation({ cycleView, feedback, goal, lastManualAdaptat
         intensityAdjustment +
         (followsWalkPreference ? -10 : 0)
     ),
-    intensity: followsWalkPreference || shouldRecover ? 'low' : intensityByPhase[phase],
+    intensity:
+      followsWalkPreference || shouldRecover
+        ? 'low'
+        : lastManualAdaptation?.intensity || intensityByPhase[phase],
     phase,
     title: followsWalkPreference ? 'Marche adaptée' : titleByPhase[phase],
     type: followsWalkPreference ? 'walk' : 'run'

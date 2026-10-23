@@ -138,6 +138,15 @@ describe('workout routes', () => {
     expect(response.json().data.completed).toBe(true);
   });
 
+  test('reports a missing user when loading the daily workout', async () => {
+    mockDb.select.mockReturnValueOnce(limitedLookup([]));
+
+    const response = await requestTodayWorkout();
+
+    expect(response.statusCode).toBe(404);
+    expect(response.json().error.code).toBe('USER_NOT_FOUND');
+  });
+
   test('persists a manual adaptation for the next recommendations to use', async () => {
     mockTodayWorkout([]);
     const updatedWorkout = {
@@ -176,5 +185,42 @@ describe('workout routes', () => {
     });
 
     expect(response.statusCode).toBe(400);
+  });
+
+  test.each([
+    ['high', 'run', 'Séance dynamique'],
+    ['low', 'run', 'Footing récupération']
+  ])('persists the %s running choice', async (intensity, type, title) => {
+    mockTodayWorkout([]);
+    const returning = jest
+      .fn()
+      .mockResolvedValue([{ intensity, manuallyAdapted: true, title, type }]);
+    mockDb.update.mockReturnValue({
+      set: jest.fn().mockReturnValue({ where: jest.fn().mockReturnValue({ returning }) })
+    });
+
+    const response = await app.inject({
+      headers: { authorization: `Bearer ${app.jwt.sign({ sub: userId })}` },
+      method: 'PUT',
+      payload: { intensity, type },
+      url: '/workouts/today'
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json().data.title).toBe(title);
+  });
+
+  test('reports a missing user when adapting the daily workout', async () => {
+    mockDb.select.mockReturnValueOnce(limitedLookup([]));
+
+    const response = await app.inject({
+      headers: { authorization: `Bearer ${app.jwt.sign({ sub: userId })}` },
+      method: 'PUT',
+      payload: { intensity: 'low', type: 'run' },
+      url: '/workouts/today'
+    });
+
+    expect(response.statusCode).toBe(404);
+    expect(response.json().error.code).toBe('USER_NOT_FOUND');
   });
 });
