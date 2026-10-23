@@ -644,3 +644,15 @@ tests unitaires et UI associés.
 **Chantier concerné :** `TECH-QUALITY-003`, tests UI et erreurs applicatives.
 
 **Vérifications :** tests frontend Jest, lint et formatage.
+
+## 23 octobre 2026 - Réinitialisation du mot de passe
+
+J'ai ajouté le parcours complet de récupération de compte : le lien « mot de
+passe oublié » depuis la connexion, l'envoi d'un e-mail via Resend, l'ouverture
+du deep link Maïa et la définition d'un nouveau mot de passe. Les liens sont
+valables une heure et deviennent invalides dès que le mot de passe est modifié.
+J'ai également évité d'exposer l'existence d'un compte lors de la demande.
+
+**Fonctionnalité concernée :** `US-AUTH-004`, réinitialisation du mot de passe.
+
+**Vérifications :** tests Jest backend et UI mobile ciblés, lint et formatage.

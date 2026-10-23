@@ -98,6 +98,9 @@ export function LoginScreen({ navigation, onAuthenticated }) {
         textContentType="password"
         value={password}
       />
+      <BrandButton onPress={() => navigation.navigate('PasswordResetRequest')} variant="ghost">
+        Mot de passe oublié ?
+      </BrandButton>
       {error ? <Text style={styles.error}>{error}</Text> : null}
       <BrandButton disabled={isSubmitting} onPress={handleSubmit}>
         {isSubmitting ? 'Connexion...' : 'Se connecter'}

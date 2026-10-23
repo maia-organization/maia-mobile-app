@@ -37,3 +37,11 @@ export function registerUser(payload) {
 export function loginUser(payload) {
   return requestAuth('/auth/login', payload);
 }
+
+export function requestPasswordReset(payload) {
+  return requestAuth('/auth/password-reset/request', payload);
+}
+
+export function confirmPasswordReset(payload) {
+  return requestAuth('/auth/password-reset/confirm', payload);
+}
