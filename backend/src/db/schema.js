@@ -88,6 +88,25 @@ const workoutRecommendations = pgTable(
   ]
 );
 
+const plannedWorkouts = pgTable(
+  'planned_workouts',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    plannedDate: date('planned_date').notNull(),
+    type: varchar('type', { length: 32 }).notNull(),
+    title: varchar('title', { length: 128 }).notNull(),
+    duration: integer('duration').notNull(),
+    intensity: varchar('intensity', { length: 32 }).notNull(),
+    phase: varchar('phase', { length: 32 }).notNull(),
+    adaptation: varchar('adaptation', { length: 255 }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+  },
+  (table) => [uniqueIndex('planned_workouts_user_date_unique').on(table.userId, table.plannedDate)]
+);
+
 const cycles = pgTable('cycles', {
   userId: uuid('user_id')
     .primaryKey()
@@ -114,5 +133,6 @@ module.exports = {
   sessions,
   sessionStatus,
   users,
+  plannedWorkouts,
   workoutRecommendations
 };

@@ -437,3 +437,22 @@ Le contenu est cohérent avec les données du cycle renseignées
 L’utilisatrice peut activer ou désactiver ces notifications
 Les notifications restent non intrusives et personnalisées
 Un accès rapide vers les recommandations associées est proposé depuis la notification
+
+7 : Expérience de navigation mobile
+
+7.1 : Naviguer facilement entre les sections de l’application
+
+Permettre à l’utilisatrice de se déplacer rapidement et naturellement entre les sections principales de Maïa.
+
+En tant que utilisatrice de l’application mobile
+Je veux accéder aux sections principales depuis une barre de navigation fixe et pouvoir passer d’une section à l’autre par bouton ou par balayage horizontal
+Afin de retrouver rapidement mes repères et de profiter de transitions agréables entre les écrans
+
+Critères d’acceptation :
+Une barre de navigation est fixée en bas des écrans principaux de l’application mobile
+La barre respecte les zones sûres de l’appareil et reste utilisable lorsque le clavier est affiché
+La section active est identifiable visuellement et chaque bouton mène à la section correspondante en un appui
+Un balayage horizontal de droite à gauche ou de gauche à droite permet d’accéder à la section principale adjacente, sans gêner les gestes propres au contenu de l’écran
+Le passage par bouton ou par balayage fournit un retour visuel clair et une animation cohérente entre les écrans
+Les animations respectent la préférence système de réduction des animations
+La navigation est utilisable au lecteur d’écran et au clavier, avec des libellés accessibles pour chaque destination

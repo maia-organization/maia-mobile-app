@@ -87,5 +87,14 @@ module.exports = [
         version: 'detect'
       }
     }
+  },
+  {
+    files: ['frontend/**/*.test.js'],
+    languageOptions: {
+      globals: {
+        ...globals.jest,
+        ...globals.node
+      }
+    }
   }
 ];

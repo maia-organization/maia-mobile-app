@@ -62,6 +62,25 @@ export function getSessionHistory() {
   return requestUser('/sessions?limit=50&offset=0');
 }
 
+export function getPlanning(weekStart) {
+  return requestUser(`/planning?week_start=${weekStart}`);
+}
+
+export function createPlannedWorkout(payload) {
+  return requestUser('/planning', { body: JSON.stringify(payload), method: 'POST' });
+}
+
+export function movePlannedWorkout(id, plannedDate) {
+  return requestUser(`/planning/${id}`, {
+    body: JSON.stringify({ planned_date: plannedDate }),
+    method: 'PUT'
+  });
+}
+
+export function deletePlannedWorkout(id) {
+  return requestUser(`/planning/${id}`, { method: 'DELETE' });
+}
+
 export function startSession() {
   return requestUser('/sessions/start', { method: 'POST' });
 }

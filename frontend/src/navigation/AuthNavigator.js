@@ -3,19 +3,18 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { HomeScreen } from '../screens/HomeScreen';
-import { CycleScreen } from '../screens/CycleScreen';
 import { FeedbackScreen } from '../screens/FeedbackScreen';
 import { LoginScreen } from '../screens/LoginScreen';
 import { OnboardingScreen } from '../screens/OnboardingScreen';
 import { ProfileSetupScreen } from '../screens/ProfileSetupScreen';
-import { ProfileScreen } from '../screens/ProfileScreen';
 import { RegisterScreen } from '../screens/RegisterScreen';
 import { SessionScreen } from '../screens/SessionScreen';
 import { SessionSummaryScreen } from '../screens/SessionSummaryScreen';
 import { StatsScreen } from '../screens/StatsScreen';
 import { WelcomeScreen } from '../screens/WelcomeScreen';
 import { colors } from '../theme';
+import { MainTabsNavigator } from './MainTabsNavigator';
+import { useReducedMotion } from '../hooks/useReducedMotion';
 import { clearAuthToken, getAuthToken, saveAuthToken } from '../services/authStorage';
 import { completeOnboarding, hasCompletedOnboarding } from '../services/onboardingStorage';
 
@@ -36,6 +35,7 @@ export function AuthNavigator() {
   const [token, setToken] = useState(null);
   const [hasSeenOnboarding, setHasSeenOnboarding] = useState(false);
   const [isReady, setIsReady] = useState(false);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     let isMounted = true;
@@ -95,9 +95,9 @@ export function AuthNavigator() {
   return (
     <NavigationContainer theme={navigationTheme}>
       <Stack.Navigator
-        initialRouteName={token ? 'Home' : hasSeenOnboarding ? 'Welcome' : 'Onboarding'}
+        initialRouteName={token ? 'MainTabs' : hasSeenOnboarding ? 'Welcome' : 'Onboarding'}
         screenOptions={{
-          animation: 'fade_from_bottom',
+          animation: reduceMotion ? 'none' : 'fade_from_bottom',
           contentStyle: { backgroundColor: colors.ink },
           headerShown: false
         }}
@@ -112,16 +112,14 @@ export function AuthNavigator() {
         <Stack.Screen name="Register">
           {(props) => <RegisterScreen {...props} onAuthenticated={handleAuthenticated} />}
         </Stack.Screen>
-        <Stack.Screen name="Home">
-          {(props) => <HomeScreen {...props} onLogout={handleLogout} />}
+        <Stack.Screen name="MainTabs">
+          {(props) => <MainTabsNavigator {...props} onLogout={handleLogout} />}
         </Stack.Screen>
         <Stack.Screen component={SessionScreen} name="Session" />
         <Stack.Screen component={SessionSummaryScreen} name="SessionSummary" />
         <Stack.Screen component={FeedbackScreen} name="Feedback" />
         <Stack.Screen component={StatsScreen} name="Stats" />
         <Stack.Screen component={ProfileSetupScreen} name="ProfileSetup" />
-        <Stack.Screen component={ProfileScreen} name="Profile" />
-        <Stack.Screen component={CycleScreen} name="Cycle" />
       </Stack.Navigator>
     </NavigationContainer>
   );
