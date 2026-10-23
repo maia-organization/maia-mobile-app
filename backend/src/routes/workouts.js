@@ -59,7 +59,12 @@ async function getTodayRecommendation(userId) {
   const [lastManualAdaptation] = await db
     .select({ intensity: workoutRecommendations.intensity, type: workoutRecommendations.type })
     .from(workoutRecommendations)
-    .where(and(eq(workoutRecommendations.userId, userId), eq(workoutRecommendations.manuallyAdapted, true)))
+    .where(
+      and(
+        eq(workoutRecommendations.userId, userId),
+        eq(workoutRecommendations.manuallyAdapted, true)
+      )
+    )
     .orderBy(desc(workoutRecommendations.recommendationDate))
     .limit(1);
 
@@ -108,7 +113,11 @@ async function getTodayRecommendation(userId) {
 
 function workoutTitle(type, intensity) {
   if (type === 'walk') return 'Marche adaptée';
-  return intensity === 'high' ? 'Séance dynamique' : intensity === 'low' ? 'Footing récupération' : 'Course adaptée';
+  return intensity === 'high'
+    ? 'Séance dynamique'
+    : intensity === 'low'
+      ? 'Footing récupération'
+      : 'Course adaptée';
 }
 
 module.exports = async function workoutRoutes(app) {
@@ -150,7 +159,8 @@ module.exports = async function workoutRoutes(app) {
       const [workout] = await db
         .update(workoutRecommendations)
         .set({
-          adaptation: 'Modifiée selon ton choix. Tes prochaines recommandations en tiendront compte.',
+          adaptation:
+            'Modifiée selon ton choix. Tes prochaines recommandations en tiendront compte.',
           intensity: request.body.intensity,
           manuallyAdapted: true,
           title: workoutTitle(request.body.type, request.body.intensity),
