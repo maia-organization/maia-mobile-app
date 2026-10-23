@@ -633,3 +633,14 @@ barre de navigation. L'export Expo Web n'était pas bloqué par Metro : il
 **Fonctionnalités concernées :** `US-NAVIGATION-001` et `US-STATS-001`.
 
 **Vérifications :** tests UI de l'écran Statistiques et export Expo Web.
+
+## 23 octobre 2026 - Socle de tests frontend et UI
+
+J'ai mis en place Jest et React Native Testing Library pour couvrir les boutons,
+la navigation et les erreurs réseau ou serveur de la connexion. Ces tests sont
+exécutés dans la CI, et chaque fonctionnalité modifiée doit désormais adapter ses
+tests unitaires et UI associés.
+
+**Chantier concerné :** `TECH-QUALITY-003`, tests UI et erreurs applicatives.
+
+**Vérifications :** tests frontend Jest, lint et formatage.
