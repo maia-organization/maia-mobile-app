@@ -7,8 +7,10 @@ import { deleteAccount, getNotificationSettings, getProfile } from '../services/
 jest.mock('../services/userApi', () => ({
   deleteAccount: jest.fn(),
   getNotificationSettings: jest.fn(),
+  getPrivacySettings: jest.fn(),
   getProfile: jest.fn(),
-  updateNotificationSettings: jest.fn()
+  updateNotificationSettings: jest.fn(),
+  updatePrivacySettings: jest.fn()
 }));
 
 jest.mock('@react-navigation/native', () => {
@@ -39,6 +41,7 @@ describe('ProfileScreen UI', () => {
     jest.clearAllMocks();
     getProfile.mockResolvedValue({ user: profile });
     getNotificationSettings.mockResolvedValue({ settings: { enabled: true } });
+    require('../services/userApi').getPrivacySettings.mockResolvedValue({ settings: { profile_visibility: 'public', show_cycle: false, show_stats: true } });
   });
 
   it('demande confirmation, supprime le compte puis déconnecte l’utilisatrice', async () => {

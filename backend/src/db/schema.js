@@ -126,9 +126,18 @@ const notificationSettings = pgTable('notification_settings', {
   preferredTime: integer('preferred_time').default(18).notNull()
 });
 
+const privacySettings = pgTable('privacy_settings', {
+  userId: uuid('user_id').primaryKey().references(() => users.id, { onDelete: 'cascade' }),
+  profileVisibility: varchar('profile_visibility', { length: 16 }).default('public').notNull(),
+  defaultRunVisibility: varchar('default_run_visibility', { length: 16 }).default('followers').notNull(),
+  showCycle: boolean('show_cycle').default(false).notNull(),
+  showStats: boolean('show_stats').default(true).notNull()
+});
+
 module.exports = {
   cycles,
   notificationSettings,
+  privacySettings,
   sessionFeedback,
   sessions,
   sessionStatus,
