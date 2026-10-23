@@ -315,6 +315,7 @@ export function ProfileScreen({ navigation, onLogout }) {
             Retour à l'accueil
           </BrandButton>
           <BrandButton
+            accessibilityLabel="Supprimer mon compte"
             disabled={isDeletingAccount}
             onPress={confirmAccountDeletion}
             variant="ghost"
