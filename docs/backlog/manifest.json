@@ -393,7 +393,8 @@
       "title": "US - Recevoir des encouragements personnalisés",
       "priority": "P1",
       "estimate": 3,
-      "status": "Review",
+      "status": "Done",
+      "completedOn": "2026-10-23",
       "areas": ["frontend", "backend"]
     },
 
