@@ -81,4 +81,12 @@ describe('LoginScreen UI', () => {
 
     expect(navigation.navigate).toHaveBeenCalledWith('Register');
   });
+
+  it('ouvre la récupération de mot de passe', async () => {
+    const { navigation, view } = await renderScreen();
+
+    await fireEvent.press(view.getByRole('button', { name: 'Mot de passe oublié ?' }));
+
+    expect(navigation.navigate).toHaveBeenCalledWith('PasswordResetRequest');
+  });
 });

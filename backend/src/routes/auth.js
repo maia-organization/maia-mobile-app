@@ -1,16 +1,27 @@
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const { eq } = require('drizzle-orm');
 
 const { db } = require('../db');
 const { cycles, notificationSettings, users } = require('../db/schema');
 const { errorResponse, successResponse } = require('../utils/response');
+const { sendPasswordResetEmail } = require('../services/passwordResetEmail');
 const {
   normalizeEmail,
+  isStrongPassword,
   validateLoginCredentials,
   validateRegistration
 } = require('../utils/validation');
 
 const SALT_ROUNDS = 10;
+const passwordHashFingerprint = (passwordHash) =>
+  crypto.createHash('sha256').update(passwordHash).digest('hex');
+
+const genericResetRequestResponse = () =>
+  successResponse({
+    message:
+      'Si un compte correspond à cette adresse, un e-mail de réinitialisation vient d’être envoyé.'
+  });
 
 const defaultProfile = () => ({
   birthdate: '1995-01-01',
@@ -127,5 +138,114 @@ module.exports = async function authRoutes(app) {
     const token = app.jwt.sign({ sub: user.id });
 
     return successResponse({ token, user: { id: user.id } });
+  });
+
+  app.post('/password-reset/request', async (request, reply) => {
+    const email = normalizeEmail(request.body?.email);
+
+    if (!email) {
+      return reply
+        .status(400)
+        .send(errorResponse('VALIDATION_ERROR', 'Une adresse e-mail valide est requise.'));
+    }
+
+    const [user] = await db
+      .select({ email: users.email, id: users.id, passwordHash: users.passwordHash })
+      .from(users)
+      .where(eq(users.email, email))
+      .limit(1);
+
+    if (!user) return genericResetRequestResponse();
+
+    const token = app.jwt.sign(
+      {
+        passwordHashFingerprint: passwordHashFingerprint(user.passwordHash),
+        purpose: 'password-reset',
+        sub: user.id
+      },
+      { expiresIn: '1h' }
+    );
+
+    try {
+      await sendPasswordResetEmail({ email: user.email, token });
+    } catch (error) {
+      request.log.error(error, 'Unable to send password reset email');
+      return reply
+        .status(503)
+        .send(
+          errorResponse(
+            'EMAIL_UNAVAILABLE',
+            "L'e-mail de réinitialisation ne peut pas être envoyé."
+          )
+        );
+    }
+
+    return genericResetRequestResponse();
+  });
+
+  app.post('/password-reset/confirm', async (request, reply) => {
+    const token = typeof request.body?.token === 'string' ? request.body.token : '';
+    const password = typeof request.body?.password === 'string' ? request.body.password : '';
+    const passwordError = isStrongPassword(password)
+      ? null
+      : 'Le mot de passe doit contenir 8 caractères, une minuscule, une majuscule, un chiffre et un caractère spécial.';
+
+    if (!token || passwordError) {
+      return reply
+        .status(400)
+        .send(
+          errorResponse(
+            'VALIDATION_ERROR',
+            passwordError || 'Le lien de réinitialisation est invalide.'
+          )
+        );
+    }
+
+    let payload;
+    try {
+      payload = app.jwt.verify(token);
+    } catch {
+      return reply
+        .status(400)
+        .send(
+          errorResponse(
+            'INVALID_RESET_TOKEN',
+            'Ce lien de réinitialisation est invalide ou expiré.'
+          )
+        );
+    }
+
+    if (payload.purpose !== 'password-reset' || !payload.sub || !payload.passwordHashFingerprint) {
+      return reply
+        .status(400)
+        .send(
+          errorResponse(
+            'INVALID_RESET_TOKEN',
+            'Ce lien de réinitialisation est invalide ou expiré.'
+          )
+        );
+    }
+
+    const [user] = await db
+      .select({ id: users.id, passwordHash: users.passwordHash })
+      .from(users)
+      .where(eq(users.id, payload.sub))
+      .limit(1);
+
+    if (!user || passwordHashFingerprint(user.passwordHash) !== payload.passwordHashFingerprint) {
+      return reply
+        .status(400)
+        .send(
+          errorResponse(
+            'INVALID_RESET_TOKEN',
+            'Ce lien de réinitialisation est invalide ou expiré.'
+          )
+        );
+    }
+
+    const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
+    await db.update(users).set({ passwordHash }).where(eq(users.id, user.id));
+
+    return successResponse({ message: 'Ton mot de passe a été réinitialisé.' });
   });
 };

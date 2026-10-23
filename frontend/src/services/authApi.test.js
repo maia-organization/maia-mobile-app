@@ -1,4 +1,4 @@
-import { loginUser } from './authApi';
+import { loginUser, requestPasswordReset } from './authApi';
 
 describe('authApi', () => {
   const originalFetch = global.fetch;
@@ -38,6 +38,20 @@ describe('authApi', () => {
 
     await expect(loginUser({ email: 'test@email.com', password: 'secret' })).rejects.toThrow(
       "L'API Maïa a renvoyé une réponse inattendue. Réessaie dans un instant."
+    );
+  });
+
+  it('appelle le point de terminaison de demande de réinitialisation', async () => {
+    global.fetch = jest.fn().mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValueOnce({ data: {}, success: true }),
+      ok: true
+    });
+
+    await requestPasswordReset({ email: 'test@email.com' });
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      expect.stringContaining('/auth/password-reset/request'),
+      expect.objectContaining({ method: 'POST' })
     );
   });
 });

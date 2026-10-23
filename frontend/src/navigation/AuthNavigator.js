@@ -7,6 +7,8 @@ import { FeedbackScreen } from '../screens/FeedbackScreen';
 import { LoginScreen } from '../screens/LoginScreen';
 import { OnboardingScreen } from '../screens/OnboardingScreen';
 import { ProfileSetupScreen } from '../screens/ProfileSetupScreen';
+import { PasswordResetRequestScreen } from '../screens/PasswordResetRequestScreen';
+import { PasswordResetScreen } from '../screens/PasswordResetScreen';
 import { RegisterScreen } from '../screens/RegisterScreen';
 import { SessionScreen } from '../screens/SessionScreen';
 import { SessionSummaryScreen } from '../screens/SessionSummaryScreen';
@@ -29,6 +31,15 @@ const navigationTheme = {
     primary: colors.rose,
     text: colors.white
   }
+};
+
+const linking = {
+  config: {
+    screens: {
+      PasswordReset: 'reset-password'
+    }
+  },
+  prefixes: ['maia://']
 };
 
 export function AuthNavigator() {
@@ -93,7 +104,7 @@ export function AuthNavigator() {
   }
 
   return (
-    <NavigationContainer theme={navigationTheme}>
+    <NavigationContainer linking={linking} theme={navigationTheme}>
       <Stack.Navigator
         initialRouteName={token ? 'MainTabs' : hasSeenOnboarding ? 'Welcome' : 'Onboarding'}
         screenOptions={{
@@ -112,6 +123,8 @@ export function AuthNavigator() {
         <Stack.Screen name="Register">
           {(props) => <RegisterScreen {...props} onAuthenticated={handleAuthenticated} />}
         </Stack.Screen>
+        <Stack.Screen component={PasswordResetRequestScreen} name="PasswordResetRequest" />
+        <Stack.Screen component={PasswordResetScreen} name="PasswordReset" />
         <Stack.Screen name="MainTabs">
           {(props) => <MainTabsNavigator {...props} onLogout={handleLogout} />}
         </Stack.Screen>

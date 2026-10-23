@@ -117,7 +117,7 @@
       "title": "US - Réinitialiser son mot de passe",
       "priority": "P1",
       "estimate": 5,
-      "status": "Backlog",
+      "status": "Review",
       "areas": ["frontend", "backend"]
     },
     {
