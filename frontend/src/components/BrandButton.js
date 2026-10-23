@@ -3,7 +3,13 @@ import { Animated, Pressable, StyleSheet, Text } from 'react-native';
 
 import { colors, radius, type } from '../theme';
 
-export function BrandButton({ children, disabled = false, onPress, variant = 'primary' }) {
+export function BrandButton({
+  children,
+  compact = false,
+  disabled = false,
+  onPress,
+  variant = 'primary'
+}) {
   const scale = useRef(new Animated.Value(1)).current;
   const [isPressed, setIsPressed] = useState(false);
 
@@ -18,7 +24,9 @@ export function BrandButton({ children, disabled = false, onPress, variant = 'pr
   };
 
   return (
-    <Animated.View style={[styles.wrapper, { transform: [{ scale }] }]}>
+    <Animated.View
+      style={[styles.wrapper, compact && styles.wrapperCompact, { transform: [{ scale }] }]}
+    >
       <Pressable
         accessibilityRole="button"
         accessibilityState={{ disabled }}
@@ -105,5 +113,8 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     alignSelf: 'stretch'
+  },
+  wrapperCompact: {
+    alignSelf: 'auto'
   }
 });
