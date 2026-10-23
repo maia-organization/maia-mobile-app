@@ -76,6 +76,7 @@ export function movePlannedWorkout(id, plannedDate) {
 export function deletePlannedWorkout(id) {
   return requestUser(`/planning/${id}`, { method: 'DELETE' });
 }
+
 export function startSession() {
   return requestUser('/sessions/start', { method: 'POST' });
 }

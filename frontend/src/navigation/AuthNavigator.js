@@ -10,6 +10,7 @@ import { ProfileSetupScreen } from '../screens/ProfileSetupScreen';
 import { RegisterScreen } from '../screens/RegisterScreen';
 import { SessionScreen } from '../screens/SessionScreen';
 import { SessionSummaryScreen } from '../screens/SessionSummaryScreen';
+import { StatsScreen } from '../screens/StatsScreen';
 import { WelcomeScreen } from '../screens/WelcomeScreen';
 import { colors } from '../theme';
 import { MainTabsNavigator } from './MainTabsNavigator';
@@ -117,6 +118,7 @@ export function AuthNavigator() {
         <Stack.Screen component={SessionScreen} name="Session" />
         <Stack.Screen component={SessionSummaryScreen} name="SessionSummary" />
         <Stack.Screen component={FeedbackScreen} name="Feedback" />
+        <Stack.Screen component={StatsScreen} name="Stats" />
         <Stack.Screen component={ProfileSetupScreen} name="ProfileSetup" />
       </Stack.Navigator>
     </NavigationContainer>

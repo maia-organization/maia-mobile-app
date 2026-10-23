@@ -536,6 +536,23 @@ séance.
 **Vérifications :** tests Jest ciblés des sessions et recommandations, lint,
 formatage et export Expo Web.
 
+## 22 octobre 2026 - Statistiques de running
+
+### Tableau de bord des progrès
+
+J'ai ajouté l'écran des statistiques, accessible depuis le tableau de bord. Il
+présente sous forme de cartes le nombre de séances terminées, la distance totale
+et la distance moyenne par séance. L'écran recharge les données à chaque mise au
+point afin d'afficher les résultats actualisés après une séance validée, avec des
+états de chargement et d'erreur accessibles.
+
+J'ai couvert l'endpoint authentifié `GET /stats/me` pour vérifier la protection
+JWT et le format des agrégats retournés pour les seules séances terminées.
+
+**Fonctionnalité concernée :** `US-STATS-001`, consultation des statistiques.
+
+**Vérifications :** 55 tests Jest backend, lint et formatage.
+
 ## 22 octobre 2026 - Planning hebdomadaire des séances
 
 ### Organiser les séances selon le cycle
