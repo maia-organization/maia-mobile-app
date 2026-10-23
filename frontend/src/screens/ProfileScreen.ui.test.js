@@ -53,9 +53,9 @@ describe('ProfileScreen UI', () => {
     });
     const view = render(<ProfileScreen navigation={navigation} onLogout={onLogout} />);
 
-    expect(await view.findByText('Supprimer mon compte')).toBeTruthy();
+    const deleteButton = await view.findByRole('button', { name: 'Supprimer mon compte' });
     await act(async () => {
-      fireEvent.press(view.getByText('Supprimer mon compte'));
+      fireEvent.press(deleteButton);
     });
 
     await waitFor(() => expect(deleteAccount).toHaveBeenCalledTimes(1));
@@ -78,9 +78,9 @@ describe('ProfileScreen UI', () => {
     jest.spyOn(Alert, 'alert').mockImplementation((_, __, actions) => actions?.[1]?.onPress());
     const view = render(<ProfileScreen navigation={navigation} onLogout={onLogout} />);
 
-    expect(await view.findByText('Supprimer mon compte')).toBeTruthy();
+    const deleteButton = await view.findByRole('button', { name: 'Supprimer mon compte' });
     await act(async () => {
-      fireEvent.press(view.getByText('Supprimer mon compte'));
+      fireEvent.press(deleteButton);
     });
 
     await waitFor(() =>
