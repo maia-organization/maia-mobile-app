@@ -41,7 +41,9 @@ describe('ProfileScreen UI', () => {
     jest.clearAllMocks();
     getProfile.mockResolvedValue({ user: profile });
     getNotificationSettings.mockResolvedValue({ settings: { enabled: true } });
-    require('../services/userApi').getPrivacySettings.mockResolvedValue({ settings: { profile_visibility: 'public', show_cycle: false, show_stats: true } });
+    require('../services/userApi').getPrivacySettings.mockResolvedValue({
+      settings: { profile_visibility: 'public', show_cycle: false, show_stats: true }
+    });
   });
 
   it('demande confirmation, supprime le compte puis déconnecte l’utilisatrice', async () => {
@@ -51,9 +53,9 @@ describe('ProfileScreen UI', () => {
     });
     const view = render(<ProfileScreen navigation={navigation} onLogout={onLogout} />);
 
-    expect(await view.findByText('Supprimer mon compte')).toBeTruthy();
+    const deleteButton = await view.findByTestId('delete-account-button', {}, { timeout: 5000 });
     await act(async () => {
-      fireEvent.press(view.getByText('Supprimer mon compte'));
+      fireEvent.press(deleteButton);
     });
 
     await waitFor(() => expect(deleteAccount).toHaveBeenCalledTimes(1));
@@ -76,9 +78,9 @@ describe('ProfileScreen UI', () => {
     jest.spyOn(Alert, 'alert').mockImplementation((_, __, actions) => actions?.[1]?.onPress());
     const view = render(<ProfileScreen navigation={navigation} onLogout={onLogout} />);
 
-    expect(await view.findByText('Supprimer mon compte')).toBeTruthy();
+    const deleteButton = await view.findByTestId('delete-account-button', {}, { timeout: 5000 });
     await act(async () => {
-      fireEvent.press(view.getByText('Supprimer mon compte'));
+      fireEvent.press(deleteButton);
     });
 
     await waitFor(() =>

@@ -125,5 +125,9 @@ export function updateNotificationSettings(payload) {
   });
 }
 
-export function getPrivacySettings() { return requestUser('/privacy/settings'); }
-export function updatePrivacySettings(payload) { return requestUser('/privacy/settings', { body: JSON.stringify(payload), method: 'PUT' }); }
+export function getPrivacySettings() {
+  return requestUser('/privacy/settings');
+}
+export function updatePrivacySettings(payload) {
+  return requestUser('/privacy/settings', { body: JSON.stringify(payload), method: 'PUT' });
+}

@@ -5,6 +5,7 @@ import { BrandButton } from '../components/BrandButton';
 import { SessionMetric } from '../components/SessionMetric';
 import { completeSession } from '../services/userApi';
 import { colors, fonts, radius, spacing, type } from '../theme';
+import { getPostSessionEncouragement } from '../utils/encouragement';
 import { describePace, formatDistance, formatDuration, formatPace } from '../utils/sessionFormat';
 
 export function SessionSummaryScreen({ navigation, route }) {
@@ -31,6 +32,9 @@ export function SessionSummaryScreen({ navigation, route }) {
           <Text style={styles.title}>Belle séance !</Text>
           <Text style={styles.subtitle}>
             Ta séance est enregistrée. Vérifie ton récapitulatif puis valide-la.
+          </Text>
+          <Text accessibilityLiveRegion="polite" style={styles.encouragement}>
+            {getPostSessionEncouragement(session)}
           </Text>
           <SessionMetric label="Durée" value={formatDuration(session.duration)} />
           <SessionMetric label="Distance" value={formatDistance(session.distance)} />
@@ -59,5 +63,6 @@ const styles = StyleSheet.create({
     padding: spacing.xl
   },
   title: { color: colors.ink, fontFamily: fonts.heading, fontSize: 30, lineHeight: 36 },
-  subtitle: { color: colors.ink, fontFamily: fonts.body, fontSize: 17, lineHeight: 25 }
+  subtitle: { color: colors.ink, fontFamily: fonts.body, fontSize: 17, lineHeight: 25 },
+  encouragement: { color: colors.ink, fontFamily: fonts.strong, fontSize: 16, lineHeight: 23 }
 });

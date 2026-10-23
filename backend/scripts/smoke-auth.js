@@ -203,7 +203,9 @@ async function run() {
     });
     assert.deepEqual(repeatedWorkoutResponse.json().data, {
       ...workoutResponse.json().data,
-      completed: true
+      completed: true,
+      encouragement:
+        'Ton dernier ressenti invite à la douceur : prendre soin de toi fait partie de ta progression.'
     });
 
     const recommendations = await db

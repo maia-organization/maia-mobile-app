@@ -107,6 +107,7 @@ describe('workout routes', () => {
         completed: false,
         date: '2026-10-02',
         duration: 35,
+        encouragement: expect.any(String),
         intensity: 'progressive',
         phase: 'follicular',
         title: 'Course progressive',

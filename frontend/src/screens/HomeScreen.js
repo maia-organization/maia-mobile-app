@@ -134,6 +134,11 @@ export function HomeScreen({ navigation, onLogout }) {
               {workout.adaptation ? (
                 <Text style={styles.adaptation}>{workout.adaptation}</Text>
               ) : null}
+              {workout.encouragement ? (
+                <Text accessibilityLiveRegion="polite" style={styles.encouragement}>
+                  {workout.encouragement}
+                </Text>
+              ) : null}
               <BrandButton
                 disabled={isStarting}
                 onPress={() => void handleStartWorkout()}
@@ -272,6 +277,7 @@ const styles = StyleSheet.create({
   workoutDetails: { gap: spacing.xs },
   detailText: { color: colors.ink, fontFamily: fonts.strong, fontSize: 16, lineHeight: 22 },
   adaptation: { color: colors.ink, fontFamily: fonts.body, fontSize: 15, lineHeight: 21 },
+  encouragement: { color: colors.ink, fontFamily: fonts.strong, fontSize: 15, lineHeight: 22 },
   actions: {
     gap: spacing.md
   }

@@ -393,7 +393,7 @@
       "title": "US - Recevoir des encouragements personnalisés",
       "priority": "P1",
       "estimate": 3,
-      "status": "Backlog",
+      "status": "Review",
       "areas": ["frontend", "backend"]
     },
 

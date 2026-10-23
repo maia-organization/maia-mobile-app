@@ -3,7 +3,11 @@ const { and, desc, eq, gte, lt } = require('drizzle-orm');
 const { db } = require('../db');
 const { sessionFeedback, sessions, users, workoutRecommendations } = require('../db/schema');
 const { getCycleView } = require('../services/cycle');
-const { getDayRange, getWorkoutRecommendation } = require('../services/workouts');
+const {
+  getDayRange,
+  getPreSessionEncouragement,
+  getWorkoutRecommendation
+} = require('../services/workouts');
 const { errorResponse, successResponse } = require('../utils/response');
 
 async function hasCompletedSession(userId, date) {
@@ -91,7 +95,8 @@ module.exports = async function workoutRoutes(app) {
 
     return successResponse({
       ...storedRecommendation,
-      completed: await hasCompletedSession(request.user.sub, recommendation.date)
+      completed: await hasCompletedSession(request.user.sub, recommendation.date),
+      encouragement: getPreSessionEncouragement({ cycleView, feedback })
     });
   });
 };
