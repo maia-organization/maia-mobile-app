@@ -121,6 +121,16 @@
       "areas": ["frontend", "backend"]
     },
     {
+      "id": "US-AUTH-005",
+      "source": "1.6",
+      "epic": "EPIC-PROFILE",
+      "title": "US - Ouvrir le lien de réinitialisation en préproduction",
+      "priority": "P1",
+      "estimate": 5,
+      "status": "Backlog",
+      "areas": ["frontend", "backend"]
+    },
+    {
       "id": "US-PREFERENCES-001",
       "source": "1.7",
       "epic": "EPIC-PROFILE",
