@@ -215,7 +215,7 @@
       "title": "US - Adapter manuellement une séance recommandée",
       "priority": "P1",
       "estimate": 5,
-      "status": "Review",
+      "status": "Done",
       "areas": ["frontend", "backend"]
     },
     {
