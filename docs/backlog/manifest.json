@@ -537,6 +537,18 @@
       "status": "Done",
       "completedOn": "2026-10-23",
       "summary": "Distinguer clairement les actions Retour et Continuer dans l'inscription et autoriser les origines locales configurées pour finaliser une création de compte, avec une configuration CORS restrictive prévue en production."
+    },
+    {
+      "id": "TECH-BUGFIX-003",
+      "type": "bugfix",
+      "epic": "EPIC-PROFILE",
+      "title": "BUG - Stabiliser le test UI de suppression de compte",
+      "area": "frontend",
+      "areas": ["frontend", "ci"],
+      "priority": "P1",
+      "estimate": 2,
+      "status": "Backlog",
+      "summary": "Rendre déterministe le scénario UI de suppression de compte dans ProfileScreen, afin que les parcours de succès et d'erreur passent sans timeout dans la suite frontend complète."
     }
   ]
 }
