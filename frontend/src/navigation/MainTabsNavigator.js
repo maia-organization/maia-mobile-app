@@ -120,10 +120,10 @@ function StatsTab(props) {
   );
 }
 
-function ProfileTab(props) {
+function ProfileTab({ onLogout, ...props }) {
   return (
     <SwipeableTabScreen {...props}>
-      <ProfileScreen {...props} />
+      <ProfileScreen {...props} onLogout={onLogout} />
     </SwipeableTabScreen>
   );
 }
@@ -146,7 +146,9 @@ export function MainTabsNavigator({ onLogout }) {
       <Tab.Screen component={CycleTab} name="Cycle" options={{ tabBarLabel: 'Cycle' }} />
       <Tab.Screen component={PlanningTab} name="Planning" options={{ tabBarLabel: 'Planning' }} />
       <Tab.Screen component={StatsTab} name="Stats" options={{ tabBarLabel: 'Stats' }} />
-      <Tab.Screen component={ProfileTab} name="Profile" options={{ tabBarLabel: 'Profil' }} />
+      <Tab.Screen name="Profile" options={{ tabBarLabel: 'Profil' }}>
+        {(props) => <ProfileTab {...props} onLogout={onLogout} />}
+      </Tab.Screen>
     </Tab.Navigator>
   );
 }

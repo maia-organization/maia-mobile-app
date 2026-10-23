@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -14,7 +15,8 @@ import { BrandButton } from '../components/BrandButton';
 import {
   getNotificationSettings,
   getProfile,
-  updateNotificationSettings
+  updateNotificationSettings,
+  deleteAccount
 } from '../services/userApi';
 import { colors, fonts, radius, spacing, type } from '../theme';
 
@@ -67,12 +69,13 @@ function NotificationToggle({ disabled, label, onValueChange, value }) {
   );
 }
 
-export function ProfileScreen({ navigation }) {
+export function ProfileScreen({ navigation, onLogout }) {
   const [profile, setProfile] = useState(null);
   const [notificationSettings, setNotificationSettings] = useState(null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSavingNotifications, setIsSavingNotifications] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [notificationFeedback, setNotificationFeedback] = useState('');
 
   const loadProfile = useCallback(() => {
@@ -118,6 +121,42 @@ export function ProfileScreen({ navigation }) {
     } finally {
       setIsSavingNotifications(false);
     }
+  };
+
+  const handleLogout = async () => {
+    await onLogout();
+    (navigation.getParent() || navigation).reset({
+      index: 0,
+      routes: [{ name: 'Welcome' }]
+    });
+  };
+
+  const handleAccountDeletion = async () => {
+    setIsDeletingAccount(true);
+
+    try {
+      await deleteAccount();
+      Alert.alert('Compte supprimé', 'Tes données personnelles ont bien été supprimées.', [
+        { onPress: () => void handleLogout(), text: 'OK' }
+      ]);
+    } catch (nextError) {
+      Alert.alert('Impossible de supprimer le compte', nextError.message);
+    } finally {
+      setIsDeletingAccount(false);
+    }
+  };
+
+  const confirmAccountDeletion = () => {
+    if (isDeletingAccount) return;
+
+    Alert.alert(
+      'Supprimer ton compte ?',
+      'Cette action supprimera définitivement tes données personnelles et ne peut pas être annulée.',
+      [
+        { style: 'cancel', text: 'Annuler' },
+        { onPress: () => void handleAccountDeletion(), style: 'destructive', text: 'Supprimer' }
+      ]
+    );
   };
 
   useFocusEffect(loadProfile);
@@ -238,6 +277,13 @@ export function ProfileScreen({ navigation }) {
           </BrandButton>
           <BrandButton onPress={() => navigation.navigate('Home')} variant="ghost">
             Retour à l'accueil
+          </BrandButton>
+          <BrandButton
+            disabled={isDeletingAccount}
+            onPress={confirmAccountDeletion}
+            variant="ghost"
+          >
+            {isDeletingAccount ? 'Suppression…' : 'Supprimer mon compte'}
           </BrandButton>
         </View>
       </ScrollView>

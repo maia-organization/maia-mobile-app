@@ -46,6 +46,10 @@ export function updateProfile(payload) {
   });
 }
 
+export function deleteAccount() {
+  return requestUser('/users/me', { method: 'DELETE' });
+}
+
 export function getCycleView() {
   return requestUser('/cycle/view');
 }
