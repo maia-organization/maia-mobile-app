@@ -665,3 +665,15 @@ J'ai ajouté les préférences de confidentialité du profil, des statistiques e
 **Fonctionnalité concernée :** `US-PRIVACY-001`.
 
 **Vérifications :** migration Drizzle générée, tests Jest ciblés backend et UI frontend.
+
+## 23 octobre 2026 - Encouragements personnalisés autour des séances
+
+J'ai ajouté un message avant la séance, adapté à la phase du cycle et au dernier
+ressenti, ainsi qu'un encouragement après la séance qui valorise la distance ou
+la régularité réalisée. Ces messages restent intégrés aux écrans de séance, sans
+notification intrusive.
+
+**Fonctionnalité concernée :** `US-MOTIVATION-001`, encouragements personnalisés.
+
+**Vérifications :** tests Jest ciblés des règles métier, de la route API et des
+écrans mobile, y compris les erreurs réseau et serveur.

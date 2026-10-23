@@ -1,4 +1,4 @@
-const { getDayRange, getWorkoutRecommendation } = require('./workouts');
+const { getDayRange, getPreSessionEncouragement, getWorkoutRecommendation } = require('./workouts');
 
 describe('workout day range', () => {
   test('bounds a recommendation date to its UTC day, across a year boundary', () => {
@@ -39,5 +39,22 @@ describe('workout recommendation', () => {
         level: 'intermediaire'
       })
     ).toMatchObject({ duration: 30, intensity: 'low' });
+  });
+});
+
+describe('pre-session encouragement', () => {
+  test('adapts the message to the cycle phase', () => {
+    expect(getPreSessionEncouragement({ cycleView: { current_phase: 'menstrual' } })).toMatch(
+      /sortie douce/i
+    );
+  });
+
+  test('prioritizes a reassuring message after difficult feedback', () => {
+    expect(
+      getPreSessionEncouragement({
+        cycleView: { current_phase: 'ovulatory' },
+        feedback: { energy: 2, fatigue: 4, pain: 1 }
+      })
+    ).toMatch(/douceur/i);
   });
 });
