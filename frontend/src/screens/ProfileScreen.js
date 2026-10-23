@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -13,8 +14,11 @@ import { useFocusEffect } from '@react-navigation/native';
 import { BrandButton } from '../components/BrandButton';
 import {
   getNotificationSettings,
+  getPrivacySettings,
   getProfile,
-  updateNotificationSettings
+  updateNotificationSettings,
+  updatePrivacySettings,
+  deleteAccount
 } from '../services/userApi';
 import { colors, fonts, radius, spacing, type } from '../theme';
 
@@ -67,12 +71,14 @@ function NotificationToggle({ disabled, label, onValueChange, value }) {
   );
 }
 
-export function ProfileScreen({ navigation }) {
+export function ProfileScreen({ navigation, onLogout }) {
   const [profile, setProfile] = useState(null);
   const [notificationSettings, setNotificationSettings] = useState(null);
+  const [privacySettings, setPrivacySettings] = useState(null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSavingNotifications, setIsSavingNotifications] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [notificationFeedback, setNotificationFeedback] = useState('');
 
   const loadProfile = useCallback(() => {
@@ -80,11 +86,12 @@ export function ProfileScreen({ navigation }) {
     setError('');
     setIsLoading(true);
 
-    Promise.all([getProfile(), getNotificationSettings()])
-      .then(([{ user }, { settings }]) => {
+    Promise.all([getProfile(), getNotificationSettings(), getPrivacySettings()])
+      .then(([{ user }, { settings }, { settings: privacy }]) => {
         if (!isActive) return;
         setProfile(user);
         setNotificationSettings(settings);
+        setPrivacySettings(privacy);
       })
       .catch((nextError) => {
         if (isActive) setError(nextError.message);
@@ -103,6 +110,18 @@ export function ProfileScreen({ navigation }) {
     setNotificationFeedback('');
   };
 
+  const savePrivacy = async (changes) => {
+    if (!privacySettings) return;
+    const next = { ...privacySettings, ...changes };
+    setPrivacySettings(next);
+    try {
+      const { settings } = await updatePrivacySettings(next);
+      setPrivacySettings(settings);
+    } catch (nextError) {
+      setError(nextError.message);
+    }
+  };
+
   const saveNotifications = async () => {
     if (!notificationSettings) return;
 
@@ -118,6 +137,42 @@ export function ProfileScreen({ navigation }) {
     } finally {
       setIsSavingNotifications(false);
     }
+  };
+
+  const handleLogout = async () => {
+    await onLogout();
+    (navigation.getParent() || navigation).reset({
+      index: 0,
+      routes: [{ name: 'Welcome' }]
+    });
+  };
+
+  const handleAccountDeletion = async () => {
+    setIsDeletingAccount(true);
+
+    try {
+      await deleteAccount();
+      Alert.alert('Compte supprimé', 'Tes données personnelles ont bien été supprimées.', [
+        { onPress: () => void handleLogout(), text: 'OK' }
+      ]);
+    } catch (nextError) {
+      Alert.alert('Impossible de supprimer le compte', nextError.message);
+    } finally {
+      setIsDeletingAccount(false);
+    }
+  };
+
+  const confirmAccountDeletion = () => {
+    if (isDeletingAccount) return;
+
+    Alert.alert(
+      'Supprimer ton compte ?',
+      'Cette action supprimera définitivement tes données personnelles et ne peut pas être annulée.',
+      [
+        { style: 'cancel', text: 'Annuler' },
+        { onPress: () => void handleAccountDeletion(), style: 'destructive', text: 'Supprimer' }
+      ]
+    );
   };
 
   useFocusEffect(loadProfile);
@@ -232,12 +287,41 @@ export function ProfileScreen({ navigation }) {
           </View>
         </ProfileSection>
 
+        <ProfileSection title="Confidentialité">
+          <NotificationToggle
+            label="Profil public"
+            onValueChange={(value) =>
+              savePrivacy({ profile_visibility: value ? 'public' : 'private' })
+            }
+            value={privacySettings?.profile_visibility === 'public'}
+          />
+          <NotificationToggle
+            label="Afficher mes statistiques"
+            onValueChange={(show_stats) => savePrivacy({ show_stats })}
+            value={privacySettings?.show_stats || false}
+          />
+          <NotificationToggle
+            label="Afficher mes informations de cycle"
+            onValueChange={(show_cycle) => savePrivacy({ show_cycle })}
+            value={privacySettings?.show_cycle || false}
+          />
+        </ProfileSection>
+
         <View style={styles.actions}>
           <BrandButton onPress={() => navigation.navigate('ProfileSetup')}>
             Modifier mon profil
           </BrandButton>
           <BrandButton onPress={() => navigation.navigate('Home')} variant="ghost">
             Retour à l'accueil
+          </BrandButton>
+          <BrandButton
+            accessibilityLabel="Supprimer mon compte"
+            disabled={isDeletingAccount}
+            onPress={confirmAccountDeletion}
+            testID="delete-account-button"
+            variant="ghost"
+          >
+            {isDeletingAccount ? 'Suppression…' : 'Supprimer mon compte'}
           </BrandButton>
         </View>
       </ScrollView>

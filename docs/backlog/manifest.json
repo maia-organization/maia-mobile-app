@@ -147,7 +147,7 @@
       "title": "US - Supprimer son compte et ses données",
       "priority": "P1",
       "estimate": 5,
-      "status": "Backlog",
+      "status": "Done",
       "areas": ["frontend", "backend", "security"]
     },
     {
@@ -158,7 +158,7 @@
       "title": "US - Contrôler la confidentialité de ses données",
       "priority": "P1",
       "estimate": 5,
-      "status": "Backlog",
+      "status": "Done",
       "areas": ["frontend", "backend", "security"]
     },
 
@@ -215,7 +215,7 @@
       "title": "US - Adapter manuellement une séance recommandée",
       "priority": "P1",
       "estimate": 5,
-      "status": "Backlog",
+      "status": "Done",
       "areas": ["frontend", "backend"]
     },
     {
@@ -373,7 +373,7 @@
       "title": "US - Recevoir un résumé après une séance",
       "priority": "P0",
       "estimate": 5,
-      "status": "Backlog",
+      "status": "Done",
       "areas": ["frontend", "backend"]
     },
     {
@@ -393,7 +393,8 @@
       "title": "US - Recevoir des encouragements personnalisés",
       "priority": "P1",
       "estimate": 3,
-      "status": "Backlog",
+      "status": "Done",
+      "completedOn": "2026-10-23",
       "areas": ["frontend", "backend"]
     },
 
@@ -536,6 +537,18 @@
       "status": "Done",
       "completedOn": "2026-10-23",
       "summary": "Distinguer clairement les actions Retour et Continuer dans l'inscription et autoriser les origines locales configurées pour finaliser une création de compte, avec une configuration CORS restrictive prévue en production."
+    },
+    {
+      "id": "TECH-BUGFIX-003",
+      "type": "bugfix",
+      "epic": "EPIC-PROFILE",
+      "title": "BUG - Stabiliser le test UI de suppression de compte",
+      "area": "frontend",
+      "areas": ["frontend", "ci"],
+      "priority": "P1",
+      "estimate": 2,
+      "status": "Backlog",
+      "summary": "Rendre déterministe le scénario UI de suppression de compte dans ProfileScreen, afin que les parcours de succès et d'erreur passent sans timeout dans la suite frontend complète."
     }
   ]
 }

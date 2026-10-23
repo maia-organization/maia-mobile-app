@@ -12,7 +12,7 @@ import {
 import { useFocusEffect } from '@react-navigation/native';
 
 import { BrandButton } from '../components/BrandButton';
-import { getTodayWorkout, startSession } from '../services/userApi';
+import { adaptTodayWorkout, getTodayWorkout, startSession } from '../services/userApi';
 import { colors, fonts, radius, spacing, type } from '../theme';
 
 const maiaIcon = require('../../assets/maia-app-icon.png');
@@ -27,6 +27,7 @@ const intensityLabels = {
 export function HomeScreen({ navigation, onLogout }) {
   const [error, setError] = useState('');
   const [isLoadingWorkout, setIsLoadingWorkout] = useState(true);
+  const [isAdapting, setIsAdapting] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
   const [workout, setWorkout] = useState(null);
 
@@ -72,6 +73,20 @@ export function HomeScreen({ navigation, onLogout }) {
       Alert.alert('Impossible de démarrer la séance', nextError.message);
     } finally {
       setIsStarting(false);
+    }
+  };
+
+  const handleAdaptWorkout = async (adaptation) => {
+    if (isAdapting || !workout) return;
+
+    setError('');
+    setIsAdapting(true);
+    try {
+      setWorkout(await adaptTodayWorkout(adaptation));
+    } catch (nextError) {
+      setError(nextError.message);
+    } finally {
+      setIsAdapting(false);
     }
   };
 
@@ -133,6 +148,39 @@ export function HomeScreen({ navigation, onLogout }) {
               </View>
               {workout.adaptation ? (
                 <Text style={styles.adaptation}>{workout.adaptation}</Text>
+              ) : null}
+              {workout.encouragement ? (
+                <Text accessibilityLiveRegion="polite" style={styles.encouragement}>
+                  {workout.encouragement}
+                </Text>
+              ) : null}
+              {!workout.completed ? (
+                <View style={styles.adaptations}>
+                  <Text style={styles.adaptationsTitle}>Adapter ma séance</Text>
+                  <View style={styles.adaptationsRow}>
+                    <BrandButton
+                      disabled={isAdapting}
+                      onPress={() => void handleAdaptWorkout({ intensity: 'low', type: 'run' })}
+                      variant="secondary"
+                    >
+                      Alléger
+                    </BrandButton>
+                    <BrandButton
+                      disabled={isAdapting}
+                      onPress={() => void handleAdaptWorkout({ intensity: 'high', type: 'run' })}
+                      variant="secondary"
+                    >
+                      Augmenter
+                    </BrandButton>
+                  </View>
+                  <BrandButton
+                    disabled={isAdapting}
+                    onPress={() => void handleAdaptWorkout({ intensity: 'low', type: 'walk' })}
+                    variant="secondary"
+                  >
+                    {isAdapting ? 'Adaptation…' : 'Passer à la marche'}
+                  </BrandButton>
+                </View>
               ) : null}
               <BrandButton
                 disabled={isStarting}
@@ -272,6 +320,10 @@ const styles = StyleSheet.create({
   workoutDetails: { gap: spacing.xs },
   detailText: { color: colors.ink, fontFamily: fonts.strong, fontSize: 16, lineHeight: 22 },
   adaptation: { color: colors.ink, fontFamily: fonts.body, fontSize: 15, lineHeight: 21 },
+  encouragement: { color: colors.ink, fontFamily: fonts.strong, fontSize: 15, lineHeight: 22 },
+  adaptations: { gap: spacing.sm },
+  adaptationsRow: { flexDirection: 'row', gap: spacing.sm },
+  adaptationsTitle: { color: colors.ink, fontFamily: fonts.strong, fontSize: 16 },
   actions: {
     gap: spacing.md
   }

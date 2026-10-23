@@ -4,10 +4,12 @@ import { Animated, Pressable, StyleSheet, Text } from 'react-native';
 import { colors, radius, type } from '../theme';
 
 export function BrandButton({
+  accessibilityLabel,
   children,
   compact = false,
   disabled = false,
   onPress,
+  testID,
   variant = 'primary'
 }) {
   const scale = useRef(new Animated.Value(1)).current;
@@ -28,6 +30,7 @@ export function BrandButton({
       style={[styles.wrapper, compact && styles.wrapperCompact, { transform: [{ scale }] }]}
     >
       <Pressable
+        accessibilityLabel={accessibilityLabel}
         accessibilityRole="button"
         accessibilityState={{ disabled }}
         disabled={disabled}
@@ -40,6 +43,7 @@ export function BrandButton({
           animateTo(1);
         }}
         onPress={onPress}
+        testID={testID}
         style={[
           styles.button,
           variant === 'primary' && styles.primary,

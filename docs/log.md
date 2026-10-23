@@ -656,3 +656,58 @@ J'ai également évité d'exposer l'existence d'un compte lors de la demande.
 **Fonctionnalité concernée :** `US-AUTH-004`, réinitialisation du mot de passe.
 
 **Vérifications :** tests Jest backend et UI mobile ciblés, lint et formatage.
+
+## 23 octobre 2026 - Suppression du compte et des données
+
+J'ai ajouté depuis le profil une action de suppression irréversible, protégée par
+une confirmation explicite. L'API authentifiée supprime le compte : les données
+personnelles associées sont effacées par les relations PostgreSQL en cascade,
+puis l'utilisatrice est déconnectée après le message de confirmation.
+
+**Fonctionnalité concernée :** `US-ACCOUNT-001`, suppression du compte et des
+données personnelles.
+
+**Vérifications :** tests Jest ciblés de la route utilisateur et de l'écran
+Profil, lint et formatage.
+
+## 23 octobre 2026 - Confidentialité des données
+
+J'ai ajouté les préférences de confidentialité du profil, des statistiques et du cycle, sauvegardées immédiatement via l'API. La visibilité par défaut des courses est également persistée pour les futures publications.
+
+**Fonctionnalité concernée :** `US-PRIVACY-001`.
+
+**Vérifications :** migration Drizzle générée, tests Jest ciblés backend et UI frontend.
+
+## 23 octobre 2026 - Encouragements personnalisés autour des séances
+
+J'ai ajouté un message avant la séance, adapté à la phase du cycle et au dernier
+ressenti, ainsi qu'un encouragement après la séance qui valorise la distance ou
+la régularité réalisée. Ces messages restent intégrés aux écrans de séance, sans
+notification intrusive.
+
+**Fonctionnalité concernée :** `US-MOTIVATION-001`, encouragements personnalisés.
+
+**Vérifications :** tests Jest ciblés des règles métier, de la route API et des
+écrans mobile, y compris les erreurs réseau et serveur.
+
+## 23 octobre 2026 - Adaptation manuelle de la séance recommandée
+
+J'ai permis d'alléger ou d'augmenter l'intensité d'une séance du jour, ou de la
+remplacer par une marche. Le choix est enregistré immédiatement et les
+recommandations suivantes l'utilisent pour rester adaptées au rythme choisi.
+
+**Fonctionnalité concernée :** `US-WORKOUT-ADAPT-001`.
+
+**Vérifications :** migration Drizzle générée, tests Jest ciblés backend et UI
+frontend, lint.
+
+## 23 octobre 2026 - Résumé de séance
+
+J'ai rendu le récapitulatif de fin de séance disponible avec la durée, la distance,
+l'allure moyenne et un message encourageant. Après validation, l'utilisatrice arrive
+directement sur le ressenti facultatif afin d'ajuster les recommandations futures.
+
+**Fonctionnalité concernée :** `US-SUMMARY-001`, résumé après une séance.
+
+**Vérifications :** dry-run de synchronisation du backlog et test UI ciblé du
+parcours de validation vers le ressenti.

@@ -1,6 +1,7 @@
 const mockDb = {
   insert: jest.fn(),
-  select: jest.fn()
+  select: jest.fn(),
+  update: jest.fn()
 };
 
 jest.mock('../db', () => ({ db: mockDb }));
@@ -25,6 +26,14 @@ function feedbackLookup(result) {
           orderBy: () => ({ limit: jest.fn().mockResolvedValue(result) })
         })
       })
+    })
+  };
+}
+
+function orderedLookup(result) {
+  return {
+    from: () => ({
+      where: () => ({ orderBy: () => ({ limit: jest.fn().mockResolvedValue(result) }) })
     })
   };
 }
@@ -64,6 +73,7 @@ describe('workout routes', () => {
         ])
       )
       .mockReturnValueOnce(feedbackLookup([]))
+      .mockReturnValueOnce(orderedLookup([]))
       .mockReturnValueOnce(
         limitedLookup([
           {
@@ -71,6 +81,7 @@ describe('workout routes', () => {
             date: '2026-10-02',
             duration: 35,
             intensity: 'progressive',
+            manuallyAdapted: false,
             phase: 'follicular',
             title: 'Course progressive',
             type: 'run'
@@ -107,7 +118,9 @@ describe('workout routes', () => {
         completed: false,
         date: '2026-10-02',
         duration: 35,
+        encouragement: expect.any(String),
         intensity: 'progressive',
+        manuallyAdapted: false,
         phase: 'follicular',
         title: 'Course progressive',
         type: 'run'
@@ -123,5 +136,91 @@ describe('workout routes', () => {
 
     expect(response.statusCode).toBe(200);
     expect(response.json().data.completed).toBe(true);
+  });
+
+  test('reports a missing user when loading the daily workout', async () => {
+    mockDb.select.mockReturnValueOnce(limitedLookup([]));
+
+    const response = await requestTodayWorkout();
+
+    expect(response.statusCode).toBe(404);
+    expect(response.json().error.code).toBe('USER_NOT_FOUND');
+  });
+
+  test('persists a manual adaptation for the next recommendations to use', async () => {
+    mockTodayWorkout([]);
+    const updatedWorkout = {
+      adaptation: 'Modifiée selon ton choix. Tes prochaines recommandations en tiendront compte.',
+      date: '2026-10-02',
+      duration: 35,
+      intensity: 'low',
+      manuallyAdapted: true,
+      phase: 'follicular',
+      title: 'Marche adaptée',
+      type: 'walk'
+    };
+    const returning = jest.fn().mockResolvedValue([updatedWorkout]);
+    mockDb.update.mockReturnValue({
+      set: jest.fn().mockReturnValue({ where: jest.fn().mockReturnValue({ returning }) })
+    });
+
+    const response = await app.inject({
+      headers: { authorization: `Bearer ${app.jwt.sign({ sub: userId })}` },
+      method: 'PUT',
+      payload: { intensity: 'low', type: 'walk' },
+      url: '/workouts/today'
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(mockDb.update).toHaveBeenCalledTimes(1);
+    expect(response.json()).toEqual({ data: updatedWorkout, success: true });
+  });
+
+  test('rejects an invalid manual adaptation', async () => {
+    const response = await app.inject({
+      headers: { authorization: `Bearer ${app.jwt.sign({ sub: userId })}` },
+      method: 'PUT',
+      payload: { intensity: 'maximum', type: 'run' },
+      url: '/workouts/today'
+    });
+
+    expect(response.statusCode).toBe(400);
+  });
+
+  test.each([
+    ['high', 'run', 'Séance dynamique'],
+    ['low', 'run', 'Footing récupération']
+  ])('persists the %s running choice', async (intensity, type, title) => {
+    mockTodayWorkout([]);
+    const returning = jest
+      .fn()
+      .mockResolvedValue([{ intensity, manuallyAdapted: true, title, type }]);
+    mockDb.update.mockReturnValue({
+      set: jest.fn().mockReturnValue({ where: jest.fn().mockReturnValue({ returning }) })
+    });
+
+    const response = await app.inject({
+      headers: { authorization: `Bearer ${app.jwt.sign({ sub: userId })}` },
+      method: 'PUT',
+      payload: { intensity, type },
+      url: '/workouts/today'
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json().data.title).toBe(title);
+  });
+
+  test('reports a missing user when adapting the daily workout', async () => {
+    mockDb.select.mockReturnValueOnce(limitedLookup([]));
+
+    const response = await app.inject({
+      headers: { authorization: `Bearer ${app.jwt.sign({ sub: userId })}` },
+      method: 'PUT',
+      payload: { intensity: 'low', type: 'run' },
+      url: '/workouts/today'
+    });
+
+    expect(response.statusCode).toBe(404);
+    expect(response.json().error.code).toBe('USER_NOT_FOUND');
   });
 });

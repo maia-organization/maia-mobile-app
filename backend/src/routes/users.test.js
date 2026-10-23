@@ -6,6 +6,7 @@ const mockDb = {
 jest.mock('../db', () => ({ db: mockDb }));
 
 const { buildApp } = require('../app');
+const { users } = require('../db/schema');
 
 const validProfile = {
   birthdate: '1995-04-12',
@@ -169,5 +170,46 @@ describe('profile routes', () => {
       success: false
     });
     expect(transaction.update).toHaveBeenCalledTimes(1);
+  });
+
+  test('deletes the authenticated user and its cascading personal data', async () => {
+    const userDelete = {
+      returning: jest.fn().mockResolvedValue([{ id: validProfile.id }]),
+      where: jest.fn().mockReturnThis()
+    };
+    mockDb.delete = jest.fn().mockReturnValue(userDelete);
+    const token = app.jwt.sign({ sub: validProfile.id });
+
+    const response = await app.inject({
+      headers: { authorization: `Bearer ${token}` },
+      method: 'DELETE',
+      url: '/users/me'
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toEqual({ data: { message: 'Compte supprimé.' }, success: true });
+    expect(mockDb.delete).toHaveBeenCalledWith(users);
+    expect(userDelete.where).toHaveBeenCalledTimes(1);
+  });
+
+  test('returns 404 when the account to delete no longer exists', async () => {
+    const userDelete = {
+      returning: jest.fn().mockResolvedValue([]),
+      where: jest.fn().mockReturnThis()
+    };
+    mockDb.delete = jest.fn().mockReturnValue(userDelete);
+    const token = app.jwt.sign({ sub: validProfile.id });
+
+    const response = await app.inject({
+      headers: { authorization: `Bearer ${token}` },
+      method: 'DELETE',
+      url: '/users/me'
+    });
+
+    expect(response.statusCode).toBe(404);
+    expect(response.json()).toMatchObject({
+      error: { code: 'USER_NOT_FOUND' },
+      success: false
+    });
   });
 });

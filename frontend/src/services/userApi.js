@@ -46,12 +46,20 @@ export function updateProfile(payload) {
   });
 }
 
+export function deleteAccount() {
+  return requestUser('/users/me', { method: 'DELETE' });
+}
+
 export function getCycleView() {
   return requestUser('/cycle/view');
 }
 
 export function getTodayWorkout() {
   return requestUser('/workouts/today');
+}
+
+export function adaptTodayWorkout(payload) {
+  return requestUser('/workouts/today', { body: JSON.stringify(payload), method: 'PUT' });
 }
 
 export function getStats() {
@@ -119,4 +127,11 @@ export function updateNotificationSettings(payload) {
     body: JSON.stringify(payload),
     method: 'PUT'
   });
+}
+
+export function getPrivacySettings() {
+  return requestUser('/privacy/settings');
+}
+export function updatePrivacySettings(payload) {
+  return requestUser('/privacy/settings', { body: JSON.stringify(payload), method: 'PUT' });
 }
