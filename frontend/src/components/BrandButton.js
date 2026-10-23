@@ -9,6 +9,7 @@ export function BrandButton({
   compact = false,
   disabled = false,
   onPress,
+  testID,
   variant = 'primary'
 }) {
   const scale = useRef(new Animated.Value(1)).current;
@@ -42,6 +43,7 @@ export function BrandButton({
           animateTo(1);
         }}
         onPress={onPress}
+        testID={testID}
         style={[
           styles.button,
           variant === 'primary' && styles.primary,

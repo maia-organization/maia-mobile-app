@@ -318,6 +318,7 @@ export function ProfileScreen({ navigation, onLogout }) {
             accessibilityLabel="Supprimer mon compte"
             disabled={isDeletingAccount}
             onPress={confirmAccountDeletion}
+            testID="delete-account-button"
             variant="ghost"
           >
             {isDeletingAccount ? 'Suppression…' : 'Supprimer mon compte'}
