@@ -34,7 +34,7 @@ jobs:
         working-directory: backend
 
       - name: Install frontend dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
         working-directory: frontend
 
       - name: Lint
@@ -99,7 +99,7 @@ jobs:
         working-directory: backend
 
       - name: Install frontend dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
         working-directory: frontend
 
       - name: Apply database migrations
