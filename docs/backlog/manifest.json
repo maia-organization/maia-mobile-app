@@ -158,7 +158,7 @@
       "title": "US - Contrôler la confidentialité de ses données",
       "priority": "P1",
       "estimate": 5,
-      "status": "In Progress",
+      "status": "Done",
       "areas": ["frontend", "backend", "security"]
     },
 
@@ -215,7 +215,7 @@
       "title": "US - Adapter manuellement une séance recommandée",
       "priority": "P1",
       "estimate": 5,
-      "status": "Backlog",
+      "status": "Review",
       "areas": ["frontend", "backend"]
     },
     {

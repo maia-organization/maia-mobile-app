@@ -1,0 +1,1 @@
+ALTER TABLE "workout_recommendations" ADD COLUMN "manually_adapted" boolean DEFAULT false NOT NULL;
