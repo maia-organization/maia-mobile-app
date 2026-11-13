@@ -36,8 +36,8 @@ function CommunityPost({ onChanged, post }) {
       setError(nextError.message);
     }
   };
-  const hasMetrics = [post.distance, post.duration, post.average_pace].every(
-    (value) => Number.isFinite(Number(value))
+  const hasMetrics = [post.distance, post.duration, post.average_pace].every((value) =>
+    Number.isFinite(Number(value))
   );
   return (
     <View style={styles.post}>
