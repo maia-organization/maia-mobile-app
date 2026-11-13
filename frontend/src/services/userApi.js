@@ -114,6 +114,25 @@ export function createRunningGroup(payload) {
 export function joinRunningGroup(groupId) {
   return requestUser(`/groups/${groupId}/join`, { method: 'POST' });
 }
+
+export function leaveRunningGroup(groupId) {
+  return requestUser(`/groups/${groupId}/members/me`, { method: 'DELETE' });
+}
+
+export function getRunningGroupMembers(groupId) {
+  return requestUser(`/groups/${groupId}/members`);
+}
+
+export function getRunningGroupFeed(groupId) {
+  return requestUser(`/groups/${groupId}/feed`);
+}
+
+export function createRunningGroupPost(groupId, message) {
+  return requestUser(`/groups/${groupId}/feed`, {
+    body: JSON.stringify({ message }),
+    method: 'POST'
+  });
+}
 export function getFollows() {
   return requestUser('/follows');
 }
