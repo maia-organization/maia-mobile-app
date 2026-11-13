@@ -810,3 +810,18 @@ groupes privés sans invitation.
 **Vérifications :** tests Jest backend et UI mobile, lint, formatage des
 fichiers versionnés et scénario e2e sur PostgreSQL isolée (création,
 confidentialité, adhésion, membres, publication et départ).
+
+## 13 novembre 2026 - Modération des publications Communauté
+
+J'ai finalisé le parcours de modération des publications : l'utilisatrice
+choisit le motif de son signalement, reçoit une confirmation après l'envoi et
+voit immédiatement disparaître les contenus des personnes bloquées. L'API
+contrôle maintenant l'existence des publications et utilisatrices ciblées pour
+renvoyer une erreur 404 explicite au lieu de laisser remonter une erreur de
+persistance.
+
+**Fonctionnalité concernée :** `US-MODERATION-001`.
+
+**Vérifications :** tests Jest backend et UI mobile, lint, formatage des
+fichiers versionnés et scénario e2e sur PostgreSQL isolée (signalement,
+blocage et masquage du fil).
