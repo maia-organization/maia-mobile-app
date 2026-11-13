@@ -748,3 +748,16 @@ Les fiches peuvent être mises en favori pendant la consultation.
 **Vérifications :** synchronisation du backlog vers `In Progress`, tests UI
 mobile du contenu et des favoris, contrôle de formatage ciblé. Le lint global
 reste bloqué par une erreur préexistante dans `StatsScreen.js`.
+
+## 13 novembre 2026 - Rappel quotidien d'entraînement
+
+J'ai ajouté le rappel quotidien de la séance recommandée : l'utilisatrice choisit
+l'heure, autorise les notifications au premier lancement et peut désactiver le
+rappel à tout moment. La notification reprend la séance du jour, ou un message
+motivationnel lorsque celle-ci est indisponible, puis ouvre directement l'accueil.
+
+**Fonctionnalité concernée :** `US-NOTIFICATION-001`.
+
+**Vérifications :** synchronisation du backlog vers `In Progress`, tests Jest
+backend et frontend (y compris annulation et erreur réseau). Le lint global
+reste bloqué par une erreur préexistante dans `StatsScreen.js`.

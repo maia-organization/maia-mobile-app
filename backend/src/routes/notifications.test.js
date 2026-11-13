@@ -17,6 +17,7 @@ const settings = {
 const payload = {
   cycle_notifications: false,
   enabled: true,
+  preferred_time: 7,
   social_notifications: true,
   workout_notifications: false
 };
@@ -91,6 +92,19 @@ describe('notification routes', () => {
     expect(mockDb.transaction).not.toHaveBeenCalled();
   });
 
+  test('rejects a reminder hour outside the 0 to 23 range', async () => {
+    const token = app.jwt.sign({ sub: userId });
+    const response = await app.inject({
+      headers: { authorization: `Bearer ${token}` },
+      method: 'PUT',
+      payload: { ...payload, preferred_time: 24 },
+      url: '/notifications/settings'
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(mockDb.transaction).not.toHaveBeenCalled();
+  });
+
   test('saves the global and category preferences atomically', async () => {
     const transaction = { insert: jest.fn(), update: jest.fn() };
     const userUpdate = {
@@ -103,7 +117,7 @@ describe('notification routes', () => {
       returning: jest.fn().mockResolvedValue([
         {
           cycleNotifications: false,
-          preferredTime: 18,
+          preferredTime: 7,
           socialNotifications: true,
           workoutNotifications: false
         }
@@ -129,6 +143,7 @@ describe('notification routes', () => {
       expect.objectContaining({
         set: expect.objectContaining({
           cycleNotifications: false,
+          preferredTime: 7,
           socialNotifications: true,
           workoutNotifications: false
         })

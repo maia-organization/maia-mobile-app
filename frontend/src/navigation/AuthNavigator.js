@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Linking, Platform, StyleSheet, View } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import * as Notifications from 'expo-notifications';
 
 import { FeedbackScreen } from '../screens/FeedbackScreen';
 import { LoginScreen } from '../screens/LoginScreen';
@@ -19,6 +20,7 @@ import { MainTabsNavigator } from './MainTabsNavigator';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { clearAuthToken, getAuthToken, saveAuthToken } from '../services/authStorage';
 import { completeOnboarding, hasCompletedOnboarding } from '../services/onboardingStorage';
+import { requestNotificationPermission } from '../services/workoutReminder';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +38,9 @@ const navigationTheme = {
 const linking = {
   config: {
     screens: {
+      MainTabs: {
+        screens: { Home: 'workout-today' }
+      },
       PasswordReset: 'reset-password'
     }
   },
@@ -47,6 +52,25 @@ export function AuthNavigator() {
   const [hasSeenOnboarding, setHasSeenOnboarding] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (!token || Platform.OS === 'web') return undefined;
+
+    const openWorkout = (response) => {
+      const url = response.notification.request.content.data?.url;
+      if (typeof url === 'string') void Linking.openURL(url);
+    };
+    const subscription = Notifications.addNotificationResponseReceivedListener(openWorkout);
+    const response = Notifications.getLastNotificationResponse();
+    if (response) openWorkout(response);
+
+    return () => subscription.remove();
+  }, [token]);
+
+  useEffect(() => {
+    if (!token) return;
+    void requestNotificationPermission().catch(() => {});
+  }, [token]);
 
   useEffect(() => {
     let isMounted = true;

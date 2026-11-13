@@ -25,13 +25,22 @@ function buildPayload(body = {}) {
   return {
     cycleNotifications: body.cycle_notifications,
     enabled: body.enabled,
+    preferredTime: body.preferred_time,
     socialNotifications: body.social_notifications,
     workoutNotifications: body.workout_notifications
   };
 }
 
 function isValidPayload(payload) {
-  return Object.values(payload).every((value) => typeof value === 'boolean');
+  return (
+    typeof payload.cycleNotifications === 'boolean' &&
+    typeof payload.enabled === 'boolean' &&
+    Number.isInteger(payload.preferredTime) &&
+    payload.preferredTime >= 0 &&
+    payload.preferredTime <= 23 &&
+    typeof payload.socialNotifications === 'boolean' &&
+    typeof payload.workoutNotifications === 'boolean'
+  );
 }
 
 module.exports = async function notificationRoutes(app) {
@@ -80,6 +89,7 @@ module.exports = async function notificationRoutes(app) {
         .insert(notificationSettings)
         .values({
           cycleNotifications: payload.cycleNotifications,
+          preferredTime: payload.preferredTime,
           socialNotifications: payload.socialNotifications,
           userId: request.user.sub,
           workoutNotifications: payload.workoutNotifications
@@ -87,6 +97,7 @@ module.exports = async function notificationRoutes(app) {
         .onConflictDoUpdate({
           set: {
             cycleNotifications: payload.cycleNotifications,
+            preferredTime: payload.preferredTime,
             socialNotifications: payload.socialNotifications,
             workoutNotifications: payload.workoutNotifications
           },
