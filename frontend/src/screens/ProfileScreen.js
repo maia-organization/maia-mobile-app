@@ -292,7 +292,9 @@ export function ProfileScreen({ navigation, onLogout }) {
             <Text style={styles.itemLabel}>Heure du rappel (0–23 h)</Text>
             <TextInput
               accessibilityLabel="Heure du rappel"
-              editable={notificationSettings?.enabled && notificationSettings?.workout_notifications}
+              editable={
+                notificationSettings?.enabled && notificationSettings?.workout_notifications
+              }
               keyboardType="number-pad"
               maxLength={2}
               onChangeText={(value) =>

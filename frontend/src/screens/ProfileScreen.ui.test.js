@@ -109,7 +109,9 @@ describe('ProfileScreen UI', () => {
   });
 
   it('enregistre l’heure du rappel et affiche une erreur réseau', async () => {
-    updateNotificationSettings.mockRejectedValue(new Error('Le service de notifications est indisponible.'));
+    updateNotificationSettings.mockRejectedValue(
+      new Error('Le service de notifications est indisponible.')
+    );
     const view = render(<ProfileScreen navigation={navigation} onLogout={onLogout} />);
 
     const saveButton = await view.findByText('Enregistrer mes préférences');

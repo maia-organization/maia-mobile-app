@@ -22,11 +22,11 @@ export async function requestNotificationPermission() {
 
 async function clearWorkoutReminders() {
   const scheduled = await Notifications.getAllScheduledNotificationsAsync();
-  const reminders = scheduled.filter(
-    ({ content }) => content.data?.kind === REMINDER_KIND
-  );
+  const reminders = scheduled.filter(({ content }) => content.data?.kind === REMINDER_KIND);
 
-  await Promise.all(reminders.map(({ identifier }) => Notifications.cancelScheduledNotificationAsync(identifier)));
+  await Promise.all(
+    reminders.map(({ identifier }) => Notifications.cancelScheduledNotificationAsync(identifier))
+  );
 }
 
 function reminderBody(workout) {
