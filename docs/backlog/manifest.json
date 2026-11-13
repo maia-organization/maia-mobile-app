@@ -246,7 +246,7 @@
       "title": "US - Accéder à l'espace Communauté",
       "priority": "P2",
       "estimate": 5,
-      "status": "Backlog",
+      "status": "In Progress",
       "areas": ["frontend", "backend"]
     },
     {
