@@ -774,3 +774,25 @@ Chaque groupe conserve ses membres et son fil dédié afin de faciliter les
 J'ai ajouté les abonnements entre runneuses et la priorité de leurs publications dans le fil Communauté.
 
 **Fonctionnalité concernée :** `US-FOLLOW-001`.
+
+## 13 novembre 2026 - Audit de cohérence Community et parcours locaux
+
+J'ai vérifié l'alignement entre les branches Community, les PR distantes, le
+manifeste et le Project GitHub, puis exécuté les suites backend et frontend.
+Le démarrage local complet reste bloqué avant les migrations par le client
+`docker-compose` installé (`ContainerConfig`), ce qui empêche pour l'instant
+une validation e2e dans le navigateur.
+
+**Vérifications :** fetch distant, audit des PR et du Project, lint, 105 tests
+backend et 36 tests frontend.
+
+## 13 novembre 2026 - Lancement Compose v2 et environnement e2e isolé
+
+J'ai installé le plugin Docker Compose v2 local et validé le démarrage de
+l'API, des migrations et d'Expo sur une base `maia_e2e` isolée. Cela préserve
+le volume PostgreSQL de développement historique.
+
+**Fonctionnalité concernée :** `TECH-BUGFIX-004`.
+
+**Vérifications :** `docker compose version`, migrations Drizzle, healthcheck,
+inscription avec JWT et preview Expo web.
