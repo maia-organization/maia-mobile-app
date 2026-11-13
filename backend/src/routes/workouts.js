@@ -100,7 +100,18 @@ async function getTodayRecommendation(userId) {
       type: recommendation.type,
       userId
     })
-    .onConflictDoNothing();
+    .onConflictDoUpdate({
+      set: {
+        adaptation: recommendation.adaptation,
+        duration: recommendation.duration,
+        intensity: recommendation.intensity,
+        phase: recommendation.phase,
+        title: recommendation.title,
+        type: recommendation.type
+      },
+      setWhere: eq(workoutRecommendations.manuallyAdapted, false),
+      target: [workoutRecommendations.userId, workoutRecommendations.recommendationDate]
+    });
 
   const [storedRecommendation] = await db
     .select({
