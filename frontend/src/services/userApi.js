@@ -77,6 +77,32 @@ export function commentCommunityPost(postId, message) {
   });
 }
 
+export function getMessageMembers() {
+  return requestUser('/messages/members');
+}
+
+export function getConversations() {
+  return requestUser('/messages/conversations');
+}
+
+export function createConversation(recipientId) {
+  return requestUser('/messages/conversations', {
+    body: JSON.stringify({ recipient_id: recipientId }),
+    method: 'POST'
+  });
+}
+
+export function getConversationMessages(conversationId) {
+  return requestUser(`/messages/conversations/${conversationId}/messages`);
+}
+
+export function sendConversationMessage(conversationId, message) {
+  return requestUser(`/messages/conversations/${conversationId}/messages`, {
+    body: JSON.stringify({ message }),
+    method: 'POST'
+  });
+}
+
 export function adaptTodayWorkout(payload) {
   return requestUser('/workouts/today', { body: JSON.stringify(payload), method: 'PUT' });
 }
