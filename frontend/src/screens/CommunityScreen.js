@@ -21,9 +21,14 @@ import {
 } from '../services/userApi';
 import { colors, fonts, radius, spacing, type } from '../theme';
 
-function CommunityPost({ onChanged, post }) {
+const reportReasons = ['Contenu inapproprié', 'Harcèlement', 'Désinformation', 'Autre'];
+
+function CommunityPost({ onBlocked, onChanged, post }) {
   const [comment, setComment] = useState('');
   const [error, setError] = useState('');
+  const [reporting, setReporting] = useState(false);
+  const [reportReason, setReportReason] = useState('');
+  const [success, setSuccess] = useState('');
   const like = async () => {
     try {
       await likeCommunityPost(post.id);
@@ -38,6 +43,32 @@ function CommunityPost({ onChanged, post }) {
       await commentCommunityPost(post.id, comment);
       setComment('');
       await onChanged();
+    } catch (nextError) {
+      setError(nextError.message);
+    }
+  };
+  const report = async () => {
+    if (!reportReason) {
+      setError('Choisis le motif du signalement.');
+      return;
+    }
+    setError('');
+    setSuccess('');
+    try {
+      await reportCommunityPost(post.id, reportReason);
+      setReporting(false);
+      setReportReason('');
+      setSuccess('Signalement envoyé. Merci de contribuer à une communauté sûre.');
+    } catch (nextError) {
+      setError(nextError.message);
+    }
+  };
+  const block = async () => {
+    setError('');
+    setSuccess('');
+    try {
+      await blockCommunityUser(post.author_id);
+      onBlocked(post.author_id);
     } catch (nextError) {
       setError(nextError.message);
     }
@@ -77,24 +108,50 @@ function CommunityPost({ onChanged, post }) {
       <View style={styles.actions}>
         <BrandButton
           compact
-          onPress={() => void reportCommunityPost(post.id, 'Contenu inapproprié')}
+          onPress={() => {
+            setError('');
+            setSuccess('');
+            setReporting((isReporting) => !isReporting);
+          }}
           variant="ghost"
         >
           Signaler
         </BrandButton>
-        <BrandButton
-          compact
-          onPress={() =>
-            void blockCommunityUser(post.author_id)
-              .then(onChanged)
-              .catch((nextError) => setError(nextError.message))
-          }
-          variant="ghost"
-        >
+        <BrandButton compact onPress={() => void block()} variant="ghost">
           Bloquer
         </BrandButton>
       </View>
-      {!!error && <Text style={styles.errorText}>{error}</Text>}
+      {reporting ? (
+        <View style={styles.reportForm}>
+          <Text style={styles.reportTitle}>Pourquoi signales-tu cette publication ?</Text>
+          <View style={styles.reasonOptions}>
+            {reportReasons.map((reason) => (
+              <BrandButton
+                accessibilityLabel={`Motif : ${reason}`}
+                compact
+                key={reason}
+                onPress={() => setReportReason(reason)}
+                variant={reportReason === reason ? 'secondary' : 'ghost'}
+              >
+                {reason}
+              </BrandButton>
+            ))}
+          </View>
+          <BrandButton disabled={!reportReason} onPress={() => void report()} variant="secondary">
+            Envoyer le signalement
+          </BrandButton>
+        </View>
+      ) : null}
+      {!!error && (
+        <Text accessibilityLiveRegion="polite" style={styles.errorText}>
+          {error}
+        </Text>
+      )}
+      {!!success && (
+        <Text accessibilityLiveRegion="polite" style={styles.successText}>
+          {success}
+        </Text>
+      )}
     </View>
   );
 }
@@ -104,6 +161,10 @@ export function CommunityScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [posts, setPosts] = useState([]);
+
+  const hideBlockedAuthor = useCallback((authorId) => {
+    setPosts((currentPosts) => currentPosts.filter((post) => post.author_id !== authorId));
+  }, []);
 
   const loadFeed = useCallback(async (refreshing = false) => {
     if (refreshing) setIsRefreshing(true);
@@ -189,7 +250,14 @@ export function CommunityScreen({ navigation }) {
         ) : null}
 
         {!isLoading && !error
-          ? posts.map((post) => <CommunityPost key={post.id} onChanged={loadFeed} post={post} />)
+          ? posts.map((post) => (
+              <CommunityPost
+                key={post.id}
+                onBlocked={hideBlockedAuthor}
+                onChanged={loadFeed}
+                post={post}
+              />
+            ))
           : null}
       </ScrollView>
     </SafeAreaView>
@@ -212,6 +280,7 @@ const styles = StyleSheet.create({
   },
   stateText: { ...type.body, color: colors.cream, textAlign: 'center' },
   errorText: { ...type.body, color: colors.roseLight, textAlign: 'center' },
+  successText: { ...type.body, color: colors.honey, textAlign: 'center' },
   emptyTitle: { ...type.action, color: colors.honey },
   post: {
     backgroundColor: colors.surface,
@@ -226,6 +295,14 @@ const styles = StyleSheet.create({
   performance: { color: colors.cream, fontFamily: fonts.strong, fontSize: 14 },
   interactions: { color: colors.muted, fontFamily: fonts.body, fontSize: 14 },
   actions: { alignItems: 'center', flexDirection: 'row', gap: spacing.sm },
+  reportForm: {
+    backgroundColor: colors.honeySoft,
+    borderRadius: radius.sm,
+    gap: spacing.sm,
+    padding: spacing.md
+  },
+  reportTitle: { ...type.body, color: colors.cream },
+  reasonOptions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   comment: {
     borderBottomColor: colors.borderLight,
     borderBottomWidth: 1,

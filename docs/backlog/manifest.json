@@ -313,8 +313,7 @@
       "title": "US - Signaler un contenu ou bloquer une utilisatrice",
       "priority": "P2",
       "estimate": 8,
-      "status": "Done",
-      "completedOn": "2026-11-13",
+      "status": "Review",
       "areas": ["frontend", "backend", "security"]
     },
 
