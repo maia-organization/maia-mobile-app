@@ -246,7 +246,8 @@
       "title": "US - Accéder à l'espace Communauté",
       "priority": "P2",
       "estimate": 5,
-      "status": "Review",
+      "status": "Done",
+      "completedOn": "2026-11-13",
       "areas": ["frontend", "backend"]
     },
     {
@@ -256,7 +257,8 @@
       "title": "US - Échanger par messagerie",
       "priority": "P3",
       "estimate": 8,
-      "status": "Review",
+      "status": "Done",
+      "completedOn": "2026-11-13",
       "areas": ["frontend", "backend"]
     },
     {
@@ -266,7 +268,8 @@
       "title": "US - Publier une course",
       "priority": "P2",
       "estimate": 8,
-      "status": "Review",
+      "status": "Done",
+      "completedOn": "2026-11-13",
       "areas": ["frontend", "backend"]
     },
     {
@@ -276,7 +279,8 @@
       "title": "US - Consulter le fil d'actualité",
       "priority": "P2",
       "estimate": 8,
-      "status": "Review",
+      "status": "Done",
+      "completedOn": "2026-11-13",
       "areas": ["frontend", "backend"]
     },
     {
@@ -286,7 +290,8 @@
       "title": "US - Créer ou rejoindre un groupe de runneuses",
       "priority": "P3",
       "estimate": 8,
-      "status": "Review",
+      "status": "Done",
+      "completedOn": "2026-11-13",
       "areas": ["frontend", "backend"]
     },
     {
@@ -296,7 +301,8 @@
       "title": "US - Suivre une autre utilisatrice",
       "priority": "P3",
       "estimate": 5,
-      "status": "Review",
+      "status": "Done",
+      "completedOn": "2026-11-13",
       "areas": ["frontend", "backend"]
     },
     {
@@ -307,7 +313,8 @@
       "title": "US - Signaler un contenu ou bloquer une utilisatrice",
       "priority": "P2",
       "estimate": 8,
-      "status": "Backlog",
+      "status": "Done",
+      "completedOn": "2026-11-13",
       "areas": ["frontend", "backend", "security"]
     },
 
