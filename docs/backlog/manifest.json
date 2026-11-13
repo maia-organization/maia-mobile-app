@@ -393,7 +393,7 @@
       "title": "US - Définir un objectif hebdomadaire",
       "priority": "P1",
       "estimate": 5,
-      "status": "In Progress",
+      "status": "Review",
       "areas": ["frontend", "backend"]
     },
     {
