@@ -1,10 +1,18 @@
-import { useCallback, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View
+} from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BrandButton } from '../components/BrandButton';
-import { getSessionHistory, getStats } from '../services/userApi';
+import { getSessionHistory, getStats, getWeeklyGoal, saveWeeklyGoal } from '../services/userApi';
 import { colors, fonts, radius, spacing, type } from '../theme';
 
 function formatDistance(value) {
@@ -35,11 +43,129 @@ function StatCard({ label, value }) {
   );
 }
 
+function WeeklyGoal({ goal, onSave }) {
+  const [isEditing, setIsEditing] = useState(!goal);
+  const [reminderEnabled, setReminderEnabled] = useState(goal?.reminder_enabled ?? false);
+  const [targetType, setTargetType] = useState(goal?.target_type || 'sessions');
+  const [targetValue, setTargetValue] = useState(goal ? String(goal.target_value) : '3');
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState('');
+
+  useEffect(() => {
+    if (!goal) return;
+    setReminderEnabled(goal.reminder_enabled);
+    setTargetType(goal.target_type);
+    setTargetValue(String(goal.target_value));
+  }, [goal]);
+
+  const targetLabel = targetType === 'sessions' ? 'séances' : 'km';
+  const progress = goal
+    ? Math.min(100, Math.round((goal.current_value / goal.target_value) * 100))
+    : 0;
+
+  const submit = () => {
+    const numericValue = Number(targetValue.replace(',', '.'));
+    setSaveError('');
+    setSaving(true);
+    saveWeeklyGoal({
+      reminder_enabled: reminderEnabled,
+      target_type: targetType,
+      target_value: numericValue
+    })
+      .then(({ goal: savedGoal }) => {
+        onSave(savedGoal);
+        setIsEditing(false);
+      })
+      .catch((nextError) => setSaveError(nextError.message))
+      .finally(() => setSaving(false));
+  };
+
+  return (
+    <View style={styles.goalCard}>
+      <View style={styles.goalHeading}>
+        <View>
+          <Text style={styles.goalTitle}>Ton objectif de la semaine</Text>
+          <Text style={styles.goalSubtitle}>
+            Une intention souple, à ajuster selon ton énergie.
+          </Text>
+        </View>
+        {goal && !isEditing ? (
+          <Pressable accessibilityRole="button" onPress={() => setIsEditing(true)}>
+            <Text style={styles.goalEdit}>Ajuster</Text>
+          </Pressable>
+        ) : null}
+      </View>
+
+      {!isEditing && goal ? (
+        <>
+          <Text style={styles.goalValue}>
+            {goal.current_value} / {goal.target_value}{' '}
+            {goal.target_type === 'sessions' ? 'séances' : 'km'}
+          </Text>
+          <View accessibilityLabel={`Progression : ${progress}%`} style={styles.progressTrack}>
+            <View style={[styles.progressFill, { width: `${progress}%` }]} />
+          </View>
+          <Text style={styles.goalProgress}>{progress}% de ton objectif atteint</Text>
+          {goal.reminder_enabled ? (
+            <Text style={styles.goalReminder}>Rappel hebdomadaire activé</Text>
+          ) : null}
+        </>
+      ) : (
+        <View style={styles.goalForm}>
+          <Text style={styles.goalLabel}>Je veux viser</Text>
+          <View style={styles.goalTypes}>
+            {['sessions', 'distance'].map((type) => (
+              <Pressable
+                accessibilityRole="button"
+                accessibilityState={{ selected: targetType === type }}
+                key={type}
+                onPress={() => setTargetType(type)}
+                style={[styles.goalType, targetType === type && styles.goalTypeActive]}
+              >
+                <Text
+                  style={[styles.goalTypeText, targetType === type && styles.goalTypeTextActive]}
+                >
+                  {type === 'sessions' ? 'Séances' : 'Distance'}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+          <TextInput
+            accessibilityLabel={`Nombre de ${targetLabel}`}
+            keyboardType="decimal-pad"
+            onChangeText={setTargetValue}
+            style={styles.goalInput}
+            value={targetValue}
+          />
+          <Pressable
+            accessibilityRole="switch"
+            accessibilityState={{ checked: reminderEnabled }}
+            onPress={() => setReminderEnabled((enabled) => !enabled)}
+            style={styles.reminderRow}
+          >
+            <Text style={styles.reminderText}>Recevoir un rappel de mon objectif</Text>
+            <Text style={styles.reminderState}>{reminderEnabled ? 'Activé' : 'Désactivé'}</Text>
+          </Pressable>
+          {saveError ? (
+            <Text accessibilityLiveRegion="polite" style={styles.saveError}>
+              {saveError}
+            </Text>
+          ) : null}
+          <BrandButton disabled={saving} onPress={submit} variant="secondary">
+            {saving ? 'Enregistrement…' : 'Enregistrer mon objectif'}
+          </BrandButton>
+        </View>
+      )}
+    </View>
+  );
+}
+
 export function StatsScreen() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [sessions, setSessions] = useState([]);
   const [stats, setStats] = useState(null);
+  const [weeklyGoal, setWeeklyGoal] = useState(null);
   const [sortDirection, setSortDirection] = useState('desc');
 
   const loadStats = useCallback(() => {
@@ -47,11 +173,12 @@ export function StatsScreen() {
     setError('');
     setIsLoading(true);
 
-    Promise.all([getStats(), getSessionHistory()])
-      .then(([nextStats, history]) => {
+    Promise.all([getStats(), getSessionHistory(), getWeeklyGoal()])
+      .then(([nextStats, history, weeklyGoalResult]) => {
         if (isActive) {
           setStats(nextStats);
           setSessions(history.sessions);
+          setWeeklyGoal(weeklyGoalResult.goal);
         }
       })
       .catch((nextError) => {
@@ -112,6 +239,7 @@ export function StatsScreen() {
                 value={formatDistance(stats.average_distance)}
               />
             </View>
+            <WeeklyGoal goal={weeklyGoal} onSave={setWeeklyGoal} />
 
             <View style={styles.history}>
               <View style={styles.historyHeading}>
@@ -190,6 +318,63 @@ const styles = StyleSheet.create({
   title: { ...type.title, color: colors.white },
   subtitle: { color: colors.cream, fontFamily: fonts.body, fontSize: 16, lineHeight: 23 },
   stats: { gap: spacing.md },
+  goalCard: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.sm,
+    gap: spacing.md,
+    padding: spacing.lg
+  },
+  goalHeading: { flexDirection: 'row', gap: spacing.md, justifyContent: 'space-between' },
+  goalTitle: { ...type.subtitle, color: colors.white },
+  goalSubtitle: {
+    color: colors.cream,
+    fontFamily: fonts.body,
+    fontSize: 14,
+    lineHeight: 20,
+    maxWidth: 230
+  },
+  goalEdit: { color: colors.honey, fontFamily: fonts.strong, fontSize: 14 },
+  goalValue: { color: colors.white, fontFamily: fonts.heading, fontSize: 27 },
+  progressTrack: {
+    backgroundColor: colors.ink,
+    borderRadius: radius.sm,
+    height: 10,
+    overflow: 'hidden'
+  },
+  progressFill: { backgroundColor: colors.honey, borderRadius: radius.sm, height: '100%' },
+  goalProgress: { color: colors.cream, fontFamily: fonts.body, fontSize: 14 },
+  goalReminder: { color: colors.honey, fontFamily: fonts.strong, fontSize: 14 },
+  goalForm: { gap: spacing.md },
+  goalLabel: { color: colors.white, fontFamily: fonts.strong, fontSize: 15 },
+  goalTypes: { flexDirection: 'row', gap: spacing.sm },
+  goalType: {
+    borderColor: colors.cream,
+    borderRadius: radius.sm,
+    borderWidth: 1,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm
+  },
+  goalTypeActive: { backgroundColor: colors.honey, borderColor: colors.honey },
+  goalTypeText: { color: colors.cream, fontFamily: fonts.strong },
+  goalTypeTextActive: { color: colors.ink },
+  goalInput: {
+    backgroundColor: colors.white,
+    borderRadius: radius.sm,
+    color: colors.ink,
+    fontFamily: fonts.strong,
+    fontSize: 18,
+    padding: spacing.md
+  },
+  reminderRow: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
+  reminderText: {
+    color: colors.cream,
+    flex: 1,
+    fontFamily: fonts.body,
+    fontSize: 14,
+    lineHeight: 20
+  },
+  reminderState: { color: colors.honey, fontFamily: fonts.strong, fontSize: 14 },
+  saveError: { color: colors.rose, fontFamily: fonts.body, fontSize: 14 },
   history: { gap: spacing.md },
   historyHeading: { gap: spacing.xs },
   historyTitle: { ...type.subtitle, color: colors.white },

@@ -7,6 +7,7 @@ import { CycleScreen } from '../screens/CycleScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { PlanningScreen } from '../screens/PlanningScreen';
 import { StatsScreen } from '../screens/StatsScreen';
+import { SymptomsScreen } from '../screens/SymptomsScreen';
 import { colors, fonts, spacing } from '../theme';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 
@@ -146,6 +147,11 @@ export function MainTabsNavigator({ onLogout }) {
       <Tab.Screen component={CycleTab} name="Cycle" options={{ tabBarLabel: 'Cycle' }} />
       <Tab.Screen component={PlanningTab} name="Planning" options={{ tabBarLabel: 'Planning' }} />
       <Tab.Screen component={StatsTab} name="Stats" options={{ tabBarLabel: 'Stats' }} />
+      <Tab.Screen
+        component={SymptomsScreen}
+        name="Symptoms"
+        options={{ tabBarButton: () => null }}
+      />
       <Tab.Screen name="Profile" options={{ tabBarLabel: 'Profil' }}>
         {(props) => <ProfileTab {...props} onLogout={onLogout} />}
       </Tab.Screen>
