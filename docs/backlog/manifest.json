@@ -266,7 +266,7 @@
       "title": "US - Publier une course",
       "priority": "P2",
       "estimate": 8,
-      "status": "In Progress",
+      "status": "Review",
       "areas": ["frontend", "backend"]
     },
     {
@@ -276,7 +276,7 @@
       "title": "US - Consulter le fil d'actualité",
       "priority": "P2",
       "estimate": 8,
-      "status": "Backlog",
+      "status": "Review",
       "areas": ["frontend", "backend"]
     },
     {
@@ -426,7 +426,7 @@
       "title": "US - Recevoir un rappel d'entraînement",
       "priority": "P1",
       "estimate": 5,
-      "status": "Backlog",
+      "status": "Review",
       "areas": ["frontend", "backend"],
       "technicalRef": "5.1"
     },

@@ -723,6 +723,17 @@ fil affiche les interactions et permet d'aimer ou commenter une publication.
 **Vérifications :** migration Drizzle générée, tests Jest backend et UI mobile,
 lint global.
 
+## 13 novembre 2026 - Fil d'actualité Communauté
+
+J'ai finalisé le fil d'actualité avec les publications triées par ordre
+chronologique, leurs performances, messages et interactions. Le défilement,
+l'actualisation automatique ainsi que les états de chargement et d'erreur restent
+disponibles pour une consultation fluide.
+
+**Fonctionnalité concernée :** `US-COMMUNITY-003`.
+
+**Vérifications :** tests UI du fil et lint global.
+
 ## 13 novembre 2026 - Espace Communauté
 
 J'ai ajouté l'onglet Communauté à la navigation principale, avec un fil
