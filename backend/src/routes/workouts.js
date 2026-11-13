@@ -1,7 +1,13 @@
 const { and, desc, eq, gte, lt } = require('drizzle-orm');
 
 const { db } = require('../db');
-const { sessionFeedback, sessions, users, workoutRecommendations } = require('../db/schema');
+const {
+  sessionFeedback,
+  sessions,
+  symptomEntries,
+  users,
+  workoutRecommendations
+} = require('../db/schema');
 const { getCycleView } = require('../services/cycle');
 const {
   getDayRange,
@@ -68,10 +74,18 @@ async function getTodayRecommendation(userId) {
     .orderBy(desc(workoutRecommendations.recommendationDate))
     .limit(1);
 
+  const todayDate = new Date().toISOString().slice(0, 10);
+  const [symptomEntry] = await db
+    .select({ symptoms: symptomEntries.symptoms })
+    .from(symptomEntries)
+    .where(and(eq(symptomEntries.userId, userId), eq(symptomEntries.recordedOn, todayDate)))
+    .limit(1);
+
   const recommendation = getWorkoutRecommendation({
     cycleView,
     feedback,
     lastManualAdaptation,
+    symptoms: symptomEntry?.symptoms || [],
     ...profile
   });
   await db

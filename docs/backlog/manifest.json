@@ -127,7 +127,7 @@
       "title": "US - Ouvrir le lien de réinitialisation en préproduction",
       "priority": "P1",
       "estimate": 5,
-      "status": "Backlog",
+      "status": "In Progress",
       "areas": ["frontend", "backend"]
     },
     {

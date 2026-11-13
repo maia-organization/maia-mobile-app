@@ -62,6 +62,17 @@ export function adaptTodayWorkout(payload) {
   return requestUser('/workouts/today', { body: JSON.stringify(payload), method: 'PUT' });
 }
 
+export function getSymptoms() {
+  return requestUser('/symptoms');
+}
+
+export function saveTodaySymptoms(symptoms) {
+  return requestUser('/symptoms/today', {
+    body: JSON.stringify({ symptoms }),
+    method: 'PUT'
+  });
+}
+
 export function getStats() {
   return requestUser('/stats/me');
 }
