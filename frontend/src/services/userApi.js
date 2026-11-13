@@ -62,6 +62,77 @@ export function getCommunityFeed() {
   return requestUser('/community/feed');
 }
 
+export function createCommunityPost(payload) {
+  return requestUser('/community/posts', { body: JSON.stringify(payload), method: 'POST' });
+}
+
+export function likeCommunityPost(postId) {
+  return requestUser(`/community/posts/${postId}/likes`, { method: 'POST' });
+}
+
+export function commentCommunityPost(postId, message) {
+  return requestUser(`/community/posts/${postId}/comments`, {
+    body: JSON.stringify({ message }),
+    method: 'POST'
+  });
+}
+
+export function getMessageMembers() {
+  return requestUser('/messages/members');
+}
+
+export function getConversations() {
+  return requestUser('/messages/conversations');
+}
+
+export function createConversation(recipientId) {
+  return requestUser('/messages/conversations', {
+    body: JSON.stringify({ recipient_id: recipientId }),
+    method: 'POST'
+  });
+}
+
+export function getConversationMessages(conversationId) {
+  return requestUser(`/messages/conversations/${conversationId}/messages`);
+}
+
+export function sendConversationMessage(conversationId, message) {
+  return requestUser(`/messages/conversations/${conversationId}/messages`, {
+    body: JSON.stringify({ message }),
+    method: 'POST'
+  });
+}
+
+export function getRunningGroups() {
+  return requestUser('/groups');
+}
+
+export function createRunningGroup(payload) {
+  return requestUser('/groups', { body: JSON.stringify(payload), method: 'POST' });
+}
+
+export function joinRunningGroup(groupId) {
+  return requestUser(`/groups/${groupId}/join`, { method: 'POST' });
+}
+export function getFollows() {
+  return requestUser('/follows');
+}
+export function followUser(id) {
+  return requestUser(`/follows/${id}`, { method: 'POST' });
+}
+export function unfollowUser(id) {
+  return requestUser(`/follows/${id}`, { method: 'DELETE' });
+}
+export function reportCommunityPost(postId, reason) {
+  return requestUser('/moderation/reports', {
+    body: JSON.stringify({ post_id: postId, reason }),
+    method: 'POST'
+  });
+}
+export function blockCommunityUser(id) {
+  return requestUser(`/moderation/blocks/${id}`, { method: 'POST' });
+}
+
 export function adaptTodayWorkout(payload) {
   return requestUser('/workouts/today', { body: JSON.stringify(payload), method: 'PUT' });
 }

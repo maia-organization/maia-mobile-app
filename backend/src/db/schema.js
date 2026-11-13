@@ -4,6 +4,7 @@ const {
   integer,
   pgEnum,
   pgTable,
+  primaryKey,
   real,
   timestamp,
   uniqueIndex,
@@ -139,14 +140,185 @@ const privacySettings = pgTable('privacy_settings', {
   showStats: boolean('show_stats').default(true).notNull()
 });
 
+const communityPosts = pgTable('community_posts', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  sessionId: uuid('session_id')
+    .notNull()
+    .unique()
+    .references(() => sessions.id, { onDelete: 'cascade' }),
+  message: varchar('message', { length: 500 }),
+  visibility: varchar('visibility', { length: 16 }).default('public').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+});
+
+const postLikes = pgTable(
+  'post_likes',
+  {
+    postId: uuid('post_id')
+      .notNull()
+      .references(() => communityPosts.id, { onDelete: 'cascade' }),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+  },
+  (table) => [primaryKey({ columns: [table.postId, table.userId] })]
+);
+
+const postComments = pgTable('post_comments', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  postId: uuid('post_id')
+    .notNull()
+    .references(() => communityPosts.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  message: varchar('message', { length: 500 }).notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+});
+
+const conversations = pgTable('conversations', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+});
+
+const conversationMembers = pgTable(
+  'conversation_members',
+  {
+    conversationId: uuid('conversation_id')
+      .notNull()
+      .references(() => conversations.id, { onDelete: 'cascade' }),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    joinedAt: timestamp('joined_at', { withTimezone: true }).defaultNow().notNull()
+  },
+  (table) => [primaryKey({ columns: [table.conversationId, table.userId] })]
+);
+
+const conversationMessages = pgTable('conversation_messages', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  conversationId: uuid('conversation_id')
+    .notNull()
+    .references(() => conversations.id, { onDelete: 'cascade' }),
+  senderId: uuid('sender_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  message: varchar('message', { length: 1000 }).notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+});
+
+const messageNotifications = pgTable('message_notifications', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  messageId: uuid('message_id')
+    .notNull()
+    .references(() => conversationMessages.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  readAt: timestamp('read_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+});
+
+const runningGroups = pgTable('running_groups', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  name: varchar('name', { length: 100 }).notNull(),
+  level: varchar('level', { length: 64 }).notNull(),
+  objective: varchar('objective', { length: 255 }).notNull(),
+  visibility: varchar('visibility', { length: 16 }).default('public').notNull(),
+  createdBy: uuid('created_by')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+});
+
+const runningGroupMembers = pgTable(
+  'running_group_members',
+  {
+    groupId: uuid('group_id')
+      .notNull()
+      .references(() => runningGroups.id, { onDelete: 'cascade' }),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    joinedAt: timestamp('joined_at', { withTimezone: true }).defaultNow().notNull()
+  },
+  (table) => [primaryKey({ columns: [table.groupId, table.userId] })]
+);
+
+const runningGroupPosts = pgTable('running_group_posts', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  groupId: uuid('group_id')
+    .notNull()
+    .references(() => runningGroups.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  message: varchar('message', { length: 500 }).notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+});
+const userFollows = pgTable(
+  'user_follows',
+  {
+    followerId: uuid('follower_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    followedId: uuid('followed_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+  },
+  (table) => [primaryKey({ columns: [table.followerId, table.followedId] })]
+);
+const blockedUsers = pgTable(
+  'blocked_users',
+  {
+    blockerId: uuid('blocker_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    blockedId: uuid('blocked_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+  },
+  (table) => [primaryKey({ columns: [table.blockerId, table.blockedId] })]
+);
+const contentReports = pgTable('content_reports', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  reporterId: uuid('reporter_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  postId: uuid('post_id')
+    .notNull()
+    .references(() => communityPosts.id, { onDelete: 'cascade' }),
+  reason: varchar('reason', { length: 255 }).notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+});
+
 module.exports = {
   cycles,
+  communityPosts,
+  blockedUsers,
+  contentReports,
+  conversationMembers,
+  conversationMessages,
+  conversations,
+  messageNotifications,
+  runningGroupMembers,
+  runningGroupPosts,
+  runningGroups,
   notificationSettings,
+  postComments,
+  postLikes,
   privacySettings,
   sessionFeedback,
   sessions,
   sessionStatus,
   users,
+  userFollows,
   plannedWorkouts,
   workoutRecommendations
 };

@@ -712,6 +712,28 @@ directement sur le ressenti facultatif afin d'ajuster les recommandations future
 **Vérifications :** dry-run de synchronisation du backlog et test UI ciblé du
 parcours de validation vers le ressenti.
 
+## 13 novembre 2026 - Publication d'une course
+
+J'ai permis de partager une séance terminée dans la communauté, avec ses
+performances, un ressenti facultatif et une visibilité publique ou privée. Le
+fil affiche les interactions et permet d'aimer ou commenter une publication.
+
+**Fonctionnalité concernée :** `US-COMMUNITY-002`.
+
+**Vérifications :** migration Drizzle générée, tests Jest backend et UI mobile,
+lint global.
+
+## 13 novembre 2026 - Fil d'actualité Communauté
+
+J'ai finalisé le fil d'actualité avec les publications triées par ordre
+chronologique, leurs performances, messages et interactions. Le défilement,
+l'actualisation automatique ainsi que les états de chargement et d'erreur restent
+disponibles pour une consultation fluide.
+
+**Fonctionnalité concernée :** `US-COMMUNITY-003`.
+
+**Vérifications :** tests UI du fil et lint global.
+
 ## 13 novembre 2026 - Espace Communauté
 
 J'ai ajouté l'onglet Communauté à la navigation principale, avec un fil
@@ -723,3 +745,54 @@ partagées qui seront ajoutées au chantier suivant.
 
 **Vérifications :** synchronisation du backlog vers `In Progress`, tests Jest
 backend et UI mobile du fil, lint global.
+
+## 13 novembre 2026 - Messagerie entre runneuses
+
+J'ai ajouté une messagerie authentifiée : sélection d'une runneuse, création et
+consultation des conversations, envoi et conservation des messages. Chaque
+message crée également une notification interne pour ses destinataires ; la
+conversation ouverte s'actualise toutes les huit secondes afin de rendre les
+nouveaux échanges visibles rapidement.
+
+**Fonctionnalité concernée :** `US-MESSAGING-001`.
+
+**Vérifications :** migration Drizzle générée, suites Jest backend et frontend
+complètes, lint global et synchronisation du backlog vers `In Progress`.
+
+## 13 novembre 2026 - Groupes de runneuses
+
+J'ai ajouté la création, la découverte et l'adhésion aux groupes de runneuses.
+Chaque groupe conserve ses membres et son fil dédié afin de faciliter les
+échanges autour d'objectifs communs.
+
+**Fonctionnalité concernée :** `US-GROUP-001`.
+
+**Vérifications :** migration Drizzle, tests backend et UI mobile ciblés, lint.
+
+## 13 novembre 2026 - Suivi de runneuses
+
+J'ai ajouté les abonnements entre runneuses et la priorité de leurs publications dans le fil Communauté.
+
+**Fonctionnalité concernée :** `US-FOLLOW-001`.
+
+## 13 novembre 2026 - Audit de cohérence Community et parcours locaux
+
+J'ai vérifié l'alignement entre les branches Community, les PR distantes, le
+manifeste et le Project GitHub, puis exécuté les suites backend et frontend.
+Le démarrage local complet reste bloqué avant les migrations par le client
+`docker-compose` installé (`ContainerConfig`), ce qui empêche pour l'instant
+une validation e2e dans le navigateur.
+
+**Vérifications :** fetch distant, audit des PR et du Project, lint, 105 tests
+backend et 36 tests frontend.
+
+## 13 novembre 2026 - Lancement Compose v2 et environnement e2e isolé
+
+J'ai installé le plugin Docker Compose v2 local et validé le démarrage de
+l'API, des migrations et d'Expo sur une base `maia_e2e` isolée. Cela préserve
+le volume PostgreSQL de développement historique.
+
+**Fonctionnalité concernée :** `TECH-BUGFIX-004`.
+
+**Vérifications :** `docker compose version`, migrations Drizzle, healthcheck,
+inscription avec JWT et preview Expo web.

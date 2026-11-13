@@ -25,7 +25,7 @@ describe('SessionSummaryScreen UI', () => {
     expect(view.getByText(/belle distance/i)).toBeTruthy();
   });
 
-  it('valide la séance puis ouvre directement le ressenti', async () => {
+  it('valide la séance puis ouvre son partage', async () => {
     completeSession.mockResolvedValueOnce({});
     const view = render(
       <SessionSummaryScreen
@@ -39,7 +39,10 @@ describe('SessionSummaryScreen UI', () => {
     });
 
     expect(completeSession).toHaveBeenCalledWith('session-1');
-    expect(navigation.replace).toHaveBeenCalledWith('Feedback', { sessionId: 'session-1' });
+    expect(navigation.replace).toHaveBeenCalledWith('PublishRun', {
+      session,
+      sessionId: 'session-1'
+    });
   });
 
   it('signale une erreur serveur lors de la validation', async () => {

@@ -1,6 +1,10 @@
 const { successResponse } = require('../utils/response');
 const authRoutes = require('./auth');
 const communityRoutes = require('./community');
+const messageRoutes = require('./messages');
+const groupRoutes = require('./groups');
+const followRoutes = require('./follows');
+const moderationRoutes = require('./moderation');
 const cycleRoutes = require('./cycle');
 const notificationRoutes = require('./notifications');
 const planningRoutes = require('./planning');
@@ -13,6 +17,10 @@ const workoutRoutes = require('./workouts');
 module.exports = async function routes(app) {
   app.register(authRoutes, { prefix: '/auth' });
   app.register(communityRoutes, { prefix: '/community' });
+  app.register(messageRoutes, { prefix: '/messages' });
+  app.register(groupRoutes, { prefix: '/groups' });
+  app.register(followRoutes, { prefix: '/follows' });
+  app.register(moderationRoutes, { prefix: '/moderation' });
   app.register(cycleRoutes, { prefix: '/cycle' });
   app.register(notificationRoutes, { prefix: '/notifications' });
   app.register(planningRoutes, { prefix: '/planning' });

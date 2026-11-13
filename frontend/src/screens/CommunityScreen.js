@@ -6,27 +6,100 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 
 import { BrandButton } from '../components/BrandButton';
-import { getCommunityFeed } from '../services/userApi';
+import {
+  blockCommunityUser,
+  commentCommunityPost,
+  getCommunityFeed,
+  likeCommunityPost,
+  reportCommunityPost
+} from '../services/userApi';
 import { colors, fonts, radius, spacing, type } from '../theme';
 
-function CommunityPost({ post }) {
+function CommunityPost({ onChanged, post }) {
+  const [comment, setComment] = useState('');
+  const [error, setError] = useState('');
+  const like = async () => {
+    try {
+      await likeCommunityPost(post.id);
+      await onChanged();
+    } catch (nextError) {
+      setError(nextError.message);
+    }
+  };
+  const sendComment = async () => {
+    if (!comment.trim()) return;
+    try {
+      await commentCommunityPost(post.id, comment);
+      setComment('');
+      await onChanged();
+    } catch (nextError) {
+      setError(nextError.message);
+    }
+  };
+  const hasMetrics = [post.distance, post.duration, post.average_pace].every((value) =>
+    Number.isFinite(Number(value))
+  );
   return (
     <View style={styles.post}>
       <Text style={styles.author}>{post.author_name}</Text>
+      {hasMetrics ? (
+        <Text style={styles.performance}>
+          {Number(post.distance).toFixed(2)} km · {Math.round(Number(post.duration) / 60)} min ·{' '}
+          {Number(post.average_pace).toFixed(1)} min/km
+        </Text>
+      ) : null}
       <Text style={styles.message}>{post.message}</Text>
       <Text style={styles.interactions}>
         {post.likes_count || 0} j’aime · {post.comments_count || 0} commentaires
       </Text>
+      <View style={styles.actions}>
+        <BrandButton compact onPress={() => void like()} variant="ghost">
+          J’aime
+        </BrandButton>
+        <TextInput
+          accessibilityLabel={`Commenter ${post.author_name}`}
+          onChangeText={setComment}
+          placeholder="Encourager…"
+          placeholderTextColor={colors.muted}
+          style={styles.comment}
+          value={comment}
+        />
+        <BrandButton compact onPress={() => void sendComment()} variant="secondary">
+          Envoyer
+        </BrandButton>
+      </View>
+      <View style={styles.actions}>
+        <BrandButton
+          compact
+          onPress={() => void reportCommunityPost(post.id, 'Contenu inapproprié')}
+          variant="ghost"
+        >
+          Signaler
+        </BrandButton>
+        <BrandButton
+          compact
+          onPress={() =>
+            void blockCommunityUser(post.author_id)
+              .then(onChanged)
+              .catch((nextError) => setError(nextError.message))
+          }
+          variant="ghost"
+        >
+          Bloquer
+        </BrandButton>
+      </View>
+      {!!error && <Text style={styles.errorText}>{error}</Text>}
     </View>
   );
 }
 
-export function CommunityScreen() {
+export function CommunityScreen({ navigation }) {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -76,6 +149,15 @@ export function CommunityScreen() {
           <Text style={styles.subtitle}>
             Les courses partagées et les encouragements de la communauté, au même endroit.
           </Text>
+          <BrandButton onPress={() => navigation.navigate('Messages')} variant="secondary">
+            Mes messages
+          </BrandButton>
+          <BrandButton onPress={() => navigation.navigate('Groups')} variant="ghost">
+            Groupes de runneuses
+          </BrandButton>
+          <BrandButton onPress={() => navigation.navigate('Follows')} variant="ghost">
+            Mes abonnements
+          </BrandButton>
         </View>
 
         {isLoading ? (
@@ -107,7 +189,7 @@ export function CommunityScreen() {
         ) : null}
 
         {!isLoading && !error
-          ? posts.map((post) => <CommunityPost key={post.id} post={post} />)
+          ? posts.map((post) => <CommunityPost key={post.id} onChanged={loadFeed} post={post} />)
           : null}
       </ScrollView>
     </SafeAreaView>
@@ -141,5 +223,15 @@ const styles = StyleSheet.create({
   },
   author: { ...type.action, color: colors.honey },
   message: { ...type.body, color: colors.white },
-  interactions: { color: colors.muted, fontFamily: fonts.body, fontSize: 14 }
+  performance: { color: colors.cream, fontFamily: fonts.strong, fontSize: 14 },
+  interactions: { color: colors.muted, fontFamily: fonts.body, fontSize: 14 },
+  actions: { alignItems: 'center', flexDirection: 'row', gap: spacing.sm },
+  comment: {
+    borderBottomColor: colors.borderLight,
+    borderBottomWidth: 1,
+    color: colors.white,
+    flex: 1,
+    fontFamily: fonts.body,
+    paddingVertical: spacing.sm
+  }
 });
