@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -50,13 +50,6 @@ function WeeklyGoal({ goal, onSave }) {
   const [targetValue, setTargetValue] = useState(goal ? String(goal.target_value) : '3');
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
-
-  useEffect(() => {
-    if (!goal) return;
-    setReminderEnabled(goal.reminder_enabled);
-    setTargetType(goal.target_type);
-    setTargetValue(String(goal.target_value));
-  }, [goal]);
 
   const targetLabel = targetType === 'sessions' ? 'séances' : 'km';
   const progress = goal
@@ -239,7 +232,15 @@ export function StatsScreen() {
                 value={formatDistance(stats.average_distance)}
               />
             </View>
-            <WeeklyGoal goal={weeklyGoal} onSave={setWeeklyGoal} />
+            <WeeklyGoal
+              goal={weeklyGoal}
+              key={
+                weeklyGoal
+                  ? `${weeklyGoal.target_type}-${weeklyGoal.target_value}-${weeklyGoal.reminder_enabled}`
+                  : 'new-goal'
+              }
+              onSave={setWeeklyGoal}
+            />
 
             <View style={styles.history}>
               <View style={styles.historyHeading}>
