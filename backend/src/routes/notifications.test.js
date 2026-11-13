@@ -1,4 +1,5 @@
 const mockDb = {
+  insert: jest.fn(),
   select: jest.fn(),
   transaction: jest.fn()
 };
@@ -50,6 +51,41 @@ describe('notification routes', () => {
     const response = await app.inject({ method: 'GET', url: '/notifications/settings' });
 
     expect(response.statusCode).toBe(401);
+  });
+
+  test('registers a native push token for the authenticated user', async () => {
+    const insert = {
+      onConflictDoUpdate: jest.fn().mockResolvedValue(undefined),
+      values: jest.fn().mockReturnThis()
+    };
+    mockDb.insert.mockReturnValue(insert);
+    const token = app.jwt.sign({ sub: userId });
+
+    const response = await app.inject({
+      headers: { authorization: `Bearer ${token}` },
+      method: 'PUT',
+      payload: { platform: 'android', token: 'fcm-device-token' },
+      url: '/notifications/devices'
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toEqual({ data: { registered: true }, success: true });
+    expect(insert.values).toHaveBeenCalledWith(
+      expect.objectContaining({ platform: 'android', token: 'fcm-device-token', userId })
+    );
+  });
+
+  test('rejects an invalid native push token before accessing the database', async () => {
+    const token = app.jwt.sign({ sub: userId });
+    const response = await app.inject({
+      headers: { authorization: `Bearer ${token}` },
+      method: 'PUT',
+      payload: { platform: 'web', token: '' },
+      url: '/notifications/devices'
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(mockDb.insert).not.toHaveBeenCalled();
   });
 
   test('returns the saved notification settings', async () => {

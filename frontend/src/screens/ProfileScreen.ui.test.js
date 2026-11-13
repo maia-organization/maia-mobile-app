@@ -15,11 +15,15 @@ jest.mock('../services/userApi', () => ({
   getTodayWorkout: jest.fn(),
   getPrivacySettings: jest.fn(),
   getProfile: jest.fn(),
+  registerPushDevice: jest.fn(),
   updateNotificationSettings: jest.fn(),
   updatePrivacySettings: jest.fn()
 }));
 
-jest.mock('../services/workoutReminder', () => ({ syncWorkoutReminder: jest.fn() }));
+jest.mock('../services/workoutReminder', () => ({
+  getNativePushDevice: jest.fn(),
+  syncWorkoutReminder: jest.fn()
+}));
 
 jest.mock('@react-navigation/native', () => {
   const React = require('react');

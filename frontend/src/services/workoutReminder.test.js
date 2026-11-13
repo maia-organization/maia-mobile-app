@@ -3,6 +3,7 @@ jest.mock('react-native', () => ({ Platform: { OS: 'ios' } }));
 jest.mock('expo-notifications', () => ({
   SchedulableTriggerInputTypes: { DAILY: 'daily' },
   cancelScheduledNotificationAsync: jest.fn(),
+  getDevicePushTokenAsync: jest.fn(),
   getAllScheduledNotificationsAsync: jest.fn(),
   getPermissionsAsync: jest.fn(),
   requestPermissionsAsync: jest.fn(),
@@ -12,7 +13,7 @@ jest.mock('expo-notifications', () => ({
 
 import * as Notifications from 'expo-notifications';
 
-import { syncWorkoutReminder } from './workoutReminder';
+import { getNativePushDevice, syncWorkoutReminder } from './workoutReminder';
 
 describe('workout reminders', () => {
   beforeEach(() => {
@@ -50,5 +51,15 @@ describe('workout reminders', () => {
 
     expect(Notifications.cancelScheduledNotificationAsync).toHaveBeenCalledWith('workout-1');
     expect(Notifications.scheduleNotificationAsync).not.toHaveBeenCalled();
+  });
+
+  it('returns the native token after notification permission is granted', async () => {
+    Notifications.getPermissionsAsync.mockResolvedValue({ granted: true });
+    Notifications.getDevicePushTokenAsync.mockResolvedValue({ data: 'fcm-device-token' });
+
+    await expect(getNativePushDevice()).resolves.toEqual({
+      platform: 'ios',
+      token: 'fcm-device-token'
+    });
   });
 });

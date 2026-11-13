@@ -11,7 +11,8 @@
     "db:generate": "XDG_DATA_HOME=.cache drizzle-kit generate",
     "db:migrate": "XDG_DATA_HOME=.cache drizzle-kit migrate",
     "db:upgrade": "XDG_DATA_HOME=.cache drizzle-kit up",
-    "db:studio": "XDG_DATA_HOME=.cache drizzle-kit studio"
+    "db:studio": "XDG_DATA_HOME=.cache drizzle-kit studio",
+    "notifications:send-workout-reminders": "node scripts/send-workout-reminders.js"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +24,7 @@
     "dotenv": "^16.3.1",
     "drizzle-orm": "^0.45.2",
     "fastify": "^5.8.5",
+    "firebase-admin": "^13.10.0",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.11.3"
   },

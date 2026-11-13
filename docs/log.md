@@ -761,3 +761,16 @@ motivationnel lorsque celle-ci est indisponible, puis ouvre directement l'accuei
 **Vérifications :** synchronisation du backlog vers `In Progress`, tests Jest
 backend et frontend (y compris annulation et erreur réseau). Le lint global
 reste bloqué par une erreur préexistante dans `StatsScreen.js`.
+
+## 13 novembre 2026 - Envoi FCM des rappels d'entraînement
+
+J'ai relié les rappels d'entraînement à Firebase Cloud Messaging : l'application
+enregistre le token natif de l'appareil, le backend le conserve par utilisatrice
+et un script de cron envoie la séance stockée ou le message motivationnel de
+secours à l'heure choisie. La clé de compte de service est uniquement lue depuis
+un chemin de secret et reste exclue de Git.
+
+**Fonctionnalité concernée :** `US-NOTIFICATION-001`.
+
+**Vérifications :** initialisation locale de Firebase Admin avec la clé fournie,
+migration PostgreSQL appliquée, tests Jest backend et frontend ciblés, lint.

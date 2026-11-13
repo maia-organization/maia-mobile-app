@@ -20,6 +20,14 @@ export async function requestNotificationPermission() {
   return permission.granted;
 }
 
+export async function getNativePushDevice() {
+  if (Platform.OS === 'web') return null;
+  if (!(await requestNotificationPermission())) return null;
+
+  const { data } = await Notifications.getDevicePushTokenAsync();
+  return data ? { platform: Platform.OS, token: data } : null;
+}
+
 async function clearWorkoutReminders() {
   const scheduled = await Notifications.getAllScheduledNotificationsAsync();
   const reminders = scheduled.filter(({ content }) => content.data?.kind === REMINDER_KIND);

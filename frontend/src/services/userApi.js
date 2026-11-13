@@ -148,6 +148,13 @@ export function updateNotificationSettings(payload) {
   });
 }
 
+export function registerPushDevice(payload) {
+  return requestUser('/notifications/devices', {
+    body: JSON.stringify(payload),
+    method: 'PUT'
+  });
+}
+
 export function getPrivacySettings() {
   return requestUser('/privacy/settings');
 }

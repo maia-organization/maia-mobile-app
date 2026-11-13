@@ -18,11 +18,12 @@ import {
   getPrivacySettings,
   getProfile,
   getTodayWorkout,
+  registerPushDevice,
   updateNotificationSettings,
   updatePrivacySettings,
   deleteAccount
 } from '../services/userApi';
-import { syncWorkoutReminder } from '../services/workoutReminder';
+import { getNativePushDevice, syncWorkoutReminder } from '../services/workoutReminder';
 import { colors, fonts, radius, spacing, type } from '../theme';
 
 const labels = {
@@ -96,6 +97,13 @@ export function ProfileScreen({ navigation, onLogout }) {
     return syncWorkoutReminder({ settings, workout });
   }, []);
 
+  const registerCurrentDevice = useCallback(async (settings) => {
+    if (!settings.enabled || !settings.workout_notifications) return;
+
+    const device = await getNativePushDevice();
+    if (device) await registerPushDevice(device);
+  }, []);
+
   const loadProfile = useCallback(() => {
     let isActive = true;
     setError('');
@@ -108,6 +116,7 @@ export function ProfileScreen({ navigation, onLogout }) {
         setNotificationSettings(settings);
         setPrivacySettings(privacy);
         void refreshWorkoutReminder(settings).catch(() => {});
+        void registerCurrentDevice(settings).catch(() => {});
       })
       .catch((nextError) => {
         if (isActive) setError(nextError.message);
@@ -119,7 +128,7 @@ export function ProfileScreen({ navigation, onLogout }) {
     return () => {
       isActive = false;
     };
-  }, [refreshWorkoutReminder]);
+  }, [refreshWorkoutReminder, registerCurrentDevice]);
 
   const updateNotifications = (changes) => {
     setNotificationSettings((current) => ({ ...current, ...changes }));
@@ -156,6 +165,7 @@ export function ProfileScreen({ navigation, onLogout }) {
       const { settings } = await updateNotificationSettings(notificationSettings);
       setNotificationSettings(settings);
       const reminder = await refreshWorkoutReminder(settings);
+      await registerCurrentDevice(settings);
       setNotificationFeedback(
         reminder.permissionDenied
           ? 'Préférences enregistrées. Active les notifications dans les réglages de ton téléphone.'

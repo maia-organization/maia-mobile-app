@@ -128,6 +128,16 @@ const notificationSettings = pgTable('notification_settings', {
   preferredTime: integer('preferred_time').default(18).notNull()
 });
 
+const pushDevices = pgTable('push_devices', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  token: varchar('token', { length: 512 }).notNull().unique(),
+  platform: varchar('platform', { length: 16 }).notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull()
+});
+
 const privacySettings = pgTable('privacy_settings', {
   userId: uuid('user_id')
     .primaryKey()
@@ -168,6 +178,7 @@ const weeklyGoals = pgTable('weekly_goals', {
 module.exports = {
   cycles,
   notificationSettings,
+  pushDevices,
   privacySettings,
   sessionFeedback,
   sessions,

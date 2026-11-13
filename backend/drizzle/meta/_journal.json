@@ -57,6 +57,13 @@
       "when": 1794559557148,
       "tag": "0007_empty_boomer",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1794568469846,
+      "tag": "0008_nosy_golden_guardian",
+      "breakpoints": true
     }
   ]
 }

@@ -1,7 +1,7 @@
 const { eq } = require('drizzle-orm');
 
 const { db } = require('../db');
-const { notificationSettings, users } = require('../db/schema');
+const { notificationSettings, pushDevices, users } = require('../db/schema');
 const { errorResponse, successResponse } = require('../utils/response');
 
 const settingFields = {
@@ -43,7 +43,43 @@ function isValidPayload(payload) {
   );
 }
 
+function isValidDevicePayload(body = {}) {
+  return (
+    ['android', 'ios'].includes(body.platform) &&
+    typeof body.token === 'string' &&
+    body.token.trim().length > 0 &&
+    body.token.length <= 512
+  );
+}
+
 module.exports = async function notificationRoutes(app) {
+  app.put('/devices', { preHandler: app.authenticate }, async (request, reply) => {
+    if (!isValidDevicePayload(request.body)) {
+      return reply
+        .status(400)
+        .send(errorResponse('VALIDATION_ERROR', "L'appareil de notification est invalide."));
+    }
+
+    await db
+      .insert(pushDevices)
+      .values({
+        platform: request.body.platform,
+        token: request.body.token.trim(),
+        userId: request.user.sub,
+        updatedAt: new Date()
+      })
+      .onConflictDoUpdate({
+        set: {
+          platform: request.body.platform,
+          updatedAt: new Date(),
+          userId: request.user.sub
+        },
+        target: pushDevices.token
+      });
+
+    return successResponse({ registered: true });
+  });
+
   app.get('/settings', { preHandler: app.authenticate }, async (request, reply) => {
     const [user] = await db
       .select({ notificationEnabled: users.notificationEnabled })
