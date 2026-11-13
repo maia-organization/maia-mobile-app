@@ -7,6 +7,7 @@ import { FeedbackScreen } from '../screens/FeedbackScreen';
 import { LoginScreen } from '../screens/LoginScreen';
 import { MessagingScreen } from '../screens/MessagingScreen';
 import { GroupsScreen } from '../screens/GroupsScreen';
+import { GroupDetailScreen } from '../screens/GroupDetailScreen';
 import { FollowsScreen } from '../screens/FollowsScreen';
 import { OnboardingScreen } from '../screens/OnboardingScreen';
 import { ProfileSetupScreen } from '../screens/ProfileSetupScreen';
@@ -137,6 +138,7 @@ export function AuthNavigator() {
         <Stack.Screen component={FeedbackScreen} name="Feedback" />
         <Stack.Screen component={MessagingScreen} name="Messages" />
         <Stack.Screen component={GroupsScreen} name="Groups" />
+        <Stack.Screen component={GroupDetailScreen} name="GroupDetail" />
         <Stack.Screen component={FollowsScreen} name="Follows" />
         <Stack.Screen component={PublishRunScreen} name="PublishRun" />
         <Stack.Screen component={StatsScreen} name="Stats" />

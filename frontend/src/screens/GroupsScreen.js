@@ -13,7 +13,7 @@ import { BrandButton } from '../components/BrandButton';
 import { createRunningGroup, getRunningGroups, joinRunningGroup } from '../services/userApi';
 import { colors, radius, spacing, type } from '../theme';
 
-export function GroupsScreen() {
+export function GroupsScreen({ navigation }) {
   const [groups, setGroups] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
@@ -37,10 +37,10 @@ export function GroupsScreen() {
   const create = async () => {
     setError('');
     try {
-      await createRunningGroup(form);
+      const { group } = await createRunningGroup(form);
       setCreating(false);
       setForm({ level: '', name: '', objective: '', visibility: 'public' });
-      await load();
+      navigation.navigate('GroupDetail', { group: { ...group, is_member: true } });
     } catch (nextError) {
       setError(nextError.message);
     }
@@ -49,6 +49,9 @@ export function GroupsScreen() {
     try {
       await joinRunningGroup(id);
       await load();
+      navigation.navigate('GroupDetail', {
+        group: { ...groups.find((group) => group.id === id), is_member: true }
+      });
     } catch (nextError) {
       setError(nextError.message);
     }
@@ -88,6 +91,24 @@ export function GroupsScreen() {
               style={styles.input}
               value={form.objective}
             />
+            <View style={styles.visibilityOptions}>
+              <BrandButton
+                accessibilityLabel="Visibilité publique"
+                compact
+                onPress={() => setForm({ ...form, visibility: 'public' })}
+                variant={form.visibility === 'public' ? 'secondary' : 'ghost'}
+              >
+                Public
+              </BrandButton>
+              <BrandButton
+                accessibilityLabel="Visibilité privée"
+                compact
+                onPress={() => setForm({ ...form, visibility: 'private' })}
+                variant={form.visibility === 'private' ? 'secondary' : 'ghost'}
+              >
+                Privé
+              </BrandButton>
+            </View>
             <BrandButton onPress={() => void create()} variant="secondary">
               Créer
             </BrandButton>
@@ -111,9 +132,19 @@ export function GroupsScreen() {
             <Text style={styles.subtitle}>
               {group.members_count} membres · {group.visibility}
             </Text>
-            <BrandButton compact onPress={() => void join(group.id)} variant="secondary">
-              Rejoindre
-            </BrandButton>
+            {group.is_member ? (
+              <BrandButton
+                compact
+                onPress={() => navigation.navigate('GroupDetail', { group })}
+                variant="secondary"
+              >
+                Ouvrir le groupe
+              </BrandButton>
+            ) : (
+              <BrandButton compact onPress={() => void join(group.id)} variant="secondary">
+                Rejoindre
+              </BrandButton>
+            )}
           </View>
         ))}
       </ScrollView>
@@ -135,6 +166,7 @@ const styles = StyleSheet.create({
     padding: spacing.lg
   },
   name: { ...type.action, color: colors.honey },
+  visibilityOptions: { flexDirection: 'row', gap: spacing.sm },
   input: {
     borderBottomColor: colors.borderLight,
     borderBottomWidth: 1,

@@ -20,7 +20,7 @@ async function membership(groupId, userId) {
 }
 
 module.exports = async function groupRoutes(app) {
-  app.get('/', { preHandler: app.authenticate }, async () => {
+  app.get('/', { preHandler: app.authenticate }, async (request) => {
     const groups = await db
       .select({
         id: runningGroups.id,
@@ -28,9 +28,21 @@ module.exports = async function groupRoutes(app) {
         level: runningGroups.level,
         objective: runningGroups.objective,
         visibility: runningGroups.visibility,
-        members_count: sql`(select count(*) from running_group_members where group_id = ${runningGroups.id})`
+        members_count: sql`(select count(*) from running_group_members where group_id = ${runningGroups.id})`,
+        is_member: sql`exists (
+          select 1 from running_group_members
+          where running_group_members.group_id = ${runningGroups.id}
+            and running_group_members.user_id = ${request.user.sub}
+        )`
       })
       .from(runningGroups)
+      .where(
+        sql`${runningGroups.visibility} = 'public' or exists (
+        select 1 from running_group_members
+        where running_group_members.group_id = ${runningGroups.id}
+          and running_group_members.user_id = ${request.user.sub}
+      )`
+      )
       .orderBy(desc(runningGroups.createdAt));
     return successResponse({ groups });
   });
@@ -61,12 +73,16 @@ module.exports = async function groupRoutes(app) {
     if (!UUID.test(request.params.id))
       return reply.status(400).send(errorResponse('VALIDATION_ERROR', 'Groupe invalide.'));
     const [group] = await db
-      .select({ id: runningGroups.id })
+      .select({ id: runningGroups.id, visibility: runningGroups.visibility })
       .from(runningGroups)
       .where(eq(runningGroups.id, request.params.id))
       .limit(1);
     if (!group)
       return reply.status(404).send(errorResponse('GROUP_NOT_FOUND', 'Groupe introuvable.'));
+    if (group.visibility === 'private')
+      return reply
+        .status(403)
+        .send(errorResponse('GROUP_PRIVATE', 'Ce groupe privé nécessite une invitation.'));
     await db
       .insert(runningGroupMembers)
       .values({ groupId: group.id, userId: request.user.sub })
@@ -111,5 +127,24 @@ module.exports = async function groupRoutes(app) {
       .where(eq(runningGroupPosts.groupId, request.params.id))
       .orderBy(desc(runningGroupPosts.createdAt));
     return successResponse({ posts });
+  });
+  app.post('/:id/feed', { preHandler: app.authenticate }, async (request, reply) => {
+    if (
+      typeof request.body?.message !== 'string' ||
+      !request.body.message.trim() ||
+      request.body.message.trim().length > 500
+    )
+      return reply.status(400).send(errorResponse('VALIDATION_ERROR', 'Publication invalide.'));
+    if (!(await membership(request.params.id, request.user.sub)))
+      return reply.status(404).send(errorResponse('GROUP_NOT_FOUND', 'Groupe introuvable.'));
+    const [post] = await db
+      .insert(runningGroupPosts)
+      .values({
+        groupId: request.params.id,
+        message: request.body.message.trim(),
+        userId: request.user.sub
+      })
+      .returning();
+    return reply.status(201).send(successResponse({ post }));
   });
 };

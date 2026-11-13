@@ -796,3 +796,17 @@ le volume PostgreSQL de développement historique.
 
 **Vérifications :** `docker compose version`, migrations Drizzle, healthcheck,
 inscription avec JWT et preview Expo web.
+
+## 13 novembre 2026 - Espace dédié des groupes de runneuses
+
+J'ai finalisé le parcours d'un groupe : après sa création ou son adhésion,
+l'utilisatrice ouvre son espace, consulte les membres et le fil, publie un
+message et peut quitter le groupe. J'ai aussi rendu le choix public/privé
+accessible sur mobile et empêché la découverte ou l'adhésion directe aux
+groupes privés sans invitation.
+
+**Fonctionnalité concernée :** `US-GROUP-001`.
+
+**Vérifications :** tests Jest backend et UI mobile, lint, formatage des
+fichiers versionnés et scénario e2e sur PostgreSQL isolée (création,
+confidentialité, adhésion, membres, publication et départ).
