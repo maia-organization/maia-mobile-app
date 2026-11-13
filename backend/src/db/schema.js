@@ -142,23 +142,40 @@ const privacySettings = pgTable('privacy_settings', {
 
 const communityPosts = pgTable('community_posts', {
   id: uuid('id').defaultRandom().primaryKey(),
-  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  sessionId: uuid('session_id').notNull().unique().references(() => sessions.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  sessionId: uuid('session_id')
+    .notNull()
+    .unique()
+    .references(() => sessions.id, { onDelete: 'cascade' }),
   message: varchar('message', { length: 500 }),
   visibility: varchar('visibility', { length: 16 }).default('public').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
 });
 
-const postLikes = pgTable('post_likes', {
-  postId: uuid('post_id').notNull().references(() => communityPosts.id, { onDelete: 'cascade' }),
-  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
-}, (table) => [primaryKey({ columns: [table.postId, table.userId] })]);
+const postLikes = pgTable(
+  'post_likes',
+  {
+    postId: uuid('post_id')
+      .notNull()
+      .references(() => communityPosts.id, { onDelete: 'cascade' }),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+  },
+  (table) => [primaryKey({ columns: [table.postId, table.userId] })]
+);
 
 const postComments = pgTable('post_comments', {
   id: uuid('id').defaultRandom().primaryKey(),
-  postId: uuid('post_id').notNull().references(() => communityPosts.id, { onDelete: 'cascade' }),
-  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  postId: uuid('post_id')
+    .notNull()
+    .references(() => communityPosts.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
   message: varchar('message', { length: 500 }).notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
 });

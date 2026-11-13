@@ -39,7 +39,10 @@ describe('SessionSummaryScreen UI', () => {
     });
 
     expect(completeSession).toHaveBeenCalledWith('session-1');
-    expect(navigation.replace).toHaveBeenCalledWith('PublishRun', { session, sessionId: 'session-1' });
+    expect(navigation.replace).toHaveBeenCalledWith('PublishRun', {
+      session,
+      sessionId: 'session-1'
+    });
   });
 
   it('signale une erreur serveur lors de la validation', async () => {
