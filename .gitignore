@@ -5,6 +5,11 @@ node_modules/
 backend/.env
 frontend/.env
 
+# Firebase Admin service-account credentials must stay local or be injected by the host.
+firebase-service-account*.json
+*-firebase-adminsdk-*.json
+secrets/
+
 postgres_data/
 
 .expo/
