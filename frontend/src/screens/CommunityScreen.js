@@ -126,6 +126,9 @@ export function CommunityScreen({ navigation }) {
           <BrandButton onPress={() => navigation.navigate('Messages')} variant="secondary">
             Mes messages
           </BrandButton>
+          <BrandButton onPress={() => navigation.navigate('Groups')} variant="ghost">
+            Groupes de runneuses
+          </BrandButton>
         </View>
 
         {isLoading ? (

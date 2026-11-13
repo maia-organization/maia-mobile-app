@@ -223,6 +223,44 @@ const messageNotifications = pgTable('message_notifications', {
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
 });
 
+const runningGroups = pgTable('running_groups', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  name: varchar('name', { length: 100 }).notNull(),
+  level: varchar('level', { length: 64 }).notNull(),
+  objective: varchar('objective', { length: 255 }).notNull(),
+  visibility: varchar('visibility', { length: 16 }).default('public').notNull(),
+  createdBy: uuid('created_by')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+});
+
+const runningGroupMembers = pgTable(
+  'running_group_members',
+  {
+    groupId: uuid('group_id')
+      .notNull()
+      .references(() => runningGroups.id, { onDelete: 'cascade' }),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    joinedAt: timestamp('joined_at', { withTimezone: true }).defaultNow().notNull()
+  },
+  (table) => [primaryKey({ columns: [table.groupId, table.userId] })]
+);
+
+const runningGroupPosts = pgTable('running_group_posts', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  groupId: uuid('group_id')
+    .notNull()
+    .references(() => runningGroups.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  message: varchar('message', { length: 500 }).notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+});
+
 module.exports = {
   cycles,
   communityPosts,
@@ -230,6 +268,9 @@ module.exports = {
   conversationMessages,
   conversations,
   messageNotifications,
+  runningGroupMembers,
+  runningGroupPosts,
+  runningGroups,
   notificationSettings,
   postComments,
   postLikes,

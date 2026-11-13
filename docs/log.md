@@ -758,3 +758,13 @@ nouveaux échanges visibles rapidement.
 
 **Vérifications :** migration Drizzle générée, suites Jest backend et frontend
 complètes, lint global et synchronisation du backlog vers `In Progress`.
+
+## 13 novembre 2026 - Groupes de runneuses
+
+J'ai ajouté la création, la découverte et l'adhésion aux groupes de runneuses.
+Chaque groupe conserve ses membres et son fil dédié afin de faciliter les
+échanges autour d'objectifs communs.
+
+**Fonctionnalité concernée :** `US-GROUP-001`.
+
+**Vérifications :** migration Drizzle, tests backend et UI mobile ciblés, lint.
