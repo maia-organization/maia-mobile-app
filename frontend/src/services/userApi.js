@@ -103,6 +103,18 @@ export function sendConversationMessage(conversationId, message) {
   });
 }
 
+export function getRunningGroups() {
+  return requestUser('/groups');
+}
+
+export function createRunningGroup(payload) {
+  return requestUser('/groups', { body: JSON.stringify(payload), method: 'POST' });
+}
+
+export function joinRunningGroup(groupId) {
+  return requestUser(`/groups/${groupId}/join`, { method: 'POST' });
+}
+
 export function adaptTodayWorkout(payload) {
   return requestUser('/workouts/today', { body: JSON.stringify(payload), method: 'PUT' });
 }

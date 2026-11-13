@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { FeedbackScreen } from '../screens/FeedbackScreen';
 import { LoginScreen } from '../screens/LoginScreen';
 import { MessagingScreen } from '../screens/MessagingScreen';
+import { GroupsScreen } from '../screens/GroupsScreen';
 import { OnboardingScreen } from '../screens/OnboardingScreen';
 import { ProfileSetupScreen } from '../screens/ProfileSetupScreen';
 import { PublishRunScreen } from '../screens/PublishRunScreen';
@@ -134,6 +135,7 @@ export function AuthNavigator() {
         <Stack.Screen component={SessionSummaryScreen} name="SessionSummary" />
         <Stack.Screen component={FeedbackScreen} name="Feedback" />
         <Stack.Screen component={MessagingScreen} name="Messages" />
+        <Stack.Screen component={GroupsScreen} name="Groups" />
         <Stack.Screen component={PublishRunScreen} name="PublishRun" />
         <Stack.Screen component={StatsScreen} name="Stats" />
         <Stack.Screen component={ProfileSetupScreen} name="ProfileSetup" />

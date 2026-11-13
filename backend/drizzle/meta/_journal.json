@@ -57,6 +57,13 @@
       "when": 1794574549672,
       "tag": "0007_nostalgic_kate_bishop",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1794576432436,
+      "tag": "0008_slippery_avengers",
+      "breakpoints": true
     }
   ]
 }
