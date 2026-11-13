@@ -17,6 +17,7 @@ import {
   getConversationMessages,
   getConversations,
   getMessageMembers,
+  markConversationNotificationsRead,
   sendConversationMessage
 } from '../services/userApi';
 import { colors, radius, spacing, type } from '../theme';
@@ -54,21 +55,37 @@ export function MessagingScreen() {
     }
   }, []);
 
+  const acknowledgeConversation = useCallback(async (conversation) => {
+    try {
+      await markConversationNotificationsRead(conversation.id);
+      setConversations((currentConversations) =>
+        currentConversations.map((item) =>
+          item.id === conversation.id ? { ...item, unread_count: 0 } : item
+        )
+      );
+    } catch (nextError) {
+      setError(nextError.message);
+    }
+  }, []);
+
   useFocusEffect(
     useCallback(() => {
       void loadConversations();
       const refreshInterval = setInterval(() => {
-        if (activeConversation) void loadMessages(activeConversation);
-        else void loadConversations();
+        if (activeConversation) {
+          void loadMessages(activeConversation);
+          void acknowledgeConversation(activeConversation);
+        } else void loadConversations();
       }, 8000);
       return () => clearInterval(refreshInterval);
-    }, [activeConversation, loadConversations, loadMessages])
+    }, [acknowledgeConversation, activeConversation, loadConversations, loadMessages])
   );
 
   const openConversation = async (conversation) => {
     setActiveConversation(conversation);
     setMessages([]);
     await loadMessages(conversation);
+    await acknowledgeConversation(conversation);
   };
 
   const openMemberPicker = async () => {
@@ -191,7 +208,14 @@ export function MessagingScreen() {
                 style={styles.card}
               >
                 <Text style={styles.cardTitle}>{conversation.recipient_name}</Text>
-                <Text style={styles.subtitle}>Ouvrir la conversation</Text>
+                {Number(conversation.unread_count) > 0 ? (
+                  <Text style={styles.unread}>
+                    {conversation.unread_count} nouveau
+                    {Number(conversation.unread_count) > 1 ? 'x messages' : ' message'}
+                  </Text>
+                ) : (
+                  <Text style={styles.subtitle}>Ouvrir la conversation</Text>
+                )}
               </Pressable>
             ))
           : null}
@@ -215,6 +239,7 @@ const styles = StyleSheet.create({
     padding: spacing.lg
   },
   cardTitle: { ...type.action, color: colors.honey },
+  unread: { ...type.action, color: colors.roseLight },
   row: { borderTopColor: colors.borderLight, borderTopWidth: 1, paddingVertical: spacing.md },
   rowText: { ...type.body, color: colors.white },
   messageList: { gap: spacing.md, paddingVertical: spacing.md },

@@ -96,6 +96,12 @@ export function getConversationMessages(conversationId) {
   return requestUser(`/messages/conversations/${conversationId}/messages`);
 }
 
+export function markConversationNotificationsRead(conversationId) {
+  return requestUser(`/messages/conversations/${conversationId}/notifications/read`, {
+    method: 'PUT'
+  });
+}
+
 export function sendConversationMessage(conversationId, message) {
   return requestUser(`/messages/conversations/${conversationId}/messages`, {
     body: JSON.stringify({ message }),

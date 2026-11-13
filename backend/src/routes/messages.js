@@ -1,4 +1,4 @@
-const { and, asc, desc, eq, ne } = require('drizzle-orm');
+const { and, asc, desc, eq, isNull, ne, sql } = require('drizzle-orm');
 
 const { db } = require('../db');
 const {
@@ -59,7 +59,25 @@ module.exports = async function messageRoutes(app) {
             )
           )
           .limit(1);
-        return { ...conversation, recipient_name: recipient?.name || 'Conversation' };
+        const [unread] = await db
+          .select({ count: sql`count(*)` })
+          .from(messageNotifications)
+          .innerJoin(
+            conversationMessages,
+            eq(messageNotifications.messageId, conversationMessages.id)
+          )
+          .where(
+            and(
+              eq(messageNotifications.userId, request.user.sub),
+              eq(conversationMessages.conversationId, conversation.id),
+              isNull(messageNotifications.readAt)
+            )
+          );
+        return {
+          ...conversation,
+          recipient_name: recipient?.name || 'Conversation',
+          unread_count: Number(unread?.count || 0)
+        };
       })
     );
     return successResponse({ conversations: conversationsWithRecipients });
@@ -117,6 +135,34 @@ module.exports = async function messageRoutes(app) {
         .where(eq(conversationMessages.conversationId, request.params.id))
         .orderBy(asc(conversationMessages.createdAt));
       return successResponse({ messages });
+    }
+  );
+
+  app.put(
+    '/conversations/:id/notifications/read',
+    { preHandler: app.authenticate },
+    async (request, reply) => {
+      if (!UUID.test(request.params.id))
+        return reply.status(400).send(errorResponse('VALIDATION_ERROR', 'Conversation invalide.'));
+      if (!(await isMember(request.params.id, request.user.sub)))
+        return reply
+          .status(404)
+          .send(errorResponse('CONVERSATION_NOT_FOUND', 'Conversation introuvable.'));
+
+      await db
+        .update(messageNotifications)
+        .set({ readAt: new Date() })
+        .where(
+          and(
+            eq(messageNotifications.userId, request.user.sub),
+            isNull(messageNotifications.readAt),
+            sql`${messageNotifications.messageId} in (
+              select ${conversationMessages.id} from ${conversationMessages}
+              where ${conversationMessages.conversationId} = ${request.params.id}
+            )`
+          )
+        );
+      return successResponse({ read: true });
     }
   );
 

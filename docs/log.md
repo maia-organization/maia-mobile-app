@@ -825,3 +825,16 @@ persistance.
 **Vérifications :** tests Jest backend et UI mobile, lint, formatage des
 fichiers versionnés et scénario e2e sur PostgreSQL isolée (signalement,
 blocage et masquage du fil).
+
+## 13 novembre 2026 - Notifications de messagerie visibles
+
+J'ai rendu visibles les notifications internes de messagerie : chaque
+conversation affiche son nombre de nouveaux messages et leur ouverture les
+marque comme lus. Les messages reçus restent ainsi signalés sans alourdir le
+parcours, tout en conservant l'historique de la conversation.
+
+**Fonctionnalité concernée :** `US-MESSAGING-001`.
+
+**Vérifications :** tests Jest backend et UI mobile, lint, formatage des
+fichiers versionnés et scénario e2e sur PostgreSQL isolée (création de la
+notification, compteur, lecture et historique).
