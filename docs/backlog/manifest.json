@@ -290,7 +290,8 @@
       "title": "US - Créer ou rejoindre un groupe de runneuses",
       "priority": "P3",
       "estimate": 8,
-      "status": "Review",
+      "status": "Done",
+      "completedOn": "2026-11-13",
       "areas": ["frontend", "backend"]
     },
     {
