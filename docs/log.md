@@ -722,3 +722,15 @@ allègent la recommandation proposée afin de mieux respecter le ressenti du mom
 
 **Vérifications :** migration Drizzle générée, tests Jest ciblés backend et UI
 mobile, lint et formatage.
+
+## 13 novembre 2026 - Objectif hebdomadaire
+
+J'ai ajouté la définition d'un objectif hebdomadaire en nombre de séances ou en
+distance, son ajustement depuis les statistiques et l'affichage de la progression
+de la semaine. L'utilisatrice peut aussi activer un rappel pour cet objectif,
+dans le respect de ses préférences.
+
+**Fonctionnalité concernée :** `US-GOAL-001`.
+
+**Vérifications :** migration Drizzle générée et tests Jest ciblés de l'API et
+de l'écran mobile, y compris l'enregistrement du rappel.

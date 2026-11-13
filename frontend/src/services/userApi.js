@@ -77,6 +77,14 @@ export function getStats() {
   return requestUser('/stats/me');
 }
 
+export function getWeeklyGoal() {
+  return requestUser('/goals/weekly');
+}
+
+export function saveWeeklyGoal(payload) {
+  return requestUser('/goals/weekly', { body: JSON.stringify(payload), method: 'PUT' });
+}
+
 export function getSessionHistory() {
   return requestUser('/sessions?limit=50&offset=0');
 }

@@ -155,6 +155,16 @@ const symptomEntries = pgTable(
   (table) => [uniqueIndex('symptom_entries_user_date_unique').on(table.userId, table.recordedOn)]
 );
 
+const weeklyGoals = pgTable('weekly_goals', {
+  userId: uuid('user_id')
+    .primaryKey()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  targetType: varchar('target_type', { length: 16 }).notNull(),
+  targetValue: real('target_value').notNull(),
+  reminderEnabled: boolean('reminder_enabled').default(false).notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull()
+});
+
 module.exports = {
   cycles,
   notificationSettings,
@@ -164,6 +174,7 @@ module.exports = {
   sessionStatus,
   symptomEntries,
   users,
+  weeklyGoals,
   plannedWorkouts,
   workoutRecommendations
 };
