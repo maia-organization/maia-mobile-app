@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { HomeScreen } from '../screens/HomeScreen';
 import { CycleScreen } from '../screens/CycleScreen';
+import { CommunityScreen } from '../screens/CommunityScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { PlanningScreen } from '../screens/PlanningScreen';
 import { StatsScreen } from '../screens/StatsScreen';
@@ -15,6 +16,7 @@ const Tab = createBottomTabNavigator();
 const tabs = [
   { label: 'Accueil', name: 'Home' },
   { label: 'Cycle', name: 'Cycle' },
+  { label: 'Communauté', name: 'Community' },
   { label: 'Planning', name: 'Planning' },
   { label: 'Stats', name: 'Stats' },
   { label: 'Profil', name: 'Profile' }
@@ -104,6 +106,14 @@ function CycleTab(props) {
   );
 }
 
+function CommunityTab(props) {
+  return (
+    <SwipeableTabScreen {...props}>
+      <CommunityScreen {...props} />
+    </SwipeableTabScreen>
+  );
+}
+
 function PlanningTab(props) {
   return (
     <SwipeableTabScreen {...props}>
@@ -144,6 +154,11 @@ export function MainTabsNavigator({ onLogout }) {
         {(props) => <HomeTab {...props} onLogout={onLogout} />}
       </Tab.Screen>
       <Tab.Screen component={CycleTab} name="Cycle" options={{ tabBarLabel: 'Cycle' }} />
+      <Tab.Screen
+        component={CommunityTab}
+        name="Community"
+        options={{ tabBarLabel: 'Communauté' }}
+      />
       <Tab.Screen component={PlanningTab} name="Planning" options={{ tabBarLabel: 'Planning' }} />
       <Tab.Screen component={StatsTab} name="Stats" options={{ tabBarLabel: 'Stats' }} />
       <Tab.Screen name="Profile" options={{ tabBarLabel: 'Profil' }}>

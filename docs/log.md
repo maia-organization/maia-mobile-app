@@ -711,3 +711,15 @@ directement sur le ressenti facultatif afin d'ajuster les recommandations future
 
 **Vérifications :** dry-run de synchronisation du backlog et test UI ciblé du
 parcours de validation vers le ressenti.
+
+## 13 novembre 2026 - Espace Communauté
+
+J'ai ajouté l'onglet Communauté à la navigation principale, avec un fil
+d'actualité authentifié et actualisé automatiquement. Le fil prévoit les états
+de chargement, d'erreur et d'absence d'activité en attendant les publications
+partagées qui seront ajoutées au chantier suivant.
+
+**Fonctionnalité concernée :** `US-COMMUNITY-001`.
+
+**Vérifications :** synchronisation du backlog vers `In Progress`, tests Jest
+backend et UI mobile du fil, lint global.

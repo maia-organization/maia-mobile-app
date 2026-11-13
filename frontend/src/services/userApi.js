@@ -58,6 +58,10 @@ export function getTodayWorkout() {
   return requestUser('/workouts/today');
 }
 
+export function getCommunityFeed() {
+  return requestUser('/community/feed');
+}
+
 export function adaptTodayWorkout(payload) {
   return requestUser('/workouts/today', { body: JSON.stringify(payload), method: 'PUT' });
 }
