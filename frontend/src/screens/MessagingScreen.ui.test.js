@@ -6,6 +6,7 @@ import {
   getConversationMessages,
   getConversations,
   getMessageMembers,
+  markConversationNotificationsRead,
   sendConversationMessage
 } from '../services/userApi';
 
@@ -17,6 +18,7 @@ jest.mock('../services/userApi', () => ({
   getConversationMessages: jest.fn(),
   getConversations: jest.fn(),
   getMessageMembers: jest.fn(),
+  markConversationNotificationsRead: jest.fn(),
   sendConversationMessage: jest.fn()
 }));
 
@@ -53,5 +55,35 @@ describe('MessagingScreen UI', () => {
     const view = render(<MessagingScreen />);
 
     await waitFor(() => expect(view.getByText("Impossible de joindre l'API Maïa.")).toBeTruthy());
+  });
+
+  it('affiche les nouveaux messages et les marque comme lus à l’ouverture', async () => {
+    getConversations.mockResolvedValue({
+      conversations: [{ id: 'conversation-1', recipient_name: 'Lina', unread_count: 2 }]
+    });
+    markConversationNotificationsRead.mockResolvedValue({ read: true });
+    const view = render(<MessagingScreen />);
+
+    expect(await view.findByText('2 nouveaux messages')).toBeTruthy();
+    await act(async () => fireEvent.press(view.getByRole('button', { name: 'Lina' })));
+
+    expect(markConversationNotificationsRead).toHaveBeenCalledWith('conversation-1');
+  });
+
+  it('affiche une erreur si le marquage des notifications échoue', async () => {
+    getConversations.mockResolvedValue({
+      conversations: [{ id: 'conversation-1', recipient_name: 'Lina', unread_count: 1 }]
+    });
+    markConversationNotificationsRead.mockRejectedValueOnce(
+      new Error('Les notifications ne peuvent pas être mises à jour.')
+    );
+    const view = render(<MessagingScreen />);
+
+    await view.findByText('1 nouveau message');
+    await act(async () => fireEvent.press(view.getByRole('button', { name: 'Lina' })));
+
+    expect(
+      await view.findByText('Les notifications ne peuvent pas être mises à jour.')
+    ).toBeTruthy();
   });
 });
