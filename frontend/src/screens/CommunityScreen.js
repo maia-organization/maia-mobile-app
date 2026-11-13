@@ -129,6 +129,9 @@ export function CommunityScreen({ navigation }) {
           <BrandButton onPress={() => navigation.navigate('Groups')} variant="ghost">
             Groupes de runneuses
           </BrandButton>
+          <BrandButton onPress={() => navigation.navigate('Follows')} variant="ghost">
+            Mes abonnements
+          </BrandButton>
         </View>
 
         {isLoading ? (

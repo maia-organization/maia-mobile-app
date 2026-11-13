@@ -260,6 +260,19 @@ const runningGroupPosts = pgTable('running_group_posts', {
   message: varchar('message', { length: 500 }).notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
 });
+const userFollows = pgTable(
+  'user_follows',
+  {
+    followerId: uuid('follower_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    followedId: uuid('followed_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+  },
+  (table) => [primaryKey({ columns: [table.followerId, table.followedId] })]
+);
 
 module.exports = {
   cycles,
@@ -279,6 +292,7 @@ module.exports = {
   sessions,
   sessionStatus,
   users,
+  userFollows,
   plannedWorkouts,
   workoutRecommendations
 };

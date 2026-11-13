@@ -19,7 +19,7 @@ async function postExists(postId) {
 }
 
 module.exports = async function communityRoutes(app) {
-  app.get('/feed', { preHandler: app.authenticate }, async () => {
+  app.get('/feed', { preHandler: app.authenticate }, async (request) => {
     const posts = await db
       .select({
         id: communityPosts.id,
@@ -36,7 +36,12 @@ module.exports = async function communityRoutes(app) {
       .innerJoin(users, eq(communityPosts.userId, users.id))
       .innerJoin(sessions, eq(communityPosts.sessionId, sessions.id))
       .where(eq(communityPosts.visibility, 'public'))
-      .orderBy(desc(communityPosts.createdAt));
+      .orderBy(
+        desc(
+          sql`exists(select 1 from user_follows where follower_id = ${request.user.sub} and followed_id = ${communityPosts.userId})`
+        ),
+        desc(communityPosts.createdAt)
+      );
     return successResponse({ posts });
   });
 

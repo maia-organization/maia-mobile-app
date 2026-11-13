@@ -114,6 +114,15 @@ export function createRunningGroup(payload) {
 export function joinRunningGroup(groupId) {
   return requestUser(`/groups/${groupId}/join`, { method: 'POST' });
 }
+export function getFollows() {
+  return requestUser('/follows');
+}
+export function followUser(id) {
+  return requestUser(`/follows/${id}`, { method: 'POST' });
+}
+export function unfollowUser(id) {
+  return requestUser(`/follows/${id}`, { method: 'DELETE' });
+}
 
 export function adaptTodayWorkout(payload) {
   return requestUser('/workouts/today', { body: JSON.stringify(payload), method: 'PUT' });

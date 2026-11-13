@@ -296,7 +296,7 @@
       "title": "US - Suivre une autre utilisatrice",
       "priority": "P3",
       "estimate": 5,
-      "status": "Backlog",
+      "status": "Review",
       "areas": ["frontend", "backend"]
     },
     {

@@ -768,3 +768,9 @@ Chaque groupe conserve ses membres et son fil dédié afin de faciliter les
 **Fonctionnalité concernée :** `US-GROUP-001`.
 
 **Vérifications :** migration Drizzle, tests backend et UI mobile ciblés, lint.
+
+## 13 novembre 2026 - Suivi de runneuses
+
+J'ai ajouté les abonnements entre runneuses et la priorité de leurs publications dans le fil Communauté.
+
+**Fonctionnalité concernée :** `US-FOLLOW-001`.
