@@ -123,6 +123,15 @@ export function followUser(id) {
 export function unfollowUser(id) {
   return requestUser(`/follows/${id}`, { method: 'DELETE' });
 }
+export function reportCommunityPost(postId, reason) {
+  return requestUser('/moderation/reports', {
+    body: JSON.stringify({ post_id: postId, reason }),
+    method: 'POST'
+  });
+}
+export function blockCommunityUser(id) {
+  return requestUser(`/moderation/blocks/${id}`, { method: 'POST' });
+}
 
 export function adaptTodayWorkout(payload) {
   return requestUser('/workouts/today', { body: JSON.stringify(payload), method: 'PUT' });
