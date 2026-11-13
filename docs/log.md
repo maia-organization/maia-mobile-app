@@ -711,3 +711,14 @@ directement sur le ressenti facultatif afin d'ajuster les recommandations future
 
 **Vérifications :** dry-run de synchronisation du backlog et test UI ciblé du
 parcours de validation vers le ressenti.
+
+## 13 novembre 2026 - Saisie des symptômes
+
+J'ai ajouté une saisie facultative de douleurs, fatigue ou humeur basse depuis
+l'accueil, avec un historique des 30 dernières saisies. Les symptômes du jour
+allègent la recommandation proposée afin de mieux respecter le ressenti du moment.
+
+**Fonctionnalité concernée :** `US-SYMPTOMS-001`.
+
+**Vérifications :** migration Drizzle générée, tests Jest ciblés backend et UI
+mobile, lint et formatage.

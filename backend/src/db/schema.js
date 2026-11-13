@@ -5,6 +5,7 @@ const {
   pgEnum,
   pgTable,
   real,
+  text,
   timestamp,
   uniqueIndex,
   uuid,
@@ -139,6 +140,21 @@ const privacySettings = pgTable('privacy_settings', {
   showStats: boolean('show_stats').default(true).notNull()
 });
 
+const symptomEntries = pgTable(
+  'symptom_entries',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    recordedOn: date('recorded_on').notNull(),
+    symptoms: text('symptoms').array().notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull()
+  },
+  (table) => [uniqueIndex('symptom_entries_user_date_unique').on(table.userId, table.recordedOn)]
+);
+
 module.exports = {
   cycles,
   notificationSettings,
@@ -146,6 +162,7 @@ module.exports = {
   sessionFeedback,
   sessions,
   sessionStatus,
+  symptomEntries,
   users,
   plannedWorkouts,
   workoutRecommendations

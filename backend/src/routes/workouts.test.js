@@ -74,6 +74,7 @@ describe('workout routes', () => {
       )
       .mockReturnValueOnce(feedbackLookup([]))
       .mockReturnValueOnce(orderedLookup([]))
+      .mockReturnValueOnce(limitedLookup([]))
       .mockReturnValueOnce(
         limitedLookup([
           {
@@ -90,7 +91,7 @@ describe('workout routes', () => {
       )
       .mockReturnValueOnce(limitedLookup(completedSessions));
     const insert = {
-      onConflictDoNothing: jest.fn().mockResolvedValue()
+      onConflictDoUpdate: jest.fn().mockResolvedValue()
     };
     mockDb.insert.mockReturnValue({ values: jest.fn().mockReturnValue(insert) });
 
@@ -105,13 +106,18 @@ describe('workout routes', () => {
     });
   }
 
-  test('creates at most one daily recommendation and returns the saved workout', async () => {
+  test('updates an automatic daily recommendation and returns the saved workout', async () => {
     const insert = mockTodayWorkout([]);
 
     const response = await requestTodayWorkout();
 
     expect(response.statusCode).toBe(200);
-    expect(insert.onConflictDoNothing).toHaveBeenCalledTimes(1);
+    expect(insert.onConflictDoUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        setWhere: expect.anything(),
+        target: expect.any(Array)
+      })
+    );
     expect(response.json()).toEqual({
       data: {
         adaptation: null,

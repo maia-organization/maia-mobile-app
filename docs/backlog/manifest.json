@@ -127,7 +127,7 @@
       "title": "US - Ouvrir le lien de réinitialisation en préproduction",
       "priority": "P1",
       "estimate": 5,
-      "status": "Backlog",
+      "status": "Review",
       "areas": ["frontend", "backend"]
     },
     {
@@ -235,7 +235,7 @@
       "title": "US - Renseigner ses symptômes",
       "priority": "P1",
       "estimate": 5,
-      "status": "Backlog",
+      "status": "Review",
       "areas": ["frontend", "backend"]
     },
 
