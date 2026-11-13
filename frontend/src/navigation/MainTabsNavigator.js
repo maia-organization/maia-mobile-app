@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { HomeScreen } from '../screens/HomeScreen';
 import { CycleScreen } from '../screens/CycleScreen';
+import { CycleEducationScreen } from '../screens/CycleEducationScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { PlanningScreen } from '../screens/PlanningScreen';
 import { StatsScreen } from '../screens/StatsScreen';
@@ -145,6 +146,11 @@ export function MainTabsNavigator({ onLogout }) {
         {(props) => <HomeTab {...props} onLogout={onLogout} />}
       </Tab.Screen>
       <Tab.Screen component={CycleTab} name="Cycle" options={{ tabBarLabel: 'Cycle' }} />
+      <Tab.Screen
+        component={CycleEducationScreen}
+        name="CycleEducation"
+        options={{ tabBarButton: () => null }}
+      />
       <Tab.Screen component={PlanningTab} name="Planning" options={{ tabBarLabel: 'Planning' }} />
       <Tab.Screen component={StatsTab} name="Stats" options={{ tabBarLabel: 'Stats' }} />
       <Tab.Screen

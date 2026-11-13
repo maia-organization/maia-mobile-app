@@ -734,3 +734,17 @@ dans le respect de ses préférences.
 
 **Vérifications :** migration Drizzle générée et tests Jest ciblés de l'API et
 de l'écran mobile, y compris l'enregistrement du rappel.
+
+## 13 novembre 2026 - Comprendre l'impact du cycle sur le sport
+
+J'ai ajouté, depuis l'écran Cycle, une section « Comprendre mon cycle » qui
+présente les quatre phases du cycle, leurs impacts sur le sport et des
+recommandations associées. Les contenus sont volontairement des placeholders,
+clairement signalés dans l'application, dans l'attente des informations validées.
+Les fiches peuvent être mises en favori pendant la consultation.
+
+**Fonctionnalité concernée :** `US-CONTENT-001`.
+
+**Vérifications :** synchronisation du backlog vers `In Progress`, tests UI
+mobile du contenu et des favoris, contrôle de formatage ciblé. Le lint global
+reste bloqué par une erreur préexistante dans `StatsScreen.js`.

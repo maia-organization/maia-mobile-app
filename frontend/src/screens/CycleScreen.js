@@ -148,6 +148,16 @@ export function CycleScreen({ navigation }) {
           </>
         ) : null}
 
+        <View style={styles.educationCard}>
+          <Text style={styles.educationTitle}>Comprendre mon cycle</Text>
+          <Text style={styles.educationText}>
+            Retrouve des repères sur chaque phase et son impact sur ta pratique.
+          </Text>
+          <BrandButton onPress={() => navigation.navigate('CycleEducation')} variant="secondary">
+            Découvrir les contenus
+          </BrandButton>
+        </View>
+
         <CycleSettingsForm
           cycleLength={cycleLength}
           cycleStartDate={cycleStartDate}
@@ -170,6 +180,16 @@ export function CycleScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  educationCard: {
+    backgroundColor: colors.honeySoft,
+    borderColor: colors.honey,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    gap: spacing.md,
+    padding: spacing.lg
+  },
+  educationText: { color: colors.cream, fontFamily: fonts.body, fontSize: 15, lineHeight: 21 },
+  educationTitle: { color: colors.honey, fontFamily: fonts.heading, fontSize: 22, lineHeight: 28 },
   errorScreen: { flex: 1, gap: spacing.lg, justifyContent: 'center', padding: spacing.xl },
   eyebrow: { ...type.eyebrow, color: colors.rose },
   header: { gap: spacing.md },
