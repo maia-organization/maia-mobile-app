@@ -106,7 +106,9 @@ export function CommunityScreen() {
           </View>
         ) : null}
 
-        {!isLoading && !error ? posts.map((post) => <CommunityPost key={post.id} post={post} />) : null}
+        {!isLoading && !error
+          ? posts.map((post) => <CommunityPost key={post.id} post={post} />)
+          : null}
       </ScrollView>
     </SafeAreaView>
   );

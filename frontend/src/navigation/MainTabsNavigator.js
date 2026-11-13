@@ -154,7 +154,11 @@ export function MainTabsNavigator({ onLogout }) {
         {(props) => <HomeTab {...props} onLogout={onLogout} />}
       </Tab.Screen>
       <Tab.Screen component={CycleTab} name="Cycle" options={{ tabBarLabel: 'Cycle' }} />
-      <Tab.Screen component={CommunityTab} name="Community" options={{ tabBarLabel: 'Communauté' }} />
+      <Tab.Screen
+        component={CommunityTab}
+        name="Community"
+        options={{ tabBarLabel: 'Communauté' }}
+      />
       <Tab.Screen component={PlanningTab} name="Planning" options={{ tabBarLabel: 'Planning' }} />
       <Tab.Screen component={StatsTab} name="Stats" options={{ tabBarLabel: 'Stats' }} />
       <Tab.Screen name="Profile" options={{ tabBarLabel: 'Profil' }}>
