@@ -1,22 +1,26 @@
 const { successResponse } = require('../utils/response');
 const authRoutes = require('./auth');
 const cycleRoutes = require('./cycle');
+const goalRoutes = require('./goals');
 const notificationRoutes = require('./notifications');
 const planningRoutes = require('./planning');
 const privacyRoutes = require('./privacy');
 const sessionRoutes = require('./sessions');
 const statsRoutes = require('./stats');
+const symptomRoutes = require('./symptoms');
 const userRoutes = require('./users');
 const workoutRoutes = require('./workouts');
 
 module.exports = async function routes(app) {
   app.register(authRoutes, { prefix: '/auth' });
   app.register(cycleRoutes, { prefix: '/cycle' });
+  app.register(goalRoutes, { prefix: '/goals' });
   app.register(notificationRoutes, { prefix: '/notifications' });
   app.register(planningRoutes, { prefix: '/planning' });
   app.register(privacyRoutes, { prefix: '/privacy' });
   app.register(sessionRoutes, { prefix: '/sessions' });
   app.register(statsRoutes, { prefix: '/stats' });
+  app.register(symptomRoutes, { prefix: '/symptoms' });
   app.register(userRoutes, { prefix: '/users' });
   app.register(workoutRoutes, { prefix: '/workouts' });
 

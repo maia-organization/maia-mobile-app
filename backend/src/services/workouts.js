@@ -38,6 +38,10 @@ function needsRecovery(feedback) {
   return feedback?.pain >= 4 || feedback?.fatigue >= 4 || feedback?.energy <= 2;
 }
 
+function hasRecoverySymptoms(symptoms = []) {
+  return symptoms.some((symptom) => ['pain', 'fatigue', 'low_mood'].includes(symptom));
+}
+
 // Recommendation dates are UTC days (see getWorkoutRecommendation).
 function getDayRange(date) {
   const start = new Date(`${date}T00:00:00.000Z`);
@@ -45,10 +49,17 @@ function getDayRange(date) {
   return { end: new Date(start.getTime() + DAY_IN_MS), start };
 }
 
-function getWorkoutRecommendation({ cycleView, feedback, goal, lastManualAdaptation, level }) {
+function getWorkoutRecommendation({
+  cycleView,
+  feedback,
+  goal,
+  lastManualAdaptation,
+  level,
+  symptoms
+}) {
   const phase = cycleView.current_phase;
   const goalAdjustment = goal === 'endurance' ? 5 : 0;
-  const shouldRecover = needsRecovery(feedback);
+  const shouldRecover = needsRecovery(feedback) || hasRecoverySymptoms(symptoms);
   const recoveryAdjustment = shouldRecover ? -10 : 0;
   const followsWalkPreference = lastManualAdaptation?.type === 'walk';
   const intensityAdjustment =
@@ -61,11 +72,13 @@ function getWorkoutRecommendation({ cycleView, feedback, goal, lastManualAdaptat
   return {
     adaptation: followsWalkPreference
       ? 'Adaptée à ton choix de marche lors de ta dernière séance.'
-      : shouldRecover
-        ? 'Séance allégée selon ton dernier ressenti.'
-        : intensityAdjustment
-          ? 'Adaptée à l’intensité choisie lors de ta dernière séance.'
-          : null,
+      : hasRecoverySymptoms(symptoms)
+        ? 'Séance allégée selon les symptômes renseignés aujourd’hui.'
+        : shouldRecover
+          ? 'Séance allégée selon ton dernier ressenti.'
+          : intensityAdjustment
+            ? 'Adaptée à l’intensité choisie lors de ta dernière séance.'
+            : null,
     date: new Date().toISOString().slice(0, 10),
     duration: Math.max(
       15,
@@ -94,4 +107,9 @@ function getPreSessionEncouragement({ cycleView, feedback }) {
   return encouragementByPhase[cycleView.current_phase];
 }
 
-module.exports = { getDayRange, getPreSessionEncouragement, getWorkoutRecommendation };
+module.exports = {
+  getDayRange,
+  getPreSessionEncouragement,
+  getWorkoutRecommendation,
+  hasRecoverySymptoms
+};
