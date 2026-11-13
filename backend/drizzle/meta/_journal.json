@@ -71,6 +71,13 @@
       "when": 1794577792025,
       "tag": "0009_absurd_tigra",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1794578522192,
+      "tag": "0010_sudden_cerise",
+      "breakpoints": true
     }
   ]
 }

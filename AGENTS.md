@@ -16,6 +16,23 @@ Appliquer uniquement les sections pertinentes pour la tâche en cours.
 - Toute promesse déclenchée doit être attendue, terminée par un gestionnaire de
   rejet ou explicitement ignorée avec l'opérateur `void`.
 
+## Lancement local et validation e2e
+
+- Ne pas utiliser `docker-compose` v1 dans cet environnement : il échoue lors
+  de la recréation des conteneurs avec `ContainerConfig`. Utiliser le plugin
+  Docker Compose v2 avec `docker compose` (installé dans
+  `~/.docker/cli-plugins/docker-compose`).
+- Démarrer PostgreSQL seul avec Docker lorsqu'il est déjà disponible, puis
+  lancer l'API et Expo sur l'hôte.
+- Pour une validation e2e, ne jamais appliquer les migrations sur le volume
+  local existant s'il ne contient pas `__drizzle_migrations`. Créer une base de
+  test isolée `maia_e2e`, appliquer les migrations avec
+  `DATABASE_URL=postgresql://maia:maia@localhost:5432/maia_e2e npm --prefix backend run db:migrate`,
+  puis lancer l'API avec la même variable et `npm --prefix backend run start`.
+- Cette procédure évite de modifier les données locales existantes. Utiliser
+  `docker compose` pour les stacks dédiées et les nouvelles bases, jamais le
+  client v1.
+
 ## Product et Backlog
 
 Responsable de la compréhension du besoin et de la préparation des User Stories.

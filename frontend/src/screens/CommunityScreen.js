@@ -12,7 +12,13 @@ import {
 import { useFocusEffect } from '@react-navigation/native';
 
 import { BrandButton } from '../components/BrandButton';
-import { commentCommunityPost, getCommunityFeed, likeCommunityPost } from '../services/userApi';
+import {
+  blockCommunityUser,
+  commentCommunityPost,
+  getCommunityFeed,
+  likeCommunityPost,
+  reportCommunityPost
+} from '../services/userApi';
 import { colors, fonts, radius, spacing, type } from '../theme';
 
 function CommunityPost({ onChanged, post }) {
@@ -66,6 +72,26 @@ function CommunityPost({ onChanged, post }) {
         />
         <BrandButton compact onPress={() => void sendComment()} variant="secondary">
           Envoyer
+        </BrandButton>
+      </View>
+      <View style={styles.actions}>
+        <BrandButton
+          compact
+          onPress={() => void reportCommunityPost(post.id, 'Contenu inapproprié')}
+          variant="ghost"
+        >
+          Signaler
+        </BrandButton>
+        <BrandButton
+          compact
+          onPress={() =>
+            void blockCommunityUser(post.author_id)
+              .then(onChanged)
+              .catch((nextError) => setError(nextError.message))
+          }
+          variant="ghost"
+        >
+          Bloquer
         </BrandButton>
       </View>
       {!!error && <Text style={styles.errorText}>{error}</Text>}

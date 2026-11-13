@@ -23,6 +23,7 @@ module.exports = async function communityRoutes(app) {
     const posts = await db
       .select({
         id: communityPosts.id,
+        author_id: communityPosts.userId,
         author_name: users.name,
         message: communityPosts.message,
         visibility: communityPosts.visibility,
@@ -35,7 +36,12 @@ module.exports = async function communityRoutes(app) {
       .from(communityPosts)
       .innerJoin(users, eq(communityPosts.userId, users.id))
       .innerJoin(sessions, eq(communityPosts.sessionId, sessions.id))
-      .where(eq(communityPosts.visibility, 'public'))
+      .where(
+        and(
+          eq(communityPosts.visibility, 'public'),
+          sql`not exists(select 1 from blocked_users where blocker_id = ${request.user.sub} and blocked_id = ${communityPosts.userId})`
+        )
+      )
       .orderBy(
         desc(
           sql`exists(select 1 from user_follows where follower_id = ${request.user.sub} and followed_id = ${communityPosts.userId})`

@@ -273,10 +273,36 @@ const userFollows = pgTable(
   },
   (table) => [primaryKey({ columns: [table.followerId, table.followedId] })]
 );
+const blockedUsers = pgTable(
+  'blocked_users',
+  {
+    blockerId: uuid('blocker_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    blockedId: uuid('blocked_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+  },
+  (table) => [primaryKey({ columns: [table.blockerId, table.blockedId] })]
+);
+const contentReports = pgTable('content_reports', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  reporterId: uuid('reporter_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  postId: uuid('post_id')
+    .notNull()
+    .references(() => communityPosts.id, { onDelete: 'cascade' }),
+  reason: varchar('reason', { length: 255 }).notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+});
 
 module.exports = {
   cycles,
   communityPosts,
+  blockedUsers,
+  contentReports,
   conversationMembers,
   conversationMessages,
   conversations,
