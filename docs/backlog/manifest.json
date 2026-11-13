@@ -276,7 +276,7 @@
       "title": "US - Consulter le fil d'actualité",
       "priority": "P2",
       "estimate": 8,
-      "status": "Backlog",
+      "status": "In Progress",
       "areas": ["frontend", "backend"]
     },
     {

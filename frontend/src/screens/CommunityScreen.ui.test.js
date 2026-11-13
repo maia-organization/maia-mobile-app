@@ -20,8 +20,11 @@ describe('CommunityScreen UI', () => {
         {
           author_name: 'Lina',
           comments_count: 2,
+          distance: 5.4,
+          duration: 1860,
           id: 'post-1',
           likes_count: 4,
+          average_pace: 5.7,
           message: 'Une sortie douce qui fait du bien.'
         }
       ]
@@ -30,6 +33,7 @@ describe('CommunityScreen UI', () => {
 
     expect(await view.findByText('Une sortie douce qui fait du bien.')).toBeTruthy();
     expect(view.getByText('4 j’aime · 2 commentaires')).toBeTruthy();
+    expect(view.getByText('5.40 km · 31 min · 5.7 min/km')).toBeTruthy();
   });
 
   it('affiche une erreur réseau et recharge le fil', async () => {

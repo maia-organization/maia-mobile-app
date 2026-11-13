@@ -36,9 +36,18 @@ function CommunityPost({ onChanged, post }) {
       setError(nextError.message);
     }
   };
+  const hasMetrics = [post.distance, post.duration, post.average_pace].every(
+    (value) => Number.isFinite(Number(value))
+  );
   return (
     <View style={styles.post}>
       <Text style={styles.author}>{post.author_name}</Text>
+      {hasMetrics ? (
+        <Text style={styles.performance}>
+          {Number(post.distance).toFixed(2)} km · {Math.round(Number(post.duration) / 60)} min ·{' '}
+          {Number(post.average_pace).toFixed(1)} min/km
+        </Text>
+      ) : null}
       <Text style={styles.message}>{post.message}</Text>
       <Text style={styles.interactions}>
         {post.likes_count || 0} j’aime · {post.comments_count || 0} commentaires
@@ -179,6 +188,7 @@ const styles = StyleSheet.create({
   },
   author: { ...type.action, color: colors.honey },
   message: { ...type.body, color: colors.white },
+  performance: { color: colors.cream, fontFamily: fonts.strong, fontSize: 14 },
   interactions: { color: colors.muted, fontFamily: fonts.body, fontSize: 14 },
   actions: { alignItems: 'center', flexDirection: 'row', gap: spacing.sm },
   comment: {
