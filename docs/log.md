@@ -745,3 +745,16 @@ partagées qui seront ajoutées au chantier suivant.
 
 **Vérifications :** synchronisation du backlog vers `In Progress`, tests Jest
 backend et UI mobile du fil, lint global.
+
+## 13 novembre 2026 - Messagerie entre runneuses
+
+J'ai ajouté une messagerie authentifiée : sélection d'une runneuse, création et
+consultation des conversations, envoi et conservation des messages. Chaque
+message crée également une notification interne pour ses destinataires ; la
+conversation ouverte s'actualise toutes les huit secondes afin de rendre les
+nouveaux échanges visibles rapidement.
+
+**Fonctionnalité concernée :** `US-MESSAGING-001`.
+
+**Vérifications :** migration Drizzle générée, suites Jest backend et frontend
+complètes, lint global et synchronisation du backlog vers `In Progress`.

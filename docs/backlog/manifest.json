@@ -256,7 +256,7 @@
       "title": "US - Échanger par messagerie",
       "priority": "P3",
       "estimate": 8,
-      "status": "Backlog",
+      "status": "Review",
       "areas": ["frontend", "backend"]
     },
     {

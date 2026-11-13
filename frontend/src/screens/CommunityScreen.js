@@ -73,7 +73,7 @@ function CommunityPost({ onChanged, post }) {
   );
 }
 
-export function CommunityScreen() {
+export function CommunityScreen({ navigation }) {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -123,6 +123,9 @@ export function CommunityScreen() {
           <Text style={styles.subtitle}>
             Les courses partagées et les encouragements de la communauté, au même endroit.
           </Text>
+          <BrandButton onPress={() => navigation.navigate('Messages')} variant="secondary">
+            Mes messages
+          </BrandButton>
         </View>
 
         {isLoading ? (
