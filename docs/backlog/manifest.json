@@ -426,7 +426,7 @@
       "title": "US - Recevoir un rappel d'entraînement",
       "priority": "P1",
       "estimate": 5,
-      "status": "In Progress",
+      "status": "Review",
       "areas": ["frontend", "backend"],
       "technicalRef": "5.1"
     },
