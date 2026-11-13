@@ -62,6 +62,21 @@ export function getCommunityFeed() {
   return requestUser('/community/feed');
 }
 
+export function createCommunityPost(payload) {
+  return requestUser('/community/posts', { body: JSON.stringify(payload), method: 'POST' });
+}
+
+export function likeCommunityPost(postId) {
+  return requestUser(`/community/posts/${postId}/likes`, { method: 'POST' });
+}
+
+export function commentCommunityPost(postId, message) {
+  return requestUser(`/community/posts/${postId}/comments`, {
+    body: JSON.stringify({ message }),
+    method: 'POST'
+  });
+}
+
 export function adaptTodayWorkout(payload) {
   return requestUser('/workouts/today', { body: JSON.stringify(payload), method: 'PUT' });
 }

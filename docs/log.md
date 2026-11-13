@@ -712,6 +712,17 @@ directement sur le ressenti facultatif afin d'ajuster les recommandations future
 **Vérifications :** dry-run de synchronisation du backlog et test UI ciblé du
 parcours de validation vers le ressenti.
 
+## 13 novembre 2026 - Publication d'une course
+
+J'ai permis de partager une séance terminée dans la communauté, avec ses
+performances, un ressenti facultatif et une visibilité publique ou privée. Le
+fil affiche les interactions et permet d'aimer ou commenter une publication.
+
+**Fonctionnalité concernée :** `US-COMMUNITY-002`.
+
+**Vérifications :** migration Drizzle générée, tests Jest backend et UI mobile,
+lint global.
+
 ## 13 novembre 2026 - Espace Communauté
 
 J'ai ajouté l'onglet Communauté à la navigation principale, avec un fil

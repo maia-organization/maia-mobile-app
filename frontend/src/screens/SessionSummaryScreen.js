@@ -16,7 +16,7 @@ export function SessionSummaryScreen({ navigation, route }) {
     setIsCompleting(true);
     try {
       await completeSession(sessionId);
-      navigation.replace('Feedback', { sessionId });
+      navigation.replace('PublishRun', { session, sessionId });
     } catch (error) {
       Alert.alert('Impossible de valider la séance', error.message);
     } finally {

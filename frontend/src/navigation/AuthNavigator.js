@@ -7,6 +7,7 @@ import { FeedbackScreen } from '../screens/FeedbackScreen';
 import { LoginScreen } from '../screens/LoginScreen';
 import { OnboardingScreen } from '../screens/OnboardingScreen';
 import { ProfileSetupScreen } from '../screens/ProfileSetupScreen';
+import { PublishRunScreen } from '../screens/PublishRunScreen';
 import { PasswordResetRequestScreen } from '../screens/PasswordResetRequestScreen';
 import { PasswordResetScreen } from '../screens/PasswordResetScreen';
 import { RegisterScreen } from '../screens/RegisterScreen';
@@ -131,6 +132,7 @@ export function AuthNavigator() {
         <Stack.Screen component={SessionScreen} name="Session" />
         <Stack.Screen component={SessionSummaryScreen} name="SessionSummary" />
         <Stack.Screen component={FeedbackScreen} name="Feedback" />
+        <Stack.Screen component={PublishRunScreen} name="PublishRun" />
         <Stack.Screen component={StatsScreen} name="Stats" />
         <Stack.Screen component={ProfileSetupScreen} name="ProfileSetup" />
       </Stack.Navigator>

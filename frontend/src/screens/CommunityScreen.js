@@ -6,15 +6,20 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 
 import { BrandButton } from '../components/BrandButton';
-import { getCommunityFeed } from '../services/userApi';
+import { commentCommunityPost, getCommunityFeed, likeCommunityPost } from '../services/userApi';
 import { colors, fonts, radius, spacing, type } from '../theme';
 
-function CommunityPost({ post }) {
+function CommunityPost({ onChanged, post }) {
+  const [comment, setComment] = useState('');
+  const [error, setError] = useState('');
+  const like = async () => { try { await likeCommunityPost(post.id); await onChanged(); } catch (nextError) { setError(nextError.message); } };
+  const sendComment = async () => { if (!comment.trim()) return; try { await commentCommunityPost(post.id, comment); setComment(''); await onChanged(); } catch (nextError) { setError(nextError.message); } };
   return (
     <View style={styles.post}>
       <Text style={styles.author}>{post.author_name}</Text>
@@ -22,6 +27,8 @@ function CommunityPost({ post }) {
       <Text style={styles.interactions}>
         {post.likes_count || 0} j’aime · {post.comments_count || 0} commentaires
       </Text>
+      <View style={styles.actions}><BrandButton compact onPress={() => void like()} variant="ghost">J’aime</BrandButton><TextInput accessibilityLabel={`Commenter ${post.author_name}`} onChangeText={setComment} placeholder="Encourager…" placeholderTextColor={colors.muted} style={styles.comment} value={comment} /><BrandButton compact onPress={() => void sendComment()} variant="secondary">Envoyer</BrandButton></View>
+      {!!error && <Text style={styles.errorText}>{error}</Text>}
     </View>
   );
 }
@@ -106,9 +113,7 @@ export function CommunityScreen() {
           </View>
         ) : null}
 
-        {!isLoading && !error
-          ? posts.map((post) => <CommunityPost key={post.id} post={post} />)
-          : null}
+        {!isLoading && !error ? posts.map((post) => <CommunityPost key={post.id} onChanged={loadFeed} post={post} />) : null}
       </ScrollView>
     </SafeAreaView>
   );
@@ -141,5 +146,14 @@ const styles = StyleSheet.create({
   },
   author: { ...type.action, color: colors.honey },
   message: { ...type.body, color: colors.white },
-  interactions: { color: colors.muted, fontFamily: fonts.body, fontSize: 14 }
+  interactions: { color: colors.muted, fontFamily: fonts.body, fontSize: 14 },
+  actions: { alignItems: 'center', flexDirection: 'row', gap: spacing.sm },
+  comment: {
+    borderBottomColor: colors.borderLight,
+    borderBottomWidth: 1,
+    color: colors.white,
+    flex: 1,
+    fontFamily: fonts.body,
+    paddingVertical: spacing.sm
+  }
 });

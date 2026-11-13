@@ -1,3 +1,6 @@
+const mockDb = { select: jest.fn() };
+jest.mock('../db', () => ({ db: mockDb }));
+
 const { buildApp } = require('../app');
 
 describe('community routes', () => {
@@ -6,6 +9,17 @@ describe('community routes', () => {
   beforeAll(async () => {
     app = buildApp({ logger: false });
     await app.ready();
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockDb.select.mockReturnValue({
+      from: () => ({
+        innerJoin: () => ({
+          innerJoin: () => ({ where: () => ({ orderBy: jest.fn().mockResolvedValue([]) }) })
+        })
+      })
+    });
   });
 
   afterAll(async () => {
