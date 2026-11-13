@@ -62,8 +62,27 @@ export function adaptTodayWorkout(payload) {
   return requestUser('/workouts/today', { body: JSON.stringify(payload), method: 'PUT' });
 }
 
+export function getSymptoms() {
+  return requestUser('/symptoms');
+}
+
+export function saveTodaySymptoms(symptoms) {
+  return requestUser('/symptoms/today', {
+    body: JSON.stringify({ symptoms }),
+    method: 'PUT'
+  });
+}
+
 export function getStats() {
   return requestUser('/stats/me');
+}
+
+export function getWeeklyGoal() {
+  return requestUser('/goals/weekly');
+}
+
+export function saveWeeklyGoal(payload) {
+  return requestUser('/goals/weekly', { body: JSON.stringify(payload), method: 'PUT' });
 }
 
 export function getSessionHistory() {
@@ -124,6 +143,13 @@ export function getNotificationSettings() {
 
 export function updateNotificationSettings(payload) {
   return requestUser('/notifications/settings', {
+    body: JSON.stringify(payload),
+    method: 'PUT'
+  });
+}
+
+export function registerPushDevice(payload) {
+  return requestUser('/notifications/devices', {
     body: JSON.stringify(payload),
     method: 'PUT'
   });

@@ -74,6 +74,7 @@ describe('workout routes', () => {
       )
       .mockReturnValueOnce(feedbackLookup([]))
       .mockReturnValueOnce(orderedLookup([]))
+      .mockReturnValueOnce(limitedLookup([]))
       .mockReturnValueOnce(
         limitedLookup([
           {

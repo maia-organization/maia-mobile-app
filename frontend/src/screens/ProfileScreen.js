@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Switch,
   Text,
+  TextInput,
   View
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
@@ -16,10 +17,13 @@ import {
   getNotificationSettings,
   getPrivacySettings,
   getProfile,
+  getTodayWorkout,
+  registerPushDevice,
   updateNotificationSettings,
   updatePrivacySettings,
   deleteAccount
 } from '../services/userApi';
+import { getNativePushDevice, syncWorkoutReminder } from '../services/workoutReminder';
 import { colors, fonts, radius, spacing, type } from '../theme';
 
 const labels = {
@@ -81,6 +85,25 @@ export function ProfileScreen({ navigation, onLogout }) {
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [notificationFeedback, setNotificationFeedback] = useState('');
 
+  const refreshWorkoutReminder = useCallback(async (settings) => {
+    let workout = null;
+
+    try {
+      workout = await getTodayWorkout();
+    } catch {
+      // The reminder service sends the documented motivational fallback when the workout is unavailable.
+    }
+
+    return syncWorkoutReminder({ settings, workout });
+  }, []);
+
+  const registerCurrentDevice = useCallback(async (settings) => {
+    if (!settings.enabled || !settings.workout_notifications) return;
+
+    const device = await getNativePushDevice();
+    if (device) await registerPushDevice(device);
+  }, []);
+
   const loadProfile = useCallback(() => {
     let isActive = true;
     setError('');
@@ -92,6 +115,8 @@ export function ProfileScreen({ navigation, onLogout }) {
         setProfile(user);
         setNotificationSettings(settings);
         setPrivacySettings(privacy);
+        void refreshWorkoutReminder(settings).catch(() => {});
+        void registerCurrentDevice(settings).catch(() => {});
       })
       .catch((nextError) => {
         if (isActive) setError(nextError.message);
@@ -103,7 +128,7 @@ export function ProfileScreen({ navigation, onLogout }) {
     return () => {
       isActive = false;
     };
-  }, []);
+  }, [refreshWorkoutReminder, registerCurrentDevice]);
 
   const updateNotifications = (changes) => {
     setNotificationSettings((current) => ({ ...current, ...changes }));
@@ -124,6 +149,14 @@ export function ProfileScreen({ navigation, onLogout }) {
 
   const saveNotifications = async () => {
     if (!notificationSettings) return;
+    if (
+      !Number.isInteger(notificationSettings.preferred_time) ||
+      notificationSettings.preferred_time < 0 ||
+      notificationSettings.preferred_time > 23
+    ) {
+      setNotificationFeedback('Choisis une heure entière entre 0 et 23.');
+      return;
+    }
 
     setIsSavingNotifications(true);
     setNotificationFeedback('');
@@ -131,7 +164,13 @@ export function ProfileScreen({ navigation, onLogout }) {
     try {
       const { settings } = await updateNotificationSettings(notificationSettings);
       setNotificationSettings(settings);
-      setNotificationFeedback('Préférences enregistrées.');
+      const reminder = await refreshWorkoutReminder(settings);
+      await registerCurrentDevice(settings);
+      setNotificationFeedback(
+        reminder.permissionDenied
+          ? 'Préférences enregistrées. Active les notifications dans les réglages de ton téléphone.'
+          : 'Préférences enregistrées.'
+      );
     } catch (nextError) {
       setNotificationFeedback(nextError.message);
     } finally {
@@ -259,6 +298,22 @@ export function ProfileScreen({ navigation, onLogout }) {
             }
             value={notificationSettings?.workout_notifications || false}
           />
+          <View style={styles.notificationTime}>
+            <Text style={styles.itemLabel}>Heure du rappel (0–23 h)</Text>
+            <TextInput
+              accessibilityLabel="Heure du rappel"
+              editable={
+                notificationSettings?.enabled && notificationSettings?.workout_notifications
+              }
+              keyboardType="number-pad"
+              maxLength={2}
+              onChangeText={(value) =>
+                updateNotifications({ preferred_time: value === '' ? null : Number(value) })
+              }
+              style={styles.notificationTimeInput}
+              value={String(notificationSettings?.preferred_time ?? '')}
+            />
+          </View>
           <NotificationToggle
             disabled={!notificationSettings?.enabled}
             label="Conseils liés à mon cycle"
@@ -371,6 +426,25 @@ const styles = StyleSheet.create({
     padding: spacing.lg
   },
   notificationItemDisabled: { opacity: 0.5 },
+  notificationTime: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.md,
+    justifyContent: 'space-between',
+    padding: spacing.lg
+  },
+  notificationTimeInput: {
+    backgroundColor: colors.cream,
+    borderColor: colors.borderLight,
+    borderRadius: radius.sm,
+    borderWidth: 1,
+    color: colors.ink,
+    fontFamily: fonts.body,
+    minWidth: 56,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    textAlign: 'center'
+  },
   notificationAction: { gap: spacing.sm, padding: spacing.lg },
   notificationFeedback: {
     color: colors.success,

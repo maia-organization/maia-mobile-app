@@ -41,6 +41,21 @@ describe('workout recommendation', () => {
     ).toMatchObject({ duration: 30, intensity: 'low' });
   });
 
+  test('reduces the workout when symptoms are reported today', () => {
+    expect(
+      getWorkoutRecommendation({
+        cycleView: { current_phase: 'ovulatory' },
+        goal: 'performance',
+        level: 'intermediaire',
+        symptoms: ['fatigue']
+      })
+    ).toMatchObject({
+      adaptation: 'Séance allégée selon les symptômes renseignés aujourd’hui.',
+      duration: 30,
+      intensity: 'low'
+    });
+  });
+
   test('uses the latest lower intensity choice for the next recommendation', () => {
     expect(
       getWorkoutRecommendation({

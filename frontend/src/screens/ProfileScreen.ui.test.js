@@ -2,15 +2,27 @@ import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import { Alert } from 'react-native';
 
 import { ProfileScreen } from './ProfileScreen';
-import { deleteAccount, getNotificationSettings, getProfile } from '../services/userApi';
+import {
+  deleteAccount,
+  getNotificationSettings,
+  getProfile,
+  updateNotificationSettings
+} from '../services/userApi';
 
 jest.mock('../services/userApi', () => ({
   deleteAccount: jest.fn(),
   getNotificationSettings: jest.fn(),
+  getTodayWorkout: jest.fn(),
   getPrivacySettings: jest.fn(),
   getProfile: jest.fn(),
+  registerPushDevice: jest.fn(),
   updateNotificationSettings: jest.fn(),
   updatePrivacySettings: jest.fn()
+}));
+
+jest.mock('../services/workoutReminder', () => ({
+  getNativePushDevice: jest.fn(),
+  syncWorkoutReminder: jest.fn()
 }));
 
 jest.mock('@react-navigation/native', () => {
@@ -40,7 +52,15 @@ describe('ProfileScreen UI', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     getProfile.mockResolvedValue({ user: profile });
-    getNotificationSettings.mockResolvedValue({ settings: { enabled: true } });
+    getNotificationSettings.mockResolvedValue({
+      settings: {
+        cycle_notifications: true,
+        enabled: true,
+        preferred_time: 18,
+        social_notifications: false,
+        workout_notifications: true
+      }
+    });
     require('../services/userApi').getPrivacySettings.mockResolvedValue({
       settings: { profile_visibility: 'public', show_cycle: false, show_stats: true }
     });
@@ -90,5 +110,24 @@ describe('ProfileScreen UI', () => {
       )
     );
     expect(onLogout).not.toHaveBeenCalled();
+  });
+
+  it('enregistre l’heure du rappel et affiche une erreur réseau', async () => {
+    updateNotificationSettings.mockRejectedValue(
+      new Error('Le service de notifications est indisponible.')
+    );
+    const view = render(<ProfileScreen navigation={navigation} onLogout={onLogout} />);
+
+    const saveButton = await view.findByText('Enregistrer mes préférences');
+    await act(async () => {
+      fireEvent.press(saveButton);
+    });
+
+    await waitFor(() =>
+      expect(updateNotificationSettings).toHaveBeenCalledWith(
+        expect.objectContaining({ preferred_time: 18, workout_notifications: true })
+      )
+    );
+    expect(await view.findByText('Le service de notifications est indisponible.')).toBeTruthy();
   });
 });

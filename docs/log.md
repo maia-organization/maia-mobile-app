@@ -711,3 +711,66 @@ directement sur le ressenti facultatif afin d'ajuster les recommandations future
 
 **Vérifications :** dry-run de synchronisation du backlog et test UI ciblé du
 parcours de validation vers le ressenti.
+
+## 13 novembre 2026 - Saisie des symptômes
+
+J'ai ajouté une saisie facultative de douleurs, fatigue ou humeur basse depuis
+l'accueil, avec un historique des 30 dernières saisies. Les symptômes du jour
+allègent la recommandation proposée afin de mieux respecter le ressenti du moment.
+
+**Fonctionnalité concernée :** `US-SYMPTOMS-001`.
+
+**Vérifications :** migration Drizzle générée, tests Jest ciblés backend et UI
+mobile, lint et formatage.
+
+## 13 novembre 2026 - Objectif hebdomadaire
+
+J'ai ajouté la définition d'un objectif hebdomadaire en nombre de séances ou en
+distance, son ajustement depuis les statistiques et l'affichage de la progression
+de la semaine. L'utilisatrice peut aussi activer un rappel pour cet objectif,
+dans le respect de ses préférences.
+
+**Fonctionnalité concernée :** `US-GOAL-001`.
+
+**Vérifications :** migration Drizzle générée et tests Jest ciblés de l'API et
+de l'écran mobile, y compris l'enregistrement du rappel.
+
+## 13 novembre 2026 - Comprendre l'impact du cycle sur le sport
+
+J'ai ajouté, depuis l'écran Cycle, une section « Comprendre mon cycle » qui
+présente les quatre phases du cycle, leurs impacts sur le sport et des
+recommandations associées. Les contenus sont volontairement des placeholders,
+clairement signalés dans l'application, dans l'attente des informations validées.
+Les fiches peuvent être mises en favori pendant la consultation.
+
+**Fonctionnalité concernée :** `US-CONTENT-001`.
+
+**Vérifications :** synchronisation du backlog vers `In Progress`, tests UI
+mobile du contenu et des favoris, contrôle de formatage ciblé. Le lint global
+reste bloqué par une erreur préexistante dans `StatsScreen.js`.
+
+## 13 novembre 2026 - Rappel quotidien d'entraînement
+
+J'ai ajouté le rappel quotidien de la séance recommandée : l'utilisatrice choisit
+l'heure, autorise les notifications au premier lancement et peut désactiver le
+rappel à tout moment. La notification reprend la séance du jour, ou un message
+motivationnel lorsque celle-ci est indisponible, puis ouvre directement l'accueil.
+
+**Fonctionnalité concernée :** `US-NOTIFICATION-001`.
+
+**Vérifications :** synchronisation du backlog vers `In Progress`, tests Jest
+backend et frontend (y compris annulation et erreur réseau). Le lint global
+reste bloqué par une erreur préexistante dans `StatsScreen.js`.
+
+## 13 novembre 2026 - Envoi FCM des rappels d'entraînement
+
+J'ai relié les rappels d'entraînement à Firebase Cloud Messaging : l'application
+enregistre le token natif de l'appareil, le backend le conserve par utilisatrice
+et un script de cron envoie la séance stockée ou le message motivationnel de
+secours à l'heure choisie. La clé de compte de service est uniquement lue depuis
+un chemin de secret et reste exclue de Git.
+
+**Fonctionnalité concernée :** `US-NOTIFICATION-001`.
+
+**Vérifications :** initialisation locale de Firebase Admin avec la clé fournie,
+migration PostgreSQL appliquée, tests Jest backend et frontend ciblés, lint.

@@ -371,6 +371,19 @@ Frontend mobile
 Vue calendrier ou timeline (MainTabNavigator → Cycle)
 Indication visuelle de la phase actuelle
 Code couleur par phase
+2.4 Symptômes
+Endpoints : GET /symptoms 🔒 · PUT /symptoms/today 🔒
+Payload de sauvegarde
+{
+"symptoms": ["pain", "fatigue", "low_mood"]
+}
+
+Les symptômes disponibles sont `pain`, `fatigue` et `low_mood`. Une saisie est
+facultative et, lorsqu'elle existe pour le jour courant, allège la recommandation
+d'entraînement. L'historique retourne les 30 dernières saisies.
+
+Frontend mobile
+Écran symptômes accessible depuis l'accueil, avec sélection rapide et historique.
 EPIC 4 - Entraînement et suivi des performances
 4.1 Voir l'entraînement du jour
 Voir section 2.2 — même endpoint GET /workouts/today

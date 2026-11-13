@@ -1,7 +1,7 @@
 const { eq } = require('drizzle-orm');
 
 const { db } = require('../db');
-const { notificationSettings, users } = require('../db/schema');
+const { notificationSettings, pushDevices, users } = require('../db/schema');
 const { errorResponse, successResponse } = require('../utils/response');
 
 const settingFields = {
@@ -25,16 +25,61 @@ function buildPayload(body = {}) {
   return {
     cycleNotifications: body.cycle_notifications,
     enabled: body.enabled,
+    preferredTime: body.preferred_time,
     socialNotifications: body.social_notifications,
     workoutNotifications: body.workout_notifications
   };
 }
 
 function isValidPayload(payload) {
-  return Object.values(payload).every((value) => typeof value === 'boolean');
+  return (
+    typeof payload.cycleNotifications === 'boolean' &&
+    typeof payload.enabled === 'boolean' &&
+    Number.isInteger(payload.preferredTime) &&
+    payload.preferredTime >= 0 &&
+    payload.preferredTime <= 23 &&
+    typeof payload.socialNotifications === 'boolean' &&
+    typeof payload.workoutNotifications === 'boolean'
+  );
+}
+
+function isValidDevicePayload(body = {}) {
+  return (
+    ['android', 'ios'].includes(body.platform) &&
+    typeof body.token === 'string' &&
+    body.token.trim().length > 0 &&
+    body.token.length <= 512
+  );
 }
 
 module.exports = async function notificationRoutes(app) {
+  app.put('/devices', { preHandler: app.authenticate }, async (request, reply) => {
+    if (!isValidDevicePayload(request.body)) {
+      return reply
+        .status(400)
+        .send(errorResponse('VALIDATION_ERROR', "L'appareil de notification est invalide."));
+    }
+
+    await db
+      .insert(pushDevices)
+      .values({
+        platform: request.body.platform,
+        token: request.body.token.trim(),
+        userId: request.user.sub,
+        updatedAt: new Date()
+      })
+      .onConflictDoUpdate({
+        set: {
+          platform: request.body.platform,
+          updatedAt: new Date(),
+          userId: request.user.sub
+        },
+        target: pushDevices.token
+      });
+
+    return successResponse({ registered: true });
+  });
+
   app.get('/settings', { preHandler: app.authenticate }, async (request, reply) => {
     const [user] = await db
       .select({ notificationEnabled: users.notificationEnabled })
@@ -80,6 +125,7 @@ module.exports = async function notificationRoutes(app) {
         .insert(notificationSettings)
         .values({
           cycleNotifications: payload.cycleNotifications,
+          preferredTime: payload.preferredTime,
           socialNotifications: payload.socialNotifications,
           userId: request.user.sub,
           workoutNotifications: payload.workoutNotifications
@@ -87,6 +133,7 @@ module.exports = async function notificationRoutes(app) {
         .onConflictDoUpdate({
           set: {
             cycleNotifications: payload.cycleNotifications,
+            preferredTime: payload.preferredTime,
             socialNotifications: payload.socialNotifications,
             workoutNotifications: payload.workoutNotifications
           },

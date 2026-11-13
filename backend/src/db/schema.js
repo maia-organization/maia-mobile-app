@@ -5,6 +5,7 @@ const {
   pgEnum,
   pgTable,
   real,
+  text,
   timestamp,
   uniqueIndex,
   uuid,
@@ -127,6 +128,16 @@ const notificationSettings = pgTable('notification_settings', {
   preferredTime: integer('preferred_time').default(18).notNull()
 });
 
+const pushDevices = pgTable('push_devices', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  token: varchar('token', { length: 512 }).notNull().unique(),
+  platform: varchar('platform', { length: 16 }).notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull()
+});
+
 const privacySettings = pgTable('privacy_settings', {
   userId: uuid('user_id')
     .primaryKey()
@@ -139,14 +150,42 @@ const privacySettings = pgTable('privacy_settings', {
   showStats: boolean('show_stats').default(true).notNull()
 });
 
+const symptomEntries = pgTable(
+  'symptom_entries',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    recordedOn: date('recorded_on').notNull(),
+    symptoms: text('symptoms').array().notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull()
+  },
+  (table) => [uniqueIndex('symptom_entries_user_date_unique').on(table.userId, table.recordedOn)]
+);
+
+const weeklyGoals = pgTable('weekly_goals', {
+  userId: uuid('user_id')
+    .primaryKey()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  targetType: varchar('target_type', { length: 16 }).notNull(),
+  targetValue: real('target_value').notNull(),
+  reminderEnabled: boolean('reminder_enabled').default(false).notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull()
+});
+
 module.exports = {
   cycles,
   notificationSettings,
+  pushDevices,
   privacySettings,
   sessionFeedback,
   sessions,
   sessionStatus,
+  symptomEntries,
   users,
+  weeklyGoals,
   plannedWorkouts,
   workoutRecommendations
 };
